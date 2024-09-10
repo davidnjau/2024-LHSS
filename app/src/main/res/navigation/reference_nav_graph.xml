@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.intellisoftkenya.a24cblhss.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_self"
+            app:destination="@id/splashFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_landingPageFragment"
+            app:destination="@id/landingPageFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.intellisoftkenya.a24cblhss.auth.fragment.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_recoverPasswordFragment"
+            app:destination="@id/recoverPasswordFragment"
+            app:popUpTo="@id/loginFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_landingPageFragment"
+            app:destination="@id/landingPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recoverPasswordFragment"
+        android:name="com.intellisoftkenya.a24cblhss.auth.fragment.RecoverPasswordFragment"
+        android:label="fragment_recover_password"
+        tools:layout="@layout/fragment_recover_password" >
+        <action
+            android:id="@+id/action_recoverPasswordFragment_to_newPasswordFragment"
+            app:destination="@id/newPasswordFragment"
+            app:popUpTo="@id/recoverPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPasswordFragment"
+        android:name="com.intellisoftkenya.a24cblhss.auth.fragment.NewPasswordFragment"
+        android:label="fragment_new_password"
+        tools:layout="@layout/fragment_new_password" >
+        <action
+            android:id="@+id/action_newPasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landingPageFragment"
+        android:name="com.intellisoftkenya.a24cblhss.LandingPageFragment"
+        android:label="fragment_landing_page"
+        tools:layout="@layout/fragment_landing_page" >
+        <action
+            android:id="@+id/action_landingPageFragment_to_patientListFragment"
+            app:destination="@id/patientListFragment"
+            app:popUpTo="@id/landingPageFragment" />
+        <action
+            android:id="@+id/action_landingPageFragment_to_demographicsFragment"
+            app:destination="@id/demographicsFragment"
+            app:popUpTo="@id/landingPageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/patientListFragment"
+        android:name="com.intellisoftkenya.a24cblhss.auth.fragment.PatientListFragment"
+        android:label="fragment_patient_list"
+        tools:layout="@layout/fragment_patient_list" >
+        <action
+            android:id="@+id/action_patientListFragment_to_patientCardFragment"
+            app:destination="@id/patientCardFragment"
+            app:popUpTo="@id/patientListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/demographicsFragment"
+        android:name="com.intellisoftkenya.a24cblhss.registration.fragment.DemographicsFragment"
+        android:label="fragment_demographics"
+        tools:layout="@layout/fragment_demographics" >
+        <action
+            android:id="@+id/action_demographicsFragment_to_addressFragment"
+            app:destination="@id/addressFragment"
+            app:popUpTo="@id/demographicsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.intellisoftkenya.a24cblhss.registration.fragment.AddressFragment"
+        android:label="fragment_address"
+        tools:layout="@layout/fragment_address" >
+        <action
+            android:id="@+id/action_addressFragment_to_nextOfKinFragment"
+            app:destination="@id/nextOfKinFragment"
+            app:popUpTo="@id/addressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nextOfKinFragment"
+        android:name="com.intellisoftkenya.a24cblhss.registration.fragment.NextOfKinFragment"
+        android:label="fragment_next_of_kin"
+        tools:layout="@layout/fragment_next_of_kin" >
+        <action
+            android:id="@+id/action_nextOfKinFragment_to_patientRegistrationSummaryFragment"
+            app:destination="@id/patientRegistrationSummaryFragment"
+            app:popUpTo="@id/nextOfKinFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/patientRegistrationSummaryFragment"
+        android:name="com.intellisoftkenya.a24cblhss.registration.PatientRegistrationSummaryFragment"
+        android:label="fragment_patient_registration_summary"
+        tools:layout="@layout/fragment_patient_registration_summary" >
+        <action
+            android:id="@+id/action_patientRegistrationSummaryFragment_to_patientCardFragment"
+            app:destination="@id/patientCardFragment"
+            app:popUpTo="@id/patientRegistrationSummaryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/patientCardFragment"
+        android:name="com.intellisoftkenya.a24cblhss.patient_details.PatientCardFragment"
+        android:label="fragment_patient_card"
+        tools:layout="@layout/fragment_patient_card" >
+        <action
+            android:id="@+id/action_patientCardFragment_pop"
+            app:popUpTo="@id/patientCardFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_patientCardFragment_to_demographicsFragment"
+            app:destination="@id/demographicsFragment"
+            app:popUpTo="@id/patientCardFragment" />
+        <action
+            android:id="@+id/action_patientCardFragment_to_referralListFragment"
+            app:destination="@id/referralListFragment"
+            app:popUpTo="@id/patientCardFragment" />
+        <action
+            android:id="@+id/action_patientCardFragment_to_referralListFragment2"
+            app:destination="@id/referralListFragment"
+            app:popUpTo="@id/patientCardFragment" />
+        <action
+            android:id="@+id/action_patientCardFragment_to_referPatientFragment"
+            app:destination="@id/referPatientFragment"
+            app:popUpTo="@id/patientCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/referralListFragment"
+        android:name="com.intellisoftkenya.a24cblhss.referrals.fragment.ReferralListFragment"
+        android:label="fragment_referral_list"
+        tools:layout="@layout/fragment_referral_list" >
+        <action
+            android:id="@+id/action_referralListFragment_to_referralDetailsFragment"
+            app:destination="@id/referralDetailsFragment"
+            app:popUpTo="@id/referralListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/referralDetailsFragment"
+        android:name="com.intellisoftkenya.a24cblhss.referrals.fragment.ReferralDetailsFragment"
+        android:label="fragment_referral_details"
+        tools:layout="@layout/fragment_referral_details" >
+        <action
+            android:id="@+id/action_referralDetailsFragment_to_acknoledgementFormFragment"
+            app:destination="@id/acknoledgementFormFragment"
+            app:popUpTo="@id/referralDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/acknoledgementFormFragment"
+        android:name="com.intellisoftkenya.a24cblhss.referrals.fragment.AcknoledgementFormFragment"
+        android:label="fragment_acknoledgement_form"
+        tools:layout="@layout/fragment_acknoledgement_form" >
+        <action
+            android:id="@+id/action_acknoledgementFormFragment_to_acknoledgementDetailsFragment"
+            app:destination="@id/acknoledgementDetailsFragment"
+            app:popUpTo="@id/acknoledgementFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/acknoledgementDetailsFragment"
+        android:name="com.intellisoftkenya.a24cblhss.referrals.fragment.AcknoledgementDetailsFragment"
+        android:label="fragment_acknoledgement_details"
+        tools:layout="@layout/fragment_acknoledgement_details" >
+        <action
+            android:id="@+id/action_acknoledgementDetailsFragment_to_patientCardFragment"
+            app:destination="@id/patientCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/referPatientFragment"
+        android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ReferPatientFragment"
+        android:label="fragment_refer_patient"
+        tools:layout="@layout/fragment_refer_patient" >
+        <action
+            android:id="@+id/action_referPatientFragment_to_referralInfoFragment"
+            app:destination="@id/referralInfoFragment"
+            app:popUpTo="@id/referPatientFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/referralInfoFragment"
+        android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ReferralInfoFragment"
+        android:label="fragment_referral_info"
+        tools:layout="@layout/fragment_referral_info" >
+        <action
+            android:id="@+id/action_referralInfoFragment_to_clinicalInfoIFragment"
+            app:destination="@id/clinicalInfoIFragment"
+            app:popUpTo="@id/referralInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/clinicalInfoIFragment"
+        android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ClinicalInfoIFragment"
+        android:label="fragment_clinical_info_i"
+        tools:layout="@layout/fragment_clinical_info_i" >
+        <action
+            android:id="@+id/action_clinicalInfoIFragment_to_clnicalInfoIIFragment"
+            app:destination="@id/clnicalInfoIIFragment"
+            app:popUpTo="@id/clinicalInfoIFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/clnicalInfoIIFragment"
+        android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ClnicalInfoIIFragment"
+        android:label="fragment_clnical_info_i_i"
+        tools:layout="@layout/fragment_clnical_info_i_i" >
+        <action
+            android:id="@+id/action_clnicalInfoIIFragment_to_clinicalInfoIIIFragment"
+            app:destination="@id/clinicalInfoIIIFragment"
+            app:popUpTo="@id/clnicalInfoIIFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/clinicalInfoIIIFragment"
+        android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ClinicalInfoIIIFragment"
+        android:label="fragment_clinical_info_i_i_i"
+        tools:layout="@layout/fragment_clinical_info_i_i_i" >
+        <action
+            android:id="@+id/action_clinicalInfoIIIFragment_to_reviewReferFragment"
+            app:destination="@id/reviewReferFragment"
+            app:popUpTo="@id/clinicalInfoIIIFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewReferFragment"
+        android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ReviewReferFragment"
+        android:label="fragment_review_refer"
+        tools:layout="@layout/fragment_review_refer" >
+        <action
+            android:id="@+id/action_reviewReferFragment_to_referralInfoFragment"
+            app:destination="@id/referralInfoFragment"
+            app:popUpTo="@id/reviewReferFragment" />
+    </fragment>
+</navigation>
