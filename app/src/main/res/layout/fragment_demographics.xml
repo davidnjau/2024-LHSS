@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:paddingBottom="20dp"
             android:layout_margin="10dp"
             android:id="@+id/rootLayout"
             android:orientation="vertical"

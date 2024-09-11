@@ -6,13 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
+import com.intellisoftkenya.a24cblhss.databinding.FragmentPatientCardBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 
 class PatientCardFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = PatientCardFragment()
-    }
+    private var _binding: FragmentPatientCardBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var fieldManager: FieldManager
 
     private val viewModel: PatientCardViewModel by viewModels()
 
@@ -26,6 +30,27 @@ class PatientCardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_patient_card, container, false)
+
+        _binding = FragmentPatientCardBinding.inflate(inflater, container, false)
+
+
+        return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnReferrals.setOnClickListener {
+            findNavController().navigate(R.id.action_patientCardFragment_to_referralListFragment)
+        }
+        binding.btnReferPatient.setOnClickListener {
+            findNavController().navigate(R.id.action_patientCardFragment_to_referPatientFragment)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

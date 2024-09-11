@@ -22,9 +22,10 @@ class DemographicsFragment : Fragment() {
 
     private var _binding: FragmentDemographicsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var fieldManager: FieldManager
+
 
     private val viewModel: DemographicsViewModel by viewModels()
-    private lateinit var fieldManager: FieldManager
     private var identificationTypes = listOf("Passport", "Identification Number", "Birth Certificate Number")
 
     override fun onCreate(savedInstanceState: Bundle?) {

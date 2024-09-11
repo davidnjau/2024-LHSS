@@ -6,14 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.databinding.FragmentReferralListBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralListViewModel
 
 class ReferralListFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = ReferralListFragment()
-    }
+    private var _binding: FragmentReferralListBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: ReferralListViewModel by viewModels()
 
@@ -27,6 +28,21 @@ class ReferralListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_referral_list, container, false)
+
+        _binding = FragmentReferralListBinding.inflate(inflater, container, false)
+
+
+
+        return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

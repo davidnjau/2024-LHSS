@@ -14,5 +14,13 @@
     <string name="referrals">Referrals</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
+    <string name="register_patient_review">Register Patient Review</string>
+    <string name="refer_patient">Refer Patient</string>
+    <string name="patient_card">Patient Card</string>
+    <string name="referral_info">Referral Info</string>
+    <string name="clinical_info_section_i">Clinical Info Section I</string>
+    <string name="clinical_info_section_ii">Clinical Info Section II</string>
+    <string name="clinical_info_section_iii">Clinical Info Section III</string>
+    <string name="refer_patient_review">Refer Patient Review</string>
 
 </resources>

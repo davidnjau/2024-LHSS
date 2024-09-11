@@ -89,7 +89,7 @@
     <fragment
         android:id="@+id/addressFragment"
         android:name="com.intellisoftkenya.a24cblhss.registration.fragment.AddressFragment"
-        android:label="fragment_address"
+        android:label="@string/register_patient"
         tools:layout="@layout/fragment_address" >
         <action
             android:id="@+id/action_addressFragment_to_nextOfKinFragment"
@@ -99,7 +99,7 @@
     <fragment
         android:id="@+id/nextOfKinFragment"
         android:name="com.intellisoftkenya.a24cblhss.registration.fragment.NextOfKinFragment"
-        android:label="fragment_next_of_kin"
+        android:label="@string/register_patient"
         tools:layout="@layout/fragment_next_of_kin" >
         <action
             android:id="@+id/action_nextOfKinFragment_to_patientRegistrationSummaryFragment"
@@ -109,7 +109,7 @@
     <fragment
         android:id="@+id/patientRegistrationSummaryFragment"
         android:name="com.intellisoftkenya.a24cblhss.registration.PatientRegistrationSummaryFragment"
-        android:label="fragment_patient_registration_summary"
+        android:label="@string/register_patient_review"
         tools:layout="@layout/fragment_patient_registration_summary" >
         <action
             android:id="@+id/action_patientRegistrationSummaryFragment_to_patientCardFragment"
@@ -119,7 +119,7 @@
     <fragment
         android:id="@+id/patientCardFragment"
         android:name="com.intellisoftkenya.a24cblhss.patient_details.PatientCardFragment"
-        android:label="fragment_patient_card"
+        android:label="@string/patient_card"
         tools:layout="@layout/fragment_patient_card" >
         <action
             android:id="@+id/action_patientCardFragment_pop"
@@ -184,7 +184,7 @@
     <fragment
         android:id="@+id/referPatientFragment"
         android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ReferPatientFragment"
-        android:label="fragment_refer_patient"
+        android:label="@string/refer_patient"
         tools:layout="@layout/fragment_refer_patient" >
         <action
             android:id="@+id/action_referPatientFragment_to_referralInfoFragment"
@@ -194,7 +194,7 @@
     <fragment
         android:id="@+id/referralInfoFragment"
         android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ReferralInfoFragment"
-        android:label="fragment_referral_info"
+        android:label="@string/referral_info"
         tools:layout="@layout/fragment_referral_info" >
         <action
             android:id="@+id/action_referralInfoFragment_to_clinicalInfoIFragment"
@@ -204,7 +204,7 @@
     <fragment
         android:id="@+id/clinicalInfoIFragment"
         android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ClinicalInfoIFragment"
-        android:label="fragment_clinical_info_i"
+        android:label="@string/clinical_info_section_i"
         tools:layout="@layout/fragment_clinical_info_i" >
         <action
             android:id="@+id/action_clinicalInfoIFragment_to_clnicalInfoIIFragment"
@@ -214,7 +214,7 @@
     <fragment
         android:id="@+id/clnicalInfoIIFragment"
         android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ClnicalInfoIIFragment"
-        android:label="fragment_clnical_info_i_i"
+        android:label="@string/clinical_info_section_ii"
         tools:layout="@layout/fragment_clnical_info_i_i" >
         <action
             android:id="@+id/action_clnicalInfoIIFragment_to_clinicalInfoIIIFragment"
@@ -224,7 +224,7 @@
     <fragment
         android:id="@+id/clinicalInfoIIIFragment"
         android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ClinicalInfoIIIFragment"
-        android:label="fragment_clinical_info_i_i_i"
+        android:label="@string/clinical_info_section_iii"
         tools:layout="@layout/fragment_clinical_info_i_i_i" >
         <action
             android:id="@+id/action_clinicalInfoIIIFragment_to_reviewReferFragment"
@@ -234,11 +234,14 @@
     <fragment
         android:id="@+id/reviewReferFragment"
         android:name="com.intellisoftkenya.a24cblhss.refer_patient.fragment.ReviewReferFragment"
-        android:label="fragment_review_refer"
+        android:label="@string/refer_patient_review"
         tools:layout="@layout/fragment_review_refer" >
         <action
             android:id="@+id/action_reviewReferFragment_to_referralInfoFragment"
             app:destination="@id/referralInfoFragment"
             app:popUpTo="@id/reviewReferFragment" />
+        <action
+            android:id="@+id/action_reviewReferFragment_to_patientCardFragment"
+            app:destination="@id/patientCardFragment" />
     </fragment>
 </navigation>

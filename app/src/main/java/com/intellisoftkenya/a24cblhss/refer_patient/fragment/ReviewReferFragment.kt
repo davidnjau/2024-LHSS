@@ -6,14 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
+import com.intellisoftkenya.a24cblhss.databinding.FragmentReviewReferBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ReviewReferViewModel
 
 class ReviewReferFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ReviewReferFragment()
-    }
+    private var _binding: FragmentReviewReferBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var fieldManager: FieldManager
+
 
     private val viewModel: ReviewReferViewModel by viewModels()
 
@@ -27,6 +32,39 @@ class ReviewReferFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_review_refer, container, false)
+
+        _binding = FragmentReviewReferBinding.inflate(inflater, container, false)
+
+        navigationActions()
+
+
+        return binding.root
+
+    }
+
+    private fun navigationActions() {
+        // Set the next button text to "Continue" and add click listeners
+        val navigationButtons = binding.navigationButtons
+        navigationButtons.setNextButtonText("Submit")
+
+        navigationButtons.setBackButtonClickListener {
+            // Handle back button click
+            findNavController().navigateUp()
+        }
+
+        navigationButtons.setNextButtonClickListener {
+            // Handle next button click
+            // Navigate to the next fragment or perform any action
+            findNavController().navigate(R.id.action_reviewReferFragment_to_patientCardFragment)
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
