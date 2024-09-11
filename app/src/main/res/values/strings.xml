@@ -12,5 +12,7 @@
     <string name="search_patient">Search Patient</string>
     <string name="register_patient">Register Patient</string>
     <string name="referrals">Referrals</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
 
 </resources>

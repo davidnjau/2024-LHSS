@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.registration.viewmodel.DemographicsViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
@@ -39,9 +40,28 @@ class DemographicsFragment : Fragment() {
 
         _binding = FragmentDemographicsBinding.inflate(inflater, container, false)
 
+        navigationActions()
+
 
         return binding.root
 
+    }
+
+    private fun navigationActions() {
+        // Set the next button text to "Continue" and add click listeners
+        val navigationButtons = binding.navigationButtons
+        navigationButtons.setNextButtonText("Next")
+
+        navigationButtons.setBackButtonClickListener {
+            // Handle back button click
+            findNavController().navigateUp()
+        }
+
+        navigationButtons.setNextButtonClickListener {
+            // Handle next button click
+            // Navigate to the next fragment or perform any action
+            findNavController().navigate(R.id.action_demographicsFragment_to_addressFragment)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,6 +126,7 @@ class DemographicsFragment : Fragment() {
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
+
 
     }
 
