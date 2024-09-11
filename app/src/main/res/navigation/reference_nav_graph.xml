@@ -155,7 +155,7 @@
     <fragment
         android:id="@+id/referralDetailsFragment"
         android:name="com.intellisoftkenya.a24cblhss.referrals.fragment.ReferralDetailsFragment"
-        android:label="fragment_referral_details"
+        android:label="@string/referral_details"
         tools:layout="@layout/fragment_referral_details" >
         <action
             android:id="@+id/action_referralDetailsFragment_to_acknoledgementFormFragment"

@@ -8,4 +8,5 @@
     <color name="colorPrimaryTrans">#41163C94</color>
     <color name="colorAccent">#50BC55</color>
     <color name="colorStatusBar">#108816</color>
+    <color name="darker_gray">#997F807F</color>
 </resources>
