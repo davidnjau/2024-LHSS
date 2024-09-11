@@ -1,0 +1,24 @@
+package com.intellisoftkenya.a24cblhss.shared
+
+import android.app.Application
+import androidx.annotation.DrawableRes
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
+import com.intellisoftkenya.a24cblhss.R
+
+class LayoutListViewModel(application: Application, private val state: SavedStateHandle) :
+    AndroidViewModel(application) {
+
+    fun getLayoutList(): List<Layout> {
+        return Layout.values().toList()
+    }
+
+    enum class Layout(
+        @DrawableRes val iconId: Int,
+        val textId: String,
+    ) {
+        SEARCH_PATIENT(R.drawable.ic_search_patient, "Search Patient"),
+        REGISTER_CLIENT(R.drawable.ic_register_patient, "Register Patient"),
+        HEALTH_FACILITIES(R.drawable.ic_referrals, "Referrals"),
+    }
+}

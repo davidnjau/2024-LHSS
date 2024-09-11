@@ -19,7 +19,6 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!! // This is safe to use after onCreateView
 
-
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +44,7 @@ class LoginFragment : Fragment() {
 
         // Access the button from the binding and set an action
         binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_recoverPasswordFragment)
+            findNavController().navigate(R.id.landingPageFragment)
         }
 
     }

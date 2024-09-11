@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.intellisoftkenya.a24cblhss.SplashFragment"
-        android:label="fragment_splash"
+        android:label="@string/splash"
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/action_splashFragment_self"
@@ -23,7 +23,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.intellisoftkenya.a24cblhss.auth.fragment.LoginFragment"
-        android:label="fragment_login"
+        android:label="@string/login"
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_recoverPasswordFragment"
@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/recoverPasswordFragment"
         android:name="com.intellisoftkenya.a24cblhss.auth.fragment.RecoverPasswordFragment"
-        android:label="fragment_recover_password"
+        android:label="@string/enter_your_password"
         tools:layout="@layout/fragment_recover_password" >
         <action
             android:id="@+id/action_recoverPasswordFragment_to_newPasswordFragment"
@@ -46,7 +46,7 @@
     <fragment
         android:id="@+id/newPasswordFragment"
         android:name="com.intellisoftkenya.a24cblhss.auth.fragment.NewPasswordFragment"
-        android:label="fragment_new_password"
+        android:label="@string/password_recovery"
         tools:layout="@layout/fragment_new_password" >
         <action
             android:id="@+id/action_newPasswordFragment_to_loginFragment"
@@ -55,7 +55,7 @@
     <fragment
         android:id="@+id/landingPageFragment"
         android:name="com.intellisoftkenya.a24cblhss.LandingPageFragment"
-        android:label="fragment_landing_page"
+        android:label="@string/home"
         tools:layout="@layout/fragment_landing_page" >
         <action
             android:id="@+id/action_landingPageFragment_to_patientListFragment"
@@ -69,7 +69,7 @@
     <fragment
         android:id="@+id/patientListFragment"
         android:name="com.intellisoftkenya.a24cblhss.auth.fragment.PatientListFragment"
-        android:label="fragment_patient_list"
+        android:label="@string/search_patient"
         tools:layout="@layout/fragment_patient_list" >
         <action
             android:id="@+id/action_patientListFragment_to_patientCardFragment"
@@ -79,7 +79,7 @@
     <fragment
         android:id="@+id/demographicsFragment"
         android:name="com.intellisoftkenya.a24cblhss.registration.fragment.DemographicsFragment"
-        android:label="fragment_demographics"
+        android:label="@string/register_patient"
         tools:layout="@layout/fragment_demographics" >
         <action
             android:id="@+id/action_demographicsFragment_to_addressFragment"
@@ -145,7 +145,7 @@
     <fragment
         android:id="@+id/referralListFragment"
         android:name="com.intellisoftkenya.a24cblhss.referrals.fragment.ReferralListFragment"
-        android:label="fragment_referral_list"
+        android:label="@string/referrals"
         tools:layout="@layout/fragment_referral_list" >
         <action
             android:id="@+id/action_referralListFragment_to_referralDetailsFragment"

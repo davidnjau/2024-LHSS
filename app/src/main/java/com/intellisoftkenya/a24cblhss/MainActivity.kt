@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.splashFragment, // Your top-level destinations (no back button)
                 R.id.loginFragment,
+                R.id.landingPageFragment,
             )
         )
 
