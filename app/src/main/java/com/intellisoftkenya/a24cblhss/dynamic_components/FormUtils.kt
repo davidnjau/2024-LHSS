@@ -1,9 +1,12 @@
 package com.intellisoftkenya.a24cblhss.dynamic_components
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.view.View
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RadioButton
 import android.widget.Spinner
 
 object FormUtils {
@@ -32,51 +35,6 @@ object FormUtils {
         }
 
         return formDataList
-    }
-
-    fun populateView1(
-        dbFieldList:ArrayList<DbField>,
-        rootLayout: LinearLayout,
-        fieldManager: FieldManager,
-        context: Context
-        ){
-
-        dbFieldList.forEach {
-            val widget = it.widgets
-            val optionList = it.optionList
-            val label = it.label
-            val isMandatory = it.isMandatory
-
-            // This is the label of the widget
-            fieldManager.addTextView(
-                label,
-                isMandatory,
-                rootLayout
-            )
-
-            val fieldWidgets = when (widget) {
-                DbWidgets.EDIT_TEXT.name -> {
-                    EditTextFieldCreator(context)
-                }
-                DbWidgets.SPINNER.name -> {
-                    SpinnerFieldCreator(
-                        optionList ,
-                        context
-                    )
-                }
-                else -> {
-                    null
-                }
-            }
-            if (fieldWidgets != null){
-                fieldManager.addField(
-                    fieldWidgets,
-                    label,
-                    isMandatory,
-                    rootLayout
-                )
-            }
-        }
     }
 
     fun populateView(
@@ -117,6 +75,14 @@ object FormUtils {
                             )
                         }
                     }
+                    is RadioButton -> {
+                        RadioButtonFieldCreator(optionList, context, isHorizontal = true)
+                    }
+                    is DatePicker -> {
+                        DatePickerFieldCreator(
+                            context
+                        )
+                    }
                 }
             } else {
                 // Create a new widget if it doesn't exist
@@ -133,6 +99,19 @@ object FormUtils {
                             context
                         )
                     }
+                    DbWidgets.RADIO_BUTTON.name -> {
+                        RadioButtonFieldCreator(
+                            optionList ,
+                            context,
+                            isHorizontal = true
+                        )
+                    }
+                    DbWidgets.DATE_PICKER.name -> {
+                        DatePickerFieldCreator(
+                            context
+                        )
+                    }
+
                     else -> {
                         null
                     }
@@ -145,6 +124,5 @@ object FormUtils {
             }
         }
     }
-
 
 }

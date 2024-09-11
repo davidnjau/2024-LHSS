@@ -24,7 +24,10 @@ data class DbSubCounty(
 )
 
 enum class DbWidgets{
-    EDIT_TEXT, SPINNER
+    EDIT_TEXT,
+    SPINNER,
+    RADIO_BUTTON,
+    DATE_PICKER
 }
 
 

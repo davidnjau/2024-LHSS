@@ -1,8 +1,20 @@
 package com.intellisoftkenya.a24cblhss.dynamic_components
 
+import android.app.DatePickerDialog
 import android.content.Context
+import android.os.Build
+import android.text.InputType
+import android.view.View
+import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.core.motion.utils.Utils
+import androidx.core.content.ContextCompat
+import com.intellisoftkenya.a24cblhss.R
+import java.util.Calendar
 
 
 class FieldManager(
@@ -33,5 +45,6 @@ class FieldManager(
         )
         parentLayout.addView(field)
     }
+
 }
 
