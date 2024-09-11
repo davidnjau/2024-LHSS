@@ -22,5 +22,6 @@
     <string name="clinical_info_section_ii">Clinical Info Section II</string>
     <string name="clinical_info_section_iii">Clinical Info Section III</string>
     <string name="refer_patient_review">Refer Patient Review</string>
+    <string name="acknowledgement_form_review">Acknowledgement Form Review</string>
 
 </resources>

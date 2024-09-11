@@ -43,7 +43,6 @@ class DemographicsFragment : Fragment() {
 
         navigationActions()
 
-
         return binding.root
 
     }

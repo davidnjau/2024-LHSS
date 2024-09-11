@@ -39,6 +39,10 @@ class ReferralListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.btnNext.setOnClickListener {
+            findNavController().navigate(R.id.action_referralListFragment_to_referralDetailsFragment)
+        }
     }
 
     override fun onDestroyView() {
