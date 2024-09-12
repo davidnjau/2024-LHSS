@@ -6,6 +6,13 @@
     android:background="@color/white"
     tools:context=".refer_patient.fragment.ReviewReferFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+
     <com.intellisoftkenya.a24cblhss.shared.NavigationButtons
         android:layout_margin="10dp"
         android:id="@+id/navigationButtons"

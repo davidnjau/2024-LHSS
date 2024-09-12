@@ -7,16 +7,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ClnicalInfoIIViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClnicalInfoIIBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbClasses
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbField
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 class ClnicalInfoIIFragment : Fragment() {
 
@@ -24,6 +30,7 @@ class ClnicalInfoIIFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var fieldManager: FieldManager
 
+    private lateinit var formatterClass: FormatterClass
 
 
 
@@ -42,6 +49,7 @@ class ClnicalInfoIIFragment : Fragment() {
         _binding = FragmentClnicalInfoIIBinding.inflate(inflater, container, false)
 
         navigationActions()
+        formatterClass = FormatterClass(requireContext())
 
         return binding.root
     }
@@ -59,7 +67,27 @@ class ClnicalInfoIIFragment : Fragment() {
         navigationButtons.setNextButtonClickListener {
             // Handle next button click
             // Navigate to the next fragment or perform any action
-            findNavController().navigate(R.id.action_clnicalInfoIIFragment_to_clinicalInfoIIIFragment)
+
+            val (addedFields, missingFields) = FormUtils.extractAllFormData(binding.rootLayout)
+            if (missingFields.isNotEmpty()){
+                Toast.makeText(context, "Please fill all mandatory fields", Toast.LENGTH_LONG).show()
+            }else{
+                findNavController().navigate(R.id.action_clnicalInfoIIFragment_to_clinicalInfoIIIFragment)
+
+                val formData = FormData(
+                    DbClasses.CLINICAL_REFERRAL_II.name,
+                    addedFields)
+
+                val gson = Gson()
+                val json = gson.toJson(formData)
+
+                formatterClass.saveSharedPref(
+                    sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
+                    DbClasses.CLINICAL_REFERRAL_II.name,
+                    json
+                )
+
+            }
         }
     }
 

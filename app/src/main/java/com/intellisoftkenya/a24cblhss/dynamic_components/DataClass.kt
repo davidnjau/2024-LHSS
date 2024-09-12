@@ -30,12 +30,19 @@ enum class DbWidgets{
     DATE_PICKER
 }
 enum class DbNavigationDetails{
-    PATIENT_REGISTRATION
+    PATIENT_REGISTRATION,
+    REFER_PATIENT
 }
 enum class DbClasses{
     DEMOGRAPHICS,
     ADDRESS,
-    NEXT_OF_KIN
+    NEXT_OF_KIN,
+
+    REFERRING_FACILITY_INFO,
+    REFERRAL_INFO,
+    CLINICAL_REFERRAL_I,
+    CLINICAL_REFERRAL_II,
+    CLINICAL_REFERRAL_III,
 }
 
 
