@@ -3,11 +3,14 @@ package com.intellisoftkenya.a24cblhss.dynamic_components
 import android.app.DatePickerDialog
 import android.content.Context
 import android.view.View
+import android.widget.CheckBox
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Spinner
+import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 
 object FormUtils {
     fun extractFormData(
@@ -137,6 +140,85 @@ object FormUtils {
             }
         }
     }
+
+    fun extractAllFormData(rootLayout: LinearLayout):
+            Pair<ArrayList<DbFormData>, ArrayList<DbFormData>> {
+
+        val missingFields = ArrayList<DbFormData>()
+        val addedFields = ArrayList<DbFormData>()
+
+        // Traverse through all child views of rootLayout
+        for (i in 0 until rootLayout.childCount) {
+            val childView = rootLayout.getChildAt(i)
+
+            if (childView.visibility == View.VISIBLE) { // Only process visible views
+                when (childView) {
+                    is RadioGroup -> {
+                        // Get the selected RadioButton ID
+                        val selectedRadioButtonId = childView.checkedRadioButtonId
+
+                        if (selectedRadioButtonId != -1) {
+                            // Find the selected RadioButton using the selected ID
+                            val selectedRadioButton = childView.findViewById<RadioButton>(selectedRadioButtonId)
+                            val selectedText = selectedRadioButton.text.toString()
+
+                            val tag = childView.tag?.toString() ?: ""
+                            if (tag.isNotEmpty() && selectedText.isNotEmpty()) {
+                                val formData = DbFormData(tag, selectedText)
+                                addedFields.add(formData)
+                            } else if (tag.isNotEmpty()) {
+                                // Add missing mandatory fields if text is empty
+                                missingFields.add(DbFormData(tag, ""))
+                            }
+                        }
+                    }
+
+                    is EditText -> {
+                        val tag = childView.tag?.toString() ?: ""
+                        val text = childView.text.toString()
+
+                        if (tag.isNotEmpty() && text.isNotEmpty()) {
+                            val formData = DbFormData(tag, text)
+                            addedFields.add(formData)
+                        } else if (tag.isNotEmpty()) {
+                            // Add missing mandatory fields if text is empty
+                            missingFields.add(DbFormData(tag, ""))
+                        }
+                    }
+
+                    is Spinner -> {
+                        val selectedText = childView.selectedItem.toString()
+                        val tag = childView.tag?.toString() ?: ""
+
+                        if (tag.isNotEmpty() && selectedText.isNotEmpty()) {
+                            val formData = DbFormData(tag, selectedText)
+                            addedFields.add(formData)
+                        } else if (tag.isNotEmpty()) {
+                            // Add missing mandatory fields if text is empty
+                            missingFields.add(DbFormData(tag, ""))
+                        }
+                    }
+
+                    is CheckBox -> {
+                        val tag = childView.tag?.toString() ?: ""
+                        val isChecked = childView.isChecked
+
+                        if (tag.isNotEmpty()) {
+                            val formData = DbFormData(tag, if (isChecked) "Checked" else "Unchecked")
+                            addedFields.add(formData)
+                        }
+                    }
+
+                    // Add more cases as needed based on widget types
+                }
+            }
+        }
+
+        return Pair(ArrayList(addedFields), ArrayList(missingFields))
+
+
+    }
+
 
 
 }

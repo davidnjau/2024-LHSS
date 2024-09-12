@@ -45,9 +45,10 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val appName = requireContext().getString(R.string.app_name)
         binding = FragmentSplashBinding.inflate(layoutInflater)
         Handler().postDelayed({
-            if (formatterClass.getSharedPref("isLoggedIn") == "true") {
+            if (formatterClass.getSharedPref(appName,"isLoggedIn") == "true") {
                 findNavController().navigate(R.id.landingPageFragment)
             } else {
                 findNavController().navigate(R.id.loginFragment)

@@ -5,10 +5,13 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.util.Log
+import android.view.View
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Spinner
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
 import org.json.JSONObject
@@ -28,25 +31,33 @@ import kotlin.random.Random
 
 class FormatterClass(private val context: Context) {
 
-    fun saveSharedPref(key: String, value: String) {
+    fun saveSharedPref(
+        sharedPrefName:String = context.getString(R.string.app_name),
+        key: String,
+        value: String)
+    {
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
+            context.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString(key, value);
         editor.apply();
     }
 
-    fun getSharedPref(key: String): String? {
+    fun getSharedPref(
+        sharedPrefName:String = context.getString(R.string.app_name),
+        key: String): String? {
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
+            context.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
         return sharedPreferences.getString(key, null)
 
     }
 
 
-    fun deleteSharedPref(key: String) {
+    fun deleteSharedPref(
+        sharedPrefName:String = context.getString(R.string.app_name),
+        key: String) {
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(context.getString(R.string.app_name), MODE_PRIVATE)
+            context.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.remove(key);
         editor.apply();
@@ -93,51 +104,6 @@ class FormatterClass(private val context: Context) {
         return null
     }
 
-    fun extractFormData(rootLayout: LinearLayout, viewModel: MainActivityViewModel) {
-
-        // Traverse through all child views of rootLayout
-        for (i in 0 until rootLayout.childCount) {
-            when (val childView = rootLayout.getChildAt(i)) {
-
-                is RadioGroup -> {
-                    // Get the selected RadioButton ID
-                    val selectedRadioButtonId = childView.checkedRadioButtonId
-                    Log.e("----->", "$selectedRadioButtonId")
-
-                    if (selectedRadioButtonId != -1) {
-                        // Find the selected RadioButton using the selected ID
-                        val selectedRadioButton = childView.findViewById<RadioButton>(selectedRadioButtonId)
-                        val selectedText = selectedRadioButton.text.toString()
-
-                        Log.e("----->selectedRadioButton", "$selectedRadioButton")
-                        Log.e("----->selectedText", selectedText)
-
-
-                        val tag = childView.tag
-                        if (tag != null && selectedText.isNotEmpty()) {
-                            val formData = DbFormData(tag.toString(), selectedText)
-
-                            // Store form data in ViewModel
-//                            viewModel.updateFormData(tag.toString(), selectedText)
-                        }
-                    }
-                }
-
-                // Other view types like EditText, Spinner, etc.
-                is EditText -> {
-                    val tag = childView.tag
-                    val text = childView.text.toString()
-
-                    if (tag != null && text.isNotEmpty()) {
-                        val formData = DbFormData(tag.toString(), text)
-
-                        // Store form data in ViewModel
-//                        viewModel.updateFormData(tag.toString(), text)
-                    }
-                }
-            }
-        }
-    }
 
 
 }

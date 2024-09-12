@@ -29,18 +29,13 @@ enum class DbWidgets{
     RADIO_BUTTON,
     DATE_PICKER
 }
-
-
-
-
-enum class DbEditTextNames {
-    FIRST_NAME_C, LAST_NAME_C, MIDDLE_NAME, OTHER_NAMES, TELEPHONE_C
+enum class DbNavigationDetails{
+    PATIENT_REGISTRATION
 }
-enum class DbDOB {
-    YEARS_C, MONTHS, DAYS
-}
-enum class IdentificationTypes {
-    PASSPORT, NEMIS, NATIONAL_ID
+enum class DbClasses{
+    DEMOGRAPHICS,
+    ADDRESS,
+    NEXT_OF_KIN
 }
 
 

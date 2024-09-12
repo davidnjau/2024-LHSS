@@ -3,26 +3,35 @@ package com.intellisoftkenya.a24cblhss.registration.fragment
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.registration.viewmodel.AddressViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentAddressBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbClasses
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbField
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 
 class AddressFragment : Fragment() {
 
     private var _binding: FragmentAddressBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AddressViewModel by viewModels()
+    private val viewModel: MainActivityViewModel by viewModels()
+
     private lateinit var fieldManager: FieldManager
     private var countryOriginList = listOf("Kenya", "Uganda", "Tanzania", "Rwanda", "Burundi", "South Sudan")
     private var kenyaCountyList = listOf(
@@ -38,6 +47,7 @@ class AddressFragment : Fragment() {
         "Kampala", "Mukono", "Wakiso", "Jinja", "Gulu", "Lira", "Mbarara", "Mbale",
         "Arua", "Fort Portal", "Masaka", "Entebbe", "Kabale", "Soroti", "Hoima"
     )
+    private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +63,7 @@ class AddressFragment : Fragment() {
         _binding = FragmentAddressBinding.inflate(inflater, container, false)
 
         navigationActions()
+        formatterClass = FormatterClass(requireContext())
 
         return binding.root
 
@@ -71,7 +82,27 @@ class AddressFragment : Fragment() {
         navigationButtons.setNextButtonClickListener {
             // Handle next button click
             // Navigate to the next fragment or perform any action
-            findNavController().navigate(R.id.action_addressFragment_to_nextOfKinFragment)
+            // Call the function to extract form data
+            val (addedFields, missingFields) = FormUtils.extractAllFormData(binding.rootLayout)
+
+            if (missingFields.isNotEmpty()){
+                Toast.makeText(context, "Please fill all mandatory fields", Toast.LENGTH_LONG).show()
+            }else{
+                findNavController().navigate(R.id.action_addressFragment_to_nextOfKinFragment)
+                val formData = FormData(
+                    DbClasses.ADDRESS.name,
+                    addedFields)
+
+                val gson = Gson()
+                val json = gson.toJson(formData)
+
+                formatterClass.saveSharedPref(
+                    sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
+                    DbClasses.ADDRESS.name,
+                    json
+                )
+
+            }
         }
     }
 

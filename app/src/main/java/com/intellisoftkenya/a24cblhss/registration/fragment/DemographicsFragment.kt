@@ -10,16 +10,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.registration.viewmodel.DemographicsViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbClasses
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbField
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.extractAllFormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 
@@ -88,11 +94,6 @@ class DemographicsFragment : Fragment() {
                     }
                 }
             }
-
-
-            // For debugging or further logic
-            Log.e("tag ", "$tag")
-            Log.e("text ", "$text")
         }
 
 
@@ -115,7 +116,29 @@ class DemographicsFragment : Fragment() {
         navigationButtons.setNextButtonClickListener {
             // Handle next button click
             // Navigate to the next fragment or perform any action
-            findNavController().navigate(R.id.action_demographicsFragment_to_addressFragment)
+
+            // Call the function to extract form data
+            val (addedFields, missingFields) = extractAllFormData(binding.rootLayout)
+
+            if (missingFields.isNotEmpty()){
+                Toast.makeText(context, "Please fill all mandatory fields", Toast.LENGTH_LONG).show()
+            }else{
+                findNavController().navigate(R.id.action_demographicsFragment_to_addressFragment)
+
+                val formData = FormData(
+                    DbClasses.DEMOGRAPHICS.name,
+                    addedFields)
+
+                val gson = Gson()
+                val json = gson.toJson(formData)
+
+                formatterClass.saveSharedPref(
+                    sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
+                    DbClasses.DEMOGRAPHICS.name,
+                    json
+                )
+
+            }
         }
     }
 
@@ -175,16 +198,16 @@ class DemographicsFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.DATE_PICKER.name,
-                "DOB", true
+                "DOB", false
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Year", true,
+                "Year", false,
                 InputType.TYPE_CLASS_NUMBER // Corrected input type for numeric input
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Month", true,
+                "Month", false,
                 InputType.TYPE_CLASS_NUMBER // Corrected input type for numeric input
             )
 

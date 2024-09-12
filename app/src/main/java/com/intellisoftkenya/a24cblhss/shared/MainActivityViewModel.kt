@@ -1,17 +1,48 @@
 package com.intellisoftkenya.a24cblhss.shared
 
+import android.util.Log
+import android.view.View
+import android.widget.CheckBox
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.Spinner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
+import kotlinx.coroutines.CoroutineScope
 
-class MainActivityViewModel : ViewModel(){
+class MainActivityViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(){
     // LiveData to hold the selected radio button's value
     private val _radioSelectedOption = MutableLiveData<DbFormData>()
     val radioSelectedOption: LiveData<DbFormData> get() = _radioSelectedOption
+
+
+    private val _missingFields = MutableLiveData<List<DbFormData>>()
+    val missingFields: LiveData<List<DbFormData>> = _missingFields
+
+    private val _formData = MutableLiveData<Map<String, String>>()
+    val formData: LiveData<Map<String, String>> get() = _formData
+
+    fun updateFormData(addedField: ArrayList<DbFormData>) {
+
+        addedField.forEach {
+            val tag = it.tag
+            val text = it.text
+
+            val currentData = _formData.value?.toMutableMap() ?: mutableMapOf()
+            currentData[tag] = text
+            _formData.value = currentData
+        }
+
+    }
+
+    fun updateMissingFields(missingFields: List<DbFormData>) {
+        _missingFields.value = missingFields
+    }
 
     // Method to update LiveData when a new option is selected
     fun updateSelectedOption(option: DbFormData) {
@@ -41,4 +72,6 @@ class MainActivityViewModel : ViewModel(){
             }
         }
     }
+
+
 }
