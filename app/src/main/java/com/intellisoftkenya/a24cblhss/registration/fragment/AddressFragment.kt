@@ -24,7 +24,20 @@ class AddressFragment : Fragment() {
 
     private val viewModel: AddressViewModel by viewModels()
     private lateinit var fieldManager: FieldManager
-    private var countryOriginList = listOf("Kenya", "Uganda")
+    private var countryOriginList = listOf("Kenya", "Uganda", "Tanzania", "Rwanda", "Burundi", "South Sudan")
+    private var kenyaCountyList = listOf(
+        "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo Marakwet", "Embu", "Garissa", "Homa Bay",
+        "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii",
+        "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera",
+        "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", "Nakuru", "Nandi",
+        "Narok", "Nyamira", "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita Taveta",
+        "Tana River", "Tharaka Nithi", "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga",
+        "Wajir", "West Pokot"
+    )
+    private var ugandaDistrictList = listOf(
+        "Kampala", "Mukono", "Wakiso", "Jinja", "Gulu", "Lira", "Mbarara", "Mbale",
+        "Arua", "Fort Portal", "Masaka", "Entebbe", "Kabale", "Soroti", "Hoima"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,20 +84,20 @@ class AddressFragment : Fragment() {
         val dbFieldList = listOf(
             DbField(
                 DbWidgets.SPINNER.name,
-                "County of Origin", true, null,
+                "Country of Origin", true, null,
                 countryOriginList),
             DbField(
                 DbWidgets.SPINNER.name,
-                "County of Residence", true, null,
+                "Country of Residence", true, null,
                 countryOriginList),
             DbField(
                 DbWidgets.SPINNER.name,
                 "Region/Province/County", true, null,
-                countryOriginList),
+                kenyaCountyList),
             DbField(
                 DbWidgets.SPINNER.name,
                 "Sub County", true, null,
-                countryOriginList),
+                ugandaDistrictList),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Ward/Village", true,
