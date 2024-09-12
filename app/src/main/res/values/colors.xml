@@ -7,6 +7,7 @@
     <color name="colorPrimaryDark">#115714</color>
     <color name="colorPrimaryTrans">#41163C94</color>
     <color name="colorAccent">#50BC55</color>
+    <color name="colorAccentTrans">#4A67C16B</color>
     <color name="colorStatusBar">#108816</color>
-    <color name="darker_gray">#997F807F</color>
+    <color name="darker_gray">#867F807F</color>
 </resources>

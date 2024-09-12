@@ -3,6 +3,7 @@ package com.intellisoftkenya.a24cblhss.shared
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -10,9 +11,7 @@ import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
 
-class FormDataAdapter(
-    private val formDataList: ArrayList<FormData>)
-    : RecyclerView.Adapter<FormDataAdapter.FormDataViewHolder>() {
+class FormDataAdapter(private val formDataList: ArrayList<FormData>) : RecyclerView.Adapter<FormDataAdapter.FormDataViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormDataViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_form_data, parent, false)
@@ -30,19 +29,46 @@ class FormDataAdapter(
 
     inner class FormDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
+        private val expandIcon: ImageView = itemView.findViewById(R.id.expandIcon)
         private val contentLayout: LinearLayout = itemView.findViewById(R.id.contentLayout)
 
         fun bind(formData: FormData) {
-            titleTextView.text = formData.title
+            titleTextView.text = toSentenceCase(formData.title)
+
+            // Set default state
+            expandIcon.setImageResource(R.drawable.ic_arrow_down)
+            contentLayout.visibility = View.GONE
 
             // Handle expand/collapse
             titleTextView.setOnClickListener {
-                if (contentLayout.visibility == View.GONE) {
-                    contentLayout.visibility = View.VISIBLE
-                    populateContent(formData.formDataList)
-                } else {
-                    contentLayout.visibility = View.GONE
+                toggleContent()
+            }
+
+            expandIcon.setOnClickListener {
+                toggleContent()
+            }
+        }
+
+        fun toSentenceCase(name:String): String {
+            return name
+                .replace('_', ' ')      // Replace underscores with spaces
+                .lowercase()            // Convert to lowercase
+                .split(' ')             // Split the string into words
+                .joinToString(" ") {    // Join the words with a space, capitalizing the first letter of each word
+                    it.replaceFirstChar { char -> char.uppercase() }
                 }
+        }
+
+        private fun toggleContent() {
+            if (contentLayout.visibility == View.GONE) {
+                // Expand
+                contentLayout.visibility = View.VISIBLE
+                expandIcon.setImageResource(R.drawable.ic_arrow_up)
+                populateContent(formDataList[adapterPosition].formDataList)
+            } else {
+                // Collapse
+                contentLayout.visibility = View.GONE
+                expandIcon.setImageResource(R.drawable.ic_arrow_down)
             }
         }
 
@@ -50,8 +76,7 @@ class FormDataAdapter(
             contentLayout.removeAllViews() // Clear previous content
 
             for (dbFormData in dbFormDataList) {
-                val dbItemView = LayoutInflater.from(contentLayout.context).inflate(
-                    R.layout.list_item_db_form_data, contentLayout, false)
+                val dbItemView = LayoutInflater.from(contentLayout.context).inflate(R.layout.list_item_db_form_data, contentLayout, false)
 
                 val tagTextView: TextView = dbItemView.findViewById(R.id.tagTextView)
                 val textTextView: TextView = dbItemView.findViewById(R.id.textTextView)
@@ -64,4 +89,5 @@ class FormDataAdapter(
         }
     }
 }
+
 

@@ -48,11 +48,13 @@ class SplashFragment : Fragment() {
         val appName = requireContext().getString(R.string.app_name)
         binding = FragmentSplashBinding.inflate(layoutInflater)
         Handler().postDelayed({
-            if (formatterClass.getSharedPref(appName,"isLoggedIn") == "true") {
-                findNavController().navigate(R.id.landingPageFragment)
-            } else {
-                findNavController().navigate(R.id.loginFragment)
-            }
+//            if (formatterClass.getSharedPref(appName,"isLoggedIn") == "true") {
+//                findNavController().navigate(R.id.landingPageFragment)
+//            } else {
+//                findNavController().navigate(R.id.loginFragment)
+//            }
+            findNavController().navigate(R.id.patientRegistrationSummaryFragment)
+
 
         }, 1000)
 

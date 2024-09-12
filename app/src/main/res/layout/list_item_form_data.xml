@@ -3,20 +3,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
 
-    <!-- Title of the FormData -->
-    <TextView
-        android:id="@+id/titleTextView"
+    <!-- Container for title and dropdown/upward icon -->
+    <LinearLayout
+        android:padding="10dp"
+        android:background="@color/colorAccentTrans"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:padding="8dp"
-        android:clickable="true"
-        android:focusable="true" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Title of the FormData -->
+        <TextView
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Title"
+            android:textStyle="bold"
+            android:padding="8dp" />
+
+        <!-- Dropdown/Upward Button -->
+        <ImageView
+            android:id="@+id/expandIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_down" />
+    </LinearLayout>
 
     <!-- Content container for displaying DbFormData list -->
     <LinearLayout
@@ -24,8 +40,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        >
 
         <!-- This will dynamically add content inside the expandable widget -->
     </LinearLayout>
 </LinearLayout>
+
