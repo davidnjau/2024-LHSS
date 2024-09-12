@@ -131,6 +131,12 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
             isFocusable = false // Prevent typing
             background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
             hint = if (isMandatory) "$label *" else label
+
+            // Set drawable to the right (use 0 for other positions if no drawable is needed)
+            val rightIcon = ContextCompat.getDrawable(context, R.drawable.ic_action_date) // Your drawable resource
+            setCompoundDrawablesWithIntrinsicBounds(null, null, rightIcon, null)
+
+
             setOnClickListener {
                 // Show DatePickerDialog on click
                 showDatePickerDialog(this)

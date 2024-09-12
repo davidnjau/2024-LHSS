@@ -4,7 +4,13 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.util.Log
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
 import org.json.JSONObject
 
 import java.text.ParseException
@@ -85,6 +91,52 @@ class FormatterClass(private val context: Context) {
 
         // If none of the formats match, return an error message or handle it as needed
         return null
+    }
+
+    fun extractFormData(rootLayout: LinearLayout, viewModel: MainActivityViewModel) {
+
+        // Traverse through all child views of rootLayout
+        for (i in 0 until rootLayout.childCount) {
+            when (val childView = rootLayout.getChildAt(i)) {
+
+                is RadioGroup -> {
+                    // Get the selected RadioButton ID
+                    val selectedRadioButtonId = childView.checkedRadioButtonId
+                    Log.e("----->", "$selectedRadioButtonId")
+
+                    if (selectedRadioButtonId != -1) {
+                        // Find the selected RadioButton using the selected ID
+                        val selectedRadioButton = childView.findViewById<RadioButton>(selectedRadioButtonId)
+                        val selectedText = selectedRadioButton.text.toString()
+
+                        Log.e("----->selectedRadioButton", "$selectedRadioButton")
+                        Log.e("----->selectedText", selectedText)
+
+
+                        val tag = childView.tag
+                        if (tag != null && selectedText.isNotEmpty()) {
+                            val formData = DbFormData(tag.toString(), selectedText)
+
+                            // Store form data in ViewModel
+                            viewModel.updateFormData(tag.toString(), selectedText)
+                        }
+                    }
+                }
+
+                // Other view types like EditText, Spinner, etc.
+                is EditText -> {
+                    val tag = childView.tag
+                    val text = childView.text.toString()
+
+                    if (tag != null && text.isNotEmpty()) {
+                        val formData = DbFormData(tag.toString(), text)
+
+                        // Store form data in ViewModel
+                        viewModel.updateFormData(tag.toString(), text)
+                    }
+                }
+            }
+        }
     }
 
 

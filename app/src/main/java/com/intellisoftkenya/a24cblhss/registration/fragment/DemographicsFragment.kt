@@ -4,10 +4,13 @@ import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.registration.viewmodel.DemographicsViewModel
 import com.intellisoftkenya.a24cblhss.R
@@ -17,21 +20,24 @@ import com.intellisoftkenya.a24cblhss.dynamic_components.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 
 class DemographicsFragment : Fragment() {
 
     private var _binding: FragmentDemographicsBinding? = null
     private val binding get() = _binding!!
     private lateinit var fieldManager: FieldManager
+    private lateinit var formatterClass: FormatterClass
 
-
-    private val viewModel: DemographicsViewModel by viewModels()
+    private val viewModel: MainActivityViewModel by viewModels()
     private var identificationTypes = listOf("Passport", "Identification Number", "Birth Certificate Number")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // TODO: Use the ViewModel
+
+
     }
 
     override fun onCreateView(
@@ -43,9 +49,20 @@ class DemographicsFragment : Fragment() {
 
         navigationActions()
 
+        formatterClass = FormatterClass(requireContext())
+
+
+        // Observe the LiveData for radio button selection changes
+        viewModel.selectedOption.observe(viewLifecycleOwner) { selectedOption ->
+            // Do something when the radio button selection changes
+            Log.e("********", "User selected: $selectedOption")
+        }
+
         return binding.root
 
     }
+
+
 
     private fun navigationActions() {
         // Set the next button text to "Continue" and add click listeners
@@ -93,8 +110,8 @@ class DemographicsFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Telephone", false,
-                InputType.TYPE_CLASS_PHONE
+                "Telephone", true,
+                InputType.TYPE_CLASS_NUMBER
             ),
             DbField(
                 DbWidgets.SPINNER.name,
@@ -125,8 +142,10 @@ class DemographicsFragment : Fragment() {
 
         )
 
-        FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+        FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
+// Call the extractFormData function to attach listeners to RadioGroups
+        viewModel.extractFormData(binding.rootLayout)
 
     }
 
