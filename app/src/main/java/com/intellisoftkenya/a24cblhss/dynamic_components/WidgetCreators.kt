@@ -102,12 +102,14 @@ class RadioButtonFieldCreator(
         // Create a RadioGroup
         val radioGroup = RadioGroup(context).apply {
             orientation = if (isHorizontal) RadioGroup.HORIZONTAL else RadioGroup.VERTICAL
+            tag = label
         }
 
         // Dynamically add RadioButtons to the RadioGroup
         optionList.forEach { option ->
             val radioButton = RadioButton(context).apply {
                 text = option
+                tag = label
             }
             radioGroup.addView(radioButton)
         }
@@ -135,7 +137,6 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
             // Set drawable to the right (use 0 for other positions if no drawable is needed)
             val rightIcon = ContextCompat.getDrawable(context, R.drawable.ic_action_date) // Your drawable resource
             setCompoundDrawablesWithIntrinsicBounds(null, null, rightIcon, null)
-
 
             setOnClickListener {
                 // Show DatePickerDialog on click

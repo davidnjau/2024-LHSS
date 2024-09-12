@@ -125,4 +125,18 @@ object FormUtils {
         }
     }
 
+    fun removeWidgetByTag(parentLayout: LinearLayout, tag: String) {
+        // Loop through the children of the parent layout
+        for (i in 0 until parentLayout.childCount) {
+            val childView = parentLayout.getChildAt(i)
+            // Check if the child's tag matches the tag to be removed
+            if (childView.tag == tag) {
+                // Remove the view from the parent layout
+                parentLayout.removeView(childView)
+                break // Exit the loop once the view is removed
+            }
+        }
+    }
+
+
 }

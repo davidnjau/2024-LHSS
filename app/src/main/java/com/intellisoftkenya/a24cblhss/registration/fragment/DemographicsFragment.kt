@@ -51,12 +51,50 @@ class DemographicsFragment : Fragment() {
 
         formatterClass = FormatterClass(requireContext())
 
-
         // Observe the LiveData for radio button selection changes
-        viewModel.selectedOption.observe(viewLifecycleOwner) { selectedOption ->
-            // Do something when the radio button selection changes
-            Log.e("********", "User selected: $selectedOption")
+        viewModel.radioSelectedOption.observe(viewLifecycleOwner) { selectedOption ->
+            val tag = selectedOption.tag // Tag of the selected radio button
+            val text = selectedOption.text // Text of the selected radio button
+
+            for (i in 0 until binding.rootLayout.childCount) {
+                val childView = binding.rootLayout.getChildAt(i)
+
+                // You can get the tag or label of the child view. Assuming the tag is set to match the label
+                val tagChildView = childView.tag?.toString() // Get the tag or label for the child view
+
+                if (tag == "Date of Birth") {
+                    if (text == "Estimate") {
+                        // Hide the widget with the label "Select Date of Birth"
+                        if (tagChildView == "DOB") {
+                            childView.visibility = View.GONE
+                        }
+
+                        // Ensure the "Year" and "Month" fields are visible
+                        if (tagChildView == "Year" || tagChildView == "Month") {
+                            childView.visibility = View.VISIBLE
+                        }
+                    }
+
+                    if (text == "Accurate") {
+                        // Hide the "Year" and "Month" widgets
+                        if (tagChildView == "Year" || tagChildView == "Month") {
+                            childView.visibility = View.GONE
+                        }
+
+                        // Ensure the "Select Date of Birth" field is visible
+                        if (tagChildView == "DOB") {
+                            childView.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+
+
+            // For debugging or further logic
+            Log.e("tag ", "$tag")
+            Log.e("text ", "$text")
         }
+
 
         return binding.root
 
@@ -116,7 +154,8 @@ class DemographicsFragment : Fragment() {
             DbField(
                 DbWidgets.SPINNER.name,
                 "Document Type", true, null,
-                identificationTypes),
+                identificationTypes
+            ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Document Number", true,
@@ -136,15 +175,25 @@ class DemographicsFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.DATE_PICKER.name,
-                "Date of Birth",
-                true
+                "DOB", true
+            ),
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Year", true,
+                InputType.TYPE_CLASS_NUMBER // Corrected input type for numeric input
+            ),
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Month", true,
+                InputType.TYPE_CLASS_NUMBER // Corrected input type for numeric input
             )
+
 
         )
 
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
-// Call the extractFormData function to attach listeners to RadioGroups
+        // Call the extractFormData function to attach listeners to RadioGroups
         viewModel.extractFormData(binding.rootLayout)
 
     }

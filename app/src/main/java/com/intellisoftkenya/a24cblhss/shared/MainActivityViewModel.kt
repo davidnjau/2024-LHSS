@@ -6,34 +6,16 @@ import android.widget.RadioGroup
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
 
 class MainActivityViewModel : ViewModel(){
-    // LiveData to hold the form data
-    private val _formData = MutableLiveData<MutableMap<String, String>>()
-    val formData: LiveData<MutableMap<String, String>> get() = _formData
-
-    // Initialize the form data map
-    private val formDataMap = mutableMapOf<String, String>()
-
     // LiveData to hold the selected radio button's value
-    private val _selectedOption = MutableLiveData<String>()
-    val selectedOption: LiveData<String> get() = _selectedOption
+    private val _radioSelectedOption = MutableLiveData<DbFormData>()
+    val radioSelectedOption: LiveData<DbFormData> get() = _radioSelectedOption
 
     // Method to update LiveData when a new option is selected
-    fun updateSelectedOption(option: String) {
-        _selectedOption.value = option
-    }
-
-    // Update form data when any field is filled or modified
-    fun updateFormData(key: String, value: String) {
-        formDataMap[key] = value
-        _formData.value = formDataMap
-    }
-
-    // Optionally clear form data if needed
-    fun clearFormData() {
-        formDataMap.clear()
-        _formData.value = formDataMap
+    fun updateSelectedOption(option: DbFormData) {
+        _radioSelectedOption.value = option
     }
 
     // Function to extract form data, including radio button selections
@@ -46,9 +28,13 @@ class MainActivityViewModel : ViewModel(){
                     childView.setOnCheckedChangeListener { group, checkedId ->
                         val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
                         val selectedText = selectedRadioButton.text.toString()
+                        val tag = childView.tag
 
-                        // Update LiveData with the new radio button selection
-                        updateSelectedOption(selectedText)
+                        if (tag != null && selectedText.isNotEmpty()) {
+                            val formData = DbFormData(tag.toString(), selectedText)
+                            // Update LiveData with the new radio button selection
+                            updateSelectedOption(formData)
+                        }
                     }
                 }
 

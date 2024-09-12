@@ -118,7 +118,7 @@ class FormatterClass(private val context: Context) {
                             val formData = DbFormData(tag.toString(), selectedText)
 
                             // Store form data in ViewModel
-                            viewModel.updateFormData(tag.toString(), selectedText)
+//                            viewModel.updateFormData(tag.toString(), selectedText)
                         }
                     }
                 }
@@ -132,7 +132,7 @@ class FormatterClass(private val context: Context) {
                         val formData = DbFormData(tag.toString(), text)
 
                         // Store form data in ViewModel
-                        viewModel.updateFormData(tag.toString(), text)
+//                        viewModel.updateFormData(tag.toString(), text)
                     }
                 }
             }
