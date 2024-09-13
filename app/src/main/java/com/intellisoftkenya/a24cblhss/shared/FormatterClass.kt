@@ -35,20 +35,30 @@ class FormatterClass(private val context: Context) {
     }
 
     fun getSharedPref(
-        sharedPrefName:String = context.getString(R.string.app_name),
+        sharedPrefName:String,
         key: String): String? {
+        val sharedPreferenceName = if (sharedPrefName == ""){
+            context.getString(R.string.app_name)
+        }else{
+            sharedPrefName
+        }
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
+            context.getSharedPreferences(sharedPreferenceName, MODE_PRIVATE)
         return sharedPreferences.getString(key, null)
 
     }
 
 
     fun deleteSharedPref(
-        sharedPrefName:String = context.getString(R.string.app_name),
+        sharedPrefName:String,
         key: String) {
+        val sharedPreferenceName = if (sharedPrefName == ""){
+            context.getString(R.string.app_name)
+        }else{
+            sharedPrefName
+        }
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
+            context.getSharedPreferences(sharedPreferenceName, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.remove(key);
         editor.apply();
@@ -93,6 +103,29 @@ class FormatterClass(private val context: Context) {
 
         // If none of the formats match, return an error message or handle it as needed
         return null
+    }
+
+    fun getNameFields(formDataList: ArrayList<FormData>): String {
+        var firstName: String = ""
+        var middleName: String = ""
+        var lastName: String = ""
+
+        // Loop through formDataList
+        formDataList.forEach { formData ->
+            if (formData.title == "DEMOGRAPHICS") {
+                // Loop through the list of DbFormData
+                formData.formDataList.forEach { dbFormData ->
+                    when (dbFormData.tag) {
+                        "First Name" -> firstName = dbFormData.text
+                        "Middle Name" -> middleName = dbFormData.text
+                        "Last Name" -> lastName = dbFormData.text
+                    }
+                }
+            }
+        }
+
+        // Return a Triple containing the First Name, Middle Name, and Last Name
+        return "$firstName $middleName $lastName"
     }
 
 

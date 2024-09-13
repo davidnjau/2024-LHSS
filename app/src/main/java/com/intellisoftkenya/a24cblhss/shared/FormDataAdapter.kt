@@ -37,6 +37,8 @@ class FormDataAdapter(private val formDataList: ArrayList<FormData>) : RecyclerV
             expandIcon.setImageResource(R.drawable.ic_arrow_down)
             contentLayout.visibility = View.GONE
 
+            toggleContent()
+
             // Handle expand/collapse
             titleTextView.setOnClickListener {
                 toggleContent()
@@ -47,7 +49,7 @@ class FormDataAdapter(private val formDataList: ArrayList<FormData>) : RecyclerV
             }
         }
 
-        fun toSentenceCase(name:String): String {
+        private fun toSentenceCase(name:String): String {
             return name
                 .replace('_', ' ')      // Replace underscores with spaces
                 .lowercase()            // Convert to lowercase

@@ -42,6 +42,13 @@ class PatientRegistrationSummaryFragment : Fragment() {
     private lateinit var formDataAdapter: FormDataAdapter
     private lateinit var fhirEngine: FhirEngine
 
+    private val navigationDetails = DbNavigationDetails.PATIENT_REGISTRATION.name
+    private val registrationClassesList = listOf(
+        DbClasses.DEMOGRAPHICS.name,
+        DbClasses.ADDRESS.name,
+        DbClasses.NEXT_OF_KIN.name,
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -103,6 +110,10 @@ class PatientRegistrationSummaryFragment : Fragment() {
 
                 savedResources = ArrayList(viewModelPatientSummary.createPatientResource(formDataList))
 
+                registrationClassesList.forEach {
+                    formatterClass.deleteSharedPref(navigationDetails, it)
+                }
+
             }.join()
 
             progressDialog.dismiss()
@@ -133,26 +144,22 @@ class PatientRegistrationSummaryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val gson = Gson()
 
-        val navigationDetails = DbNavigationDetails.PATIENT_REGISTRATION.name
-        val registrationClassesList = listOf(
-            DbClasses.DEMOGRAPHICS.name,
-            DbClasses.ADDRESS.name,
-            DbClasses.NEXT_OF_KIN.name,
-        )
         registrationClassesList.forEach {
             val savedJson = formatterClass.getSharedPref(navigationDetails, it)
             val formDataFromJson = gson.fromJson(savedJson, FormData::class.java)
             formDataList.addAll(listOf(formDataFromJson))
         }
 
-        formDataAdapter = FormDataAdapter(formDataList)
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        if (formDataList.isEmpty()){
+            findNavController().navigate(R.id.landingPageFragment)
+        }else{
+            formDataAdapter = FormDataAdapter(formDataList)
+            binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
-        binding.recyclerView.adapter = formDataAdapter
-
+            binding.recyclerView.adapter = formDataAdapter
+        }
 
     }
 

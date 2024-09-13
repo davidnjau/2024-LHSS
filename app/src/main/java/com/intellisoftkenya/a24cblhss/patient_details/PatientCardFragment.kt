@@ -3,6 +3,7 @@ package com.intellisoftkenya.a24cblhss.patient_details
 import android.app.Application
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -68,7 +69,6 @@ class PatientCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         binding.btnReferrals.setOnClickListener {
             findNavController().navigate(R.id.action_patientCardFragment_to_referralListFragment)
         }
@@ -77,10 +77,15 @@ class PatientCardFragment : Fragment() {
         }
 
         val formDataList = patientDetailsViewModel.getPatientInfo()
+
         formDataAdapter = FormDataAdapter(formDataList)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         binding.recyclerView.adapter = formDataAdapter
+
+        val fullName = formatterClass.getNameFields(formDataList)
+        binding.tvFullName.text = fullName
+
     }
 
     override fun onDestroyView() {
