@@ -1,11 +1,10 @@
-package com.intellisoftkenya.a24cblhss.patient_details
+package com.intellisoftkenya.a24cblhss.patient_details.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
-import com.google.android.fhir.logicalId
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
@@ -13,7 +12,6 @@ import com.intellisoftkenya.a24cblhss.shared.FormData
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
-import timber.log.Timber
 
 class PatientCardViewModel(
     application: Application,

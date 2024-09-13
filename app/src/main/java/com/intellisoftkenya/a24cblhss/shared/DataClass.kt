@@ -53,4 +53,10 @@ data class DbFormData(
     val tag: String,
     val text: String,
 )
+data class DbPatientItem(
+    val id: String,
+    val name: String,
+    val crossBorderId:String,
+    val dob:String
+)
 

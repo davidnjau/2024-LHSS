@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".patient_details.PatientCardFragment">
+    tools:context=".patient_details.fragment.PatientCardFragment">
 
     <LinearLayout
         android:orientation="vertical"

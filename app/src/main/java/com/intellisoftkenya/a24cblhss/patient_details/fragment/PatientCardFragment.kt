@@ -1,9 +1,7 @@
-package com.intellisoftkenya.a24cblhss.patient_details
+package com.intellisoftkenya.a24cblhss.patient_details.fragment
 
 import android.app.Application
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
 import com.intellisoftkenya.a24cblhss.R
-import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentPatientCardBinding
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
+import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientCardViewModel
+import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientDetailsViewModelFactory
 import com.intellisoftkenya.a24cblhss.shared.FormDataAdapter
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 

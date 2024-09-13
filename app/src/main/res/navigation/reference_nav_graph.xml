@@ -68,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/patientListFragment"
-        android:name="com.intellisoftkenya.a24cblhss.auth.fragment.PatientListFragment"
+        android:name="com.intellisoftkenya.a24cblhss.patient_details.fragment.PatientListFragment"
         android:label="@string/search_patient"
         tools:layout="@layout/fragment_patient_list" >
         <action
@@ -118,7 +118,7 @@
     </fragment>
     <fragment
         android:id="@+id/patientCardFragment"
-        android:name="com.intellisoftkenya.a24cblhss.patient_details.PatientCardFragment"
+        android:name="com.intellisoftkenya.a24cblhss.patient_details.fragment.PatientCardFragment"
         android:label="@string/patient_card"
         tools:layout="@layout/fragment_patient_card" >
         <action
