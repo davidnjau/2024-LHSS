@@ -7,11 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.AcknoledgementDetailsViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentAcknoledgementDetailsBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbClasses
+import com.intellisoftkenya.a24cblhss.dynamic_components.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormDataAdapter
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 class AcknoledgementDetailsFragment : Fragment() {
 
@@ -20,6 +27,9 @@ class AcknoledgementDetailsFragment : Fragment() {
     private lateinit var fieldManager: FieldManager
 
     private val viewModel: AcknoledgementDetailsViewModel by viewModels()
+    private lateinit var formatterClass: FormatterClass
+    private var formDataList = ArrayList<FormData>()
+    private lateinit var formDataAdapter: FormDataAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +45,8 @@ class AcknoledgementDetailsFragment : Fragment() {
         _binding = FragmentAcknoledgementDetailsBinding.inflate(inflater, container, false)
 
         navigationActions()
+
+        formatterClass = FormatterClass(requireContext())
 
         return binding.root
     }
@@ -57,6 +69,29 @@ class AcknoledgementDetailsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val gson = Gson()
+
+        val navigationDetails = DbNavigationDetails.REFERRALS.name
+        val registrationClassesList = listOf(
+            DbClasses.ACKNOWLEDGEMENT_FORM.name
+        )
+        registrationClassesList.forEach {
+            val savedJson = formatterClass.getSharedPref(navigationDetails, it)
+            if (savedJson != null){
+                val formDataFromJson = gson.fromJson(savedJson, FormData::class.java)
+                if (formDataFromJson != null){
+                    formDataList.addAll(listOf(formDataFromJson))
+                }
+            }
+
+        }
+
+        formDataAdapter = FormDataAdapter(formDataList)
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+
+        binding.recyclerView.adapter = formDataAdapter
+
     }
     override fun onDestroyView() {
         super.onDestroyView()

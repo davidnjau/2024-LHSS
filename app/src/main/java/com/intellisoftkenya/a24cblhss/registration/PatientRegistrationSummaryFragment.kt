@@ -72,6 +72,9 @@ class PatientRegistrationSummaryFragment : Fragment() {
         navigationButtons.setNextButtonClickListener {
             // Handle next button click
             // Navigate to the next fragment or perform any action
+
+
+
             findNavController().navigate(R.id.action_patientRegistrationSummaryFragment_to_patientCardFragment)
         }
     }

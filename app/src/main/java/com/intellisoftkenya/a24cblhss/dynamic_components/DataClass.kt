@@ -9,11 +9,6 @@ data class DbField(
     val optionList : List<String> = emptyList()
 )
 
-data class DbFormData(
-    val tag: String,
-    val text: String,
-)
-
 data class DbCounty(
     val id: Int,
     val name: String
@@ -31,7 +26,8 @@ enum class DbWidgets{
 }
 enum class DbNavigationDetails{
     PATIENT_REGISTRATION,
-    REFER_PATIENT
+    REFER_PATIENT,
+    REFERRALS
 }
 enum class DbClasses{
     DEMOGRAPHICS,
@@ -43,6 +39,8 @@ enum class DbClasses{
     CLINICAL_REFERRAL_I,
     CLINICAL_REFERRAL_II,
     CLINICAL_REFERRAL_III,
+
+    ACKNOWLEDGEMENT_FORM
 }
 
 
@@ -51,4 +49,8 @@ data class FormData(
     val formDataList: ArrayList<DbFormData>
 )
 
+data class DbFormData(
+    val tag: String,
+    val text: String,
+)
 
