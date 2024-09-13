@@ -1,5 +1,6 @@
 package com.intellisoftkenya.a24cblhss.registration
 
+import android.app.ProgressDialog
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,6 +23,10 @@ import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormDataAdapter
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class PatientRegistrationSummaryFragment : Fragment() {
     private var _binding: FragmentPatientRegistrationSummaryBinding? = null
@@ -76,15 +81,53 @@ class PatientRegistrationSummaryFragment : Fragment() {
             // Handle next button click
             // Navigate to the next fragment or perform any action
 
-            viewModelPatientSummary.createPatientResource(formDataList)
+            submitData()
 
-            val blurBackgroundDialog = BlurBackgroundDialog(requireContext(),
-                "Patient Registered Successfully.",
-                this,
-                R.id.action_patientRegistrationSummaryFragment_to_patientCardFragment
-            )
-            blurBackgroundDialog.show()
         }
+    }
+
+    private fun submitData() {
+
+        CoroutineScope(Dispatchers.Main).launch {
+
+            val progressDialog = ProgressDialog(requireContext())
+            progressDialog.setTitle("Please wait")
+            progressDialog.setMessage("Patient is being saved.")
+            progressDialog.setCanceledOnTouchOutside(false)
+            progressDialog.show()
+
+            var savedResources = ArrayList<String>()
+
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+
+                savedResources = ArrayList(viewModelPatientSummary.createPatientResource(formDataList))
+
+            }.join()
+
+            progressDialog.dismiss()
+
+            val blurBackgroundDialog = if (savedResources.isNotEmpty()){
+                //Save was okay
+                BlurBackgroundDialog(requireContext(),
+                    "Patient Registered Successfully.",
+                    this@PatientRegistrationSummaryFragment,
+                    R.id.action_patientRegistrationSummaryFragment_to_patientCardFragment
+                )
+            }else{
+                //Save was not okay
+                BlurBackgroundDialog(requireContext(),
+                    "There was an issue with the registration.",
+                    this@PatientRegistrationSummaryFragment,
+                    R.id.landingPageFragment
+                )
+            }
+            blurBackgroundDialog.show()
+
+
+
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -8,16 +8,27 @@ import com.intellisoftkenya.a24cblhss.R
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.UUID
 
 class FormatterClass(private val context: Context) {
 
+    fun generateUuid(): String {
+        return UUID.randomUUID().toString()
+    }
+
     fun saveSharedPref(
-        sharedPrefName:String = context.getString(R.string.app_name),
+        sharedPrefName:String,
         key: String,
         value: String)
     {
+        val sharedPreferenceName = if (sharedPrefName == ""){
+            context.getString(R.string.app_name)
+        }else{
+            sharedPrefName
+        }
+
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences(sharedPrefName, MODE_PRIVATE)
+            context.getSharedPreferences(sharedPreferenceName, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putString(key, value);
         editor.apply();

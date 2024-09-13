@@ -10,9 +10,12 @@ import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Address
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.ContactPoint
@@ -35,8 +38,9 @@ class PatientRegistrationSummaryViewModel(
         FhirApplication.fhirEngine(application.applicationContext)
 
     // Function to create FHIR Patient resource from FormDataList
-    private fun createPatientResourceBac(formDataList: ArrayList<FormData>): Patient {
+    private suspend fun createPatientResourceBac(formDataList: ArrayList<FormData>):List<String> {
         val patient = Patient()
+        val formatterClass = FormatterClass(getApplication<Application>().applicationContext)
 
         formDataList.forEach { formData ->
             when (formData.title) {
@@ -61,6 +65,8 @@ class PatientRegistrationSummaryViewModel(
                 DbClasses.ADDRESS.name -> {
                     val address = Address()
                     formData.formDataList.forEach { dbFormData ->
+                        address.text = dbFormData.tag
+
                         when (dbFormData.tag) {
                             "Country of Origin", "Country of Residence" -> {
                                 address.country = dbFormData.text
@@ -80,22 +86,21 @@ class PatientRegistrationSummaryViewModel(
                 }
             }
         }
+        val id = formatterClass.generateUuid()
+        patient.id = id
 
-        return patient
+        formatterClass.saveSharedPref("","patientId",id)
+
+       return saveResourceToDatabase(patient, "Patient")
     }
 
-    fun createPatientResource(formDataList: ArrayList<FormData>){
-        CoroutineScope(Dispatchers.IO).launch {
-            val patient = createPatientResourceBac(formDataList)
-            saveResourceToDatabase(patient, "Patient")
-        }
+    fun createPatientResource(formDataList: ArrayList<FormData>) = runBlocking{
+        createPatientResourceBac(formDataList)
     }
 
-    private suspend fun saveResourceToDatabase(resource: Resource, type: String) {
-
+    private suspend fun saveResourceToDatabase(resource: Resource, type: String) :List<String>{
         Log.e("----", "----$type")
-        fhirEngine.create(resource)
-
+        return fhirEngine.create(resource)
     }
 
     // Helper function to add name to Patient resource
