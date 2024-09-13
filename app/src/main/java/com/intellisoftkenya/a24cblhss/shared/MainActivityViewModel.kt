@@ -1,19 +1,12 @@
 package com.intellisoftkenya.a24cblhss.shared
 
-import android.util.Log
-import android.view.View
-import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.Spinner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
-import kotlinx.coroutines.CoroutineScope
 
 class MainActivityViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(){
     // LiveData to hold the selected radio button's value

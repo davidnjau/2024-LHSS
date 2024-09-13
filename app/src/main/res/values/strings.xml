@@ -24,5 +24,6 @@
     <string name="refer_patient_review">Refer Patient Review</string>
     <string name="acknowledgement_form_review">Acknowledgement Form Review</string>
     <string name="referral_details">Referral Details</string>
+    <string name="success">Success</string>
 
 </resources>

@@ -1,15 +1,12 @@
 package com.intellisoftkenya.a24cblhss.registration.viewmodel
 
-import android.view.View
-import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.Spinner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
+import com.intellisoftkenya.a24cblhss.shared.DbFormData
 
 class DemographicsViewModel : ViewModel() {
 

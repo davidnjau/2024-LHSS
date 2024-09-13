@@ -10,12 +10,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
-import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentReviewReferBinding
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbClasses
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbNavigationDetails
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
-import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ReviewReferViewModel
 import com.intellisoftkenya.a24cblhss.shared.FormDataAdapter
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass

@@ -8,8 +8,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoftkenya.a24cblhss.R
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
-import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
 
 class FormDataAdapter(private val formDataList: ArrayList<FormData>) : RecyclerView.Adapter<FormDataAdapter.FormDataViewHolder>() {
 

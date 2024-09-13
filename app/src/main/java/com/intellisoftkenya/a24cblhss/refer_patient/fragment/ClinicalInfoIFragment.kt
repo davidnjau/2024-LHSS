@@ -13,14 +13,13 @@ import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ClinicalInfoIViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoIBinding
-import com.intellisoftkenya.a24cblhss.databinding.FragmentDemographicsBinding
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbClasses
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbField
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbNavigationDetails
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbWidgets
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
+import com.intellisoftkenya.a24cblhss.shared.DbField
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
+import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
-import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 

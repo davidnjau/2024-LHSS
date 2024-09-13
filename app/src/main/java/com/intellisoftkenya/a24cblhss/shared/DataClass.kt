@@ -1,4 +1,4 @@
-package com.intellisoftkenya.a24cblhss.dynamic_components
+package com.intellisoftkenya.a24cblhss.shared
 
 data class DbField(
     val widgets: String,

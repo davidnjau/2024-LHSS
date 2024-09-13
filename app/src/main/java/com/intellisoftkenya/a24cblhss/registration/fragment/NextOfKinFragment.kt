@@ -3,7 +3,6 @@ package com.intellisoftkenya.a24cblhss.registration.fragment
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +13,13 @@ import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.registration.viewmodel.NextOfKinViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentNextOfKinBinding
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbClasses
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbField
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbNavigationDetails
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbWidgets
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
+import com.intellisoftkenya.a24cblhss.shared.DbField
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
+import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
-import com.intellisoftkenya.a24cblhss.dynamic_components.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel

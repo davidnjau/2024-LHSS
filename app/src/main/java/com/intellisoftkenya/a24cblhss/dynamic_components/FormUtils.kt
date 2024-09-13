@@ -1,6 +1,5 @@
 package com.intellisoftkenya.a24cblhss.dynamic_components
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.view.View
 import android.widget.CheckBox
@@ -10,7 +9,9 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
-import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
+import com.intellisoftkenya.a24cblhss.shared.DbField
+import com.intellisoftkenya.a24cblhss.shared.DbFormData
+import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 
 object FormUtils {
     fun extractFormData(

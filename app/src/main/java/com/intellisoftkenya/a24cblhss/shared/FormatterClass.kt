@@ -3,31 +3,11 @@ package com.intellisoftkenya.a24cblhss.shared
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.content.res.Resources
-import android.util.Log
-import android.view.View
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Spinner
 import com.intellisoftkenya.a24cblhss.R
-import com.intellisoftkenya.a24cblhss.dynamic_components.DbFormData
-import org.json.JSONObject
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.Period
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
-import java.util.Calendar
-import java.util.Date
 import java.util.Locale
-import java.util.UUID
-import kotlin.math.abs
-import kotlin.random.Random
 
 class FormatterClass(private val context: Context) {
 
