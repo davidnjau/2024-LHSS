@@ -3,6 +3,7 @@ package com.intellisoftkenya.a24cblhss.referrals.fragment
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +32,8 @@ class AcknoledgementFormFragment : Fragment() {
 
     private val viewModel: AcknoledgementFormViewModel by viewModels()
     private lateinit var formatterClass: FormatterClass
+    private var patientId:String = ""
+    private var serviceRequestId:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +50,10 @@ class AcknoledgementFormFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
+
+        patientId = formatterClass.getSharedPref("", "patientId") ?: ""
+        serviceRequestId = formatterClass.getSharedPref("", "serviceRequestId") ?: ""
+
 
         return binding.root
 
