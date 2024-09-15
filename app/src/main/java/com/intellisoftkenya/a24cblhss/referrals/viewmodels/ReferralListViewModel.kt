@@ -1,7 +1,148 @@
 package com.intellisoftkenya.a24cblhss.referrals.viewmodels
 
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.search.StringFilterModifier
+import com.google.android.fhir.search.count
+import com.google.android.fhir.search.search
+import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientListViewModel
+import com.intellisoftkenya.a24cblhss.shared.DbPatientItem
+import com.intellisoftkenya.a24cblhss.shared.DbServiceRequest
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.Patient
+import org.hl7.fhir.r4.model.ServiceRequest
 
-class ReferralListViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class ReferralListViewModel(
+    application: Application,
+    private val fhirEngine: FhirEngine
+) : AndroidViewModel(application) {
+
+    val liveSearchedPatients = MutableLiveData<List<DbServiceRequest?>>()
+    val patientCount = MutableLiveData<Long>()
+    val formatterClass = FormatterClass(application.applicationContext)
+
+    init {
+        updatePatientListAndPatientCount({ getSearchResults() }, { count() })
+    }
+
+    private fun updatePatientListAndPatientCount(
+        search: suspend () -> List<DbServiceRequest?>,
+        count: suspend () -> Long,
+    ) {
+        viewModelScope.launch {
+            liveSearchedPatients.value = search()
+            patientCount.value = count()
+        }
+    }
+
+    private suspend fun count(nameQuery: String = ""): Long {
+        return fhirEngine.count<Patient> {
+            if (nameQuery.isNotEmpty()) {
+                filter(
+                    Patient.NAME,
+                    {
+                        modifier = StringFilterModifier.CONTAINS
+                        value = nameQuery
+                    },
+                )
+            }
+        }
+    }
+
+    fun searchPatientsByName(nameQuery: String) {
+        updatePatientListAndPatientCount({ getSearchResults(nameQuery) }, { count(nameQuery) })
+    }
+
+    private suspend fun getSearchResults(nameQuery: String = "", patientId: String = ""):
+            ArrayList<DbServiceRequest?> {
+
+        var patients: MutableList<DbServiceRequest?> = mutableListOf()
+
+        fhirEngine
+            .search<ServiceRequest> {
+                if (patientId != ""){
+                    filter(ServiceRequest.PATIENT, { value = patientId })
+                }
+
+            }
+            .mapIndexed { index, fhirPatient -> createServiceRequest(fhirPatient.resource) }
+            .let { patients.addAll(it) }
+
+
+        return ArrayList(patients)
+    }
+
+    private fun createServiceRequest(resource: ServiceRequest):DbServiceRequest? {
+
+        val id = resource.id.replace("ServiceRequest/","")
+        val patient = if (resource.hasSubject())
+            resource.subject.referenceElement_
+                .toString().replace("Patient/","")
+        else ""
+        val status = if (resource.hasStatus()) resource.status.toString() else ""
+        val occurrenceDateTime = if (resource.hasOccurrenceDateTimeType()) resource.occurrenceDateTimeType.toString().replace("DateTimeType[", "") else null
+        val supportingInfo = if (resource.hasSupportingInfo()) resource.supportingInfo else emptyList()
+        val reasonCodeList = if (resource.hasReasonCode()) resource.reasonCode else emptyList()
+        var isReferral = false
+        var display = ""
+
+        reasonCodeList.forEach {
+
+            val text = if (it.hasText()) it.text else ""
+            if (text == "REFERRAL_MODULE") isReferral = true
+            if (text == "REASON_FOR_REFERRAL"){
+                val coding = if (it.hasCoding()) it.codingFirstRep else null
+                if (coding != null){
+                    display = if (coding.hasDisplay()) coding.displayElement.toString() else ""
+                }
+            }
+        }
+
+        if (isReferral){
+
+            var convertedDate = ""
+            if (occurrenceDateTime != null){
+
+                val convertedDateString = formatterClass
+                    .convertDateFormat(occurrenceDateTime.toString().replace("]",""))
+
+                if (convertedDateString != null){
+                    convertedDate = convertedDateString.toString()
+                }
+            }
+
+            val dbServiceRequest = DbServiceRequest(
+                id,
+                patient,
+                status,
+                convertedDate,
+                ArrayList(supportingInfo),
+                display
+            )
+            return dbServiceRequest
+        }
+
+        return null
+    }
+
+    class PatientListViewModelFactory(
+        private val application: Application,
+        private val fhirEngine: FhirEngine,
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(ReferralListViewModel::class.java)) {
+                return ReferralListViewModel(application, fhirEngine) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+
 }

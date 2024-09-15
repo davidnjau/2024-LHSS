@@ -1,5 +1,7 @@
 package com.intellisoftkenya.a24cblhss.shared
 
+import org.hl7.fhir.r4.model.Reference
+
 data class DbField(
     val widgets: String,
     val label: String,
@@ -58,5 +60,13 @@ data class DbPatientItem(
     val name: String,
     val crossBorderId:String,
     val dob:String
+)
+data class DbServiceRequest(
+    val id:String,
+    val patientId: String,
+    val status: String,
+    val dateRecorded: String,
+    val encounterList: ArrayList<Reference>,
+    val referralReason: String
 )
 

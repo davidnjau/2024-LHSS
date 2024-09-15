@@ -37,5 +37,9 @@
     <string name="_072bedf">072bedf</string>
     <string name="date_of_birth">Date of Birth</string>
     <string name="_2024_03_04">2024-03-04</string>
+    <string name="referral_reason">Referral Reason</string>
+    <string name="referral_id">Referral Id</string>
+    <string name="referral_date">Referral Date</string>
+    <string name="total_referrals_0">Total Referrals: 0</string>
 
 </resources>

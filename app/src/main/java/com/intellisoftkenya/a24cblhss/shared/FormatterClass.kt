@@ -97,6 +97,7 @@ class FormatterClass(private val context: Context) {
                     return SimpleDateFormat("MMM d yyyy", Locale.getDefault()).format(it)
                 }
             } catch (e: ParseException) {
+                e.printStackTrace()
                 // Continue to the next format if parsing fails
             }
         }

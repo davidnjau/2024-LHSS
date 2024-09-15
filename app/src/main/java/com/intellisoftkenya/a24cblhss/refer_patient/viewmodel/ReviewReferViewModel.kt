@@ -34,6 +34,20 @@ class ReviewReferViewModel (
                              requesterId: String?)= runBlocking {
         generateServiceRequest(formDataList,patientId, requesterId )
     }
+
+    fun getReasonForReferral(formDataList: List<FormData>): String? {
+        // Find the FormData with the title "REFERRAL_INFO"
+        val referralInfo = formDataList.find { it.title == "REFERRAL_INFO" }
+
+        // If found, find the DbFormData with the tag "Reason for Referral"
+        val reasonForReferral = referralInfo?.formDataList?.find { it.tag == "Reason for Referral" }
+
+        // Return the text (i.e., the value) of the "Reason for Referral", or null if not found
+        return reasonForReferral?.text
+    }
+
+
+
     private suspend fun generateServiceRequest(
         formDataList: List<FormData>,
         patientId: String,
@@ -47,8 +61,37 @@ class ReviewReferViewModel (
         if (requesterId != null){
             serviceRequest.requester = Reference("Practitioner/$requesterId")
         }
-        serviceRequest.reasonCode = listOf(
-            CodeableConcept().setText("Referral Reason"))
+
+
+        val reasonCodeList = ArrayList<CodeableConcept>()
+
+        val referralReason = getReasonForReferral(formDataList)
+        if (referralReason != null){
+            val codeableConcept = CodeableConcept()
+            codeableConcept.text = "REASON_FOR_REFERRAL"
+
+            val codingList = ArrayList<Coding>()
+
+            val coding = Coding()
+            coding.id = formatterClass.generateUuid()
+            coding.display = referralReason
+            coding.code = generateRandomLoincCode()
+            codingList.add(coding)
+
+            codeableConcept.coding = codingList
+            codeableConcept.id = formatterClass.generateUuid()
+
+            reasonCodeList.add(codeableConcept)
+        }
+
+        val codeableConcept = CodeableConcept()
+        codeableConcept.text = "REFERRAL_MODULE"
+        codeableConcept.id = formatterClass.generateUuid()
+        reasonCodeList.add(codeableConcept)
+
+
+        serviceRequest.reasonCode = reasonCodeList
+
         serviceRequest.occurrence = DateTimeType.now()
         serviceRequest.supportingInfo = ArrayList()
 

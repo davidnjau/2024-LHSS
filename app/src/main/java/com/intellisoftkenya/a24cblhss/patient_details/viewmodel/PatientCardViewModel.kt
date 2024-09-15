@@ -106,9 +106,11 @@ class PatientCardViewModel(
                 if (patient.hasContact()) {
                     patient.contact.forEach { k ->
 
-                        val name = k.name.nameAsSingleString
-                        val phone = k.telecomFirstRep.value
-                        val rshp = k.relationshipFirstRep.text
+                        val name = if (k.hasName()) {
+                            k.name.nameAsSingleString.toString()
+                        } else ""
+                        val phone = if (k.hasTelecom()) k.telecomFirstRep.value else ""
+                        val rshp = if (k.hasRelationship()) k.relationshipFirstRep.text else ""
 
                         kinFormDataList.add(
                             DbFormData("Full Name", name)
