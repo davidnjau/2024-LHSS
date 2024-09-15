@@ -42,6 +42,7 @@ class PatientRegistrationSummaryFragment : Fragment() {
     private lateinit var formDataAdapter: FormDataAdapter
     private lateinit var fhirEngine: FhirEngine
 
+
     private val navigationDetails = DbNavigationDetails.PATIENT_REGISTRATION.name
     private val registrationClassesList = listOf(
         DbClasses.DEMOGRAPHICS.name,
@@ -61,6 +62,7 @@ class PatientRegistrationSummaryFragment : Fragment() {
     ): View {
 
         _binding = FragmentPatientRegistrationSummaryBinding.inflate(inflater, container, false)
+
 
         viewModel = ViewModelProvider(this,
             SavedStateViewModelFactory(requireActivity().application, this))

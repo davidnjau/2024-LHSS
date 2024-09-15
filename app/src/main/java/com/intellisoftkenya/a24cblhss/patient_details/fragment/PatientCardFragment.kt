@@ -84,6 +84,8 @@ class PatientCardFragment : Fragment() {
 
         val fullName = formatterClass.getNameFields(formDataList)
         binding.tvFullName.text = fullName
+        val crossBorderId = "Cross Border Id: ${patientId.substring(0,6)}"
+        binding.tvCrossBorderId.text = crossBorderId
 
     }
 
