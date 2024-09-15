@@ -1,14 +1,18 @@
 package com.intellisoftkenya.a24cblhss.referrals.fragment
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
+import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentReferralListBinding
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralListViewModel
@@ -85,10 +89,11 @@ class ReferralListFragment : Fragment() {
             // Initialize RecyclerView and adapter
             val patientAdapter = PatientReferralAdapter(requestList) { selectedPatient ->
 
-                val id = selectedPatient?.id
-//                formatterClass.saveSharedPref("","patientId", id)
-//                findNavController().navigate(R.id.action_patientListFragment_to_patientCardFragment)
+                val serviceId = selectedPatient?.id
+                showReceivePatientDialog()
 
+                formatterClass.saveSharedPref("","serviceRequestId", serviceId.toString())
+                
             }
 
             binding.patientRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -99,6 +104,34 @@ class ReferralListFragment : Fragment() {
 
         }
     }
+
+
+    fun showReceivePatientDialog() {
+        // Create an AlertDialog builder
+        val builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle("Receive Patient")
+        // Set dialog message
+        builder.setMessage("Do you want to Receive the Patient?\n\n" +
+                "When you choose to receive patient you will fill in an acknowledgement form. ")
+
+        // Set Yes button and its action
+        builder.setPositiveButton("Yes") { dialog, _ ->
+            // Trigger the form when Yes is clicked
+            dialog.dismiss() // Close the dialog
+            findNavController().navigate(R.id.action_referralListFragment_to_referralDetailsFragment)
+        }
+
+        // Set No button and its action
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss() // Just close the dialog when No is clicked
+        }
+
+        // Create and show the dialog
+        val dialog = builder.create()
+        dialog.show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
