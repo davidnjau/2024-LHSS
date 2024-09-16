@@ -21,15 +21,17 @@ import org.hl7.fhir.r4.model.ServiceRequest
 
 class ReferralListViewModel(
     application: Application,
-    private val fhirEngine: FhirEngine
+    private val fhirEngine: FhirEngine,
+    patientId: String
 ) : AndroidViewModel(application) {
 
     val liveSearchedPatients = MutableLiveData<List<DbServiceRequest?>>()
     val patientCount = MutableLiveData<Long>()
     val formatterClass = FormatterClass(application.applicationContext)
+    val patientIdValue = patientId
 
     init {
-        updatePatientListAndPatientCount({ getSearchResults() }, { count() })
+        updatePatientListAndPatientCount({ getSearchResults("") }, { count() })
     }
 
     private fun updatePatientListAndPatientCount(
@@ -60,26 +62,31 @@ class ReferralListViewModel(
         updatePatientListAndPatientCount({ getSearchResults(nameQuery) }, { count(nameQuery) })
     }
 
-    private suspend fun getSearchResults(nameQuery: String = "", patientId: String = ""):
+    private suspend fun getSearchResults(nameQuery: String = ""):
             ArrayList<DbServiceRequest?> {
 
         var patients: MutableList<DbServiceRequest?> = mutableListOf()
 
         fhirEngine
             .search<ServiceRequest> {
-                if (patientId != ""){
-                    filter(ServiceRequest.PATIENT, { value = patientId })
+                if (patientIdValue != ""){
+                    filter(ServiceRequest.SUBJECT, { value = "Patient/$patientIdValue" })
                 }
-
             }
             .mapIndexed { index, fhirPatient -> createServiceRequest(fhirPatient.resource) }
             .let { patients.addAll(it) }
+
+        Log.e("---->","<---")
+        println("patientIdValue $patientIdValue")
+        Log.e("---->","<---")
 
 
         return ArrayList(patients)
     }
 
     private fun createServiceRequest(resource: ServiceRequest):DbServiceRequest? {
+
+
 
         val id = resource.id.replace("ServiceRequest/","")
         val patient = if (resource.hasSubject())
@@ -135,11 +142,12 @@ class ReferralListViewModel(
     class PatientListViewModelFactory(
         private val application: Application,
         private val fhirEngine: FhirEngine,
+        private val patientId: String
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ReferralListViewModel::class.java)) {
-                return ReferralListViewModel(application, fhirEngine) as T
+                return ReferralListViewModel(application, fhirEngine, patientId) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }

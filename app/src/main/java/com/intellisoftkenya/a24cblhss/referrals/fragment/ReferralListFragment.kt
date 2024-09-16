@@ -26,6 +26,7 @@ class ReferralListFragment : Fragment() {
     private lateinit var viewModel: ReferralListViewModel
     private lateinit var fhirEngine: FhirEngine
     private lateinit var formatterClass: FormatterClass
+    private var patientId:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +45,16 @@ class ReferralListFragment : Fragment() {
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
+        patientId = formatterClass.getSharedPref("", "patientId") ?: ""
+
+
         viewModel =
             ViewModelProvider(
                 this,
                 ReferralListViewModel.PatientListViewModelFactory(
                     requireActivity().application,
-                    fhirEngine
+                    fhirEngine,
+                    patientId
                 ),
             )[ReferralListViewModel::class.java]
 

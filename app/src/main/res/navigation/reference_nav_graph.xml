@@ -65,6 +65,10 @@
             android:id="@+id/action_landingPageFragment_to_demographicsFragment"
             app:destination="@id/demographicsFragment"
             app:popUpTo="@id/landingPageFragment" />
+        <action
+            android:id="@+id/action_landingPageFragment_to_referralPatientList"
+            app:destination="@id/referralPatientList"
+            app:popUpTo="@id/landingPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/patientListFragment"
@@ -141,6 +145,7 @@
             android:id="@+id/action_patientCardFragment_to_referPatientFragment"
             app:destination="@id/referPatientFragment"
             app:popUpTo="@id/patientCardFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/referralListFragment"
@@ -243,5 +248,15 @@
         <action
             android:id="@+id/action_reviewReferFragment_to_patientCardFragment"
             app:destination="@id/patientCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/referralPatientList"
+        android:name="com.intellisoftkenya.a24cblhss.ReferralPatientList"
+        android:label="fragment_referral_patient_list"
+        tools:layout="@layout/fragment_referral_patient_list" >
+        <action
+            android:id="@+id/action_referralPatientList_to_referralListFragment"
+            app:destination="@id/referralListFragment"
+            app:popUpTo="@id/referralPatientList" />
     </fragment>
 </navigation>

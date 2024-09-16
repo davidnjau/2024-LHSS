@@ -50,7 +50,7 @@ class LandingPageFragment : Fragment() {
                 findNavController().navigate(R.id.patientListFragment)
             }
             "Referrals" -> {
-                findNavController().navigate(R.id.referralListFragment)
+                findNavController().navigate(R.id.referralPatientList)
             }
 
             "Register Patient" -> {

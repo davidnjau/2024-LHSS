@@ -150,11 +150,6 @@ class ReviewReferFragment : Fragment() {
             formDataList.addAll(listOf(formDataFromJson))
         }
 
-        Log.e("----->","<---")
-        println("formDataList $formDataList")
-        println("formDataList $formDataList")
-        Log.e("----->","<---")
-
         formDataAdapter = FormDataAdapter(formDataList)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
