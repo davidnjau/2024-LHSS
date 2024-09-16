@@ -251,8 +251,8 @@
     </fragment>
     <fragment
         android:id="@+id/referralPatientList"
-        android:name="com.intellisoftkenya.a24cblhss.ReferralPatientList"
-        android:label="fragment_referral_patient_list"
+        android:name="com.intellisoftkenya.a24cblhss.referrals.fragment.ReferralPatientList"
+        android:label="@string/patient_referral_list"
         tools:layout="@layout/fragment_referral_patient_list" >
         <action
             android:id="@+id/action_referralPatientList_to_referralListFragment"

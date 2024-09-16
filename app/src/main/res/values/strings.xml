@@ -41,5 +41,6 @@
     <string name="referral_id">Referral Id</string>
     <string name="referral_date">Referral Date</string>
     <string name="total_referrals_0">Total Referrals: 0</string>
+    <string name="patient_referral_list">Patient Referral List</string>
 
 </resources>
