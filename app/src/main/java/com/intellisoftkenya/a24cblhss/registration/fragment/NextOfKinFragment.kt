@@ -52,6 +52,7 @@ class NextOfKinFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
+        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.NEXT_OF_KIN.name)
 
         return binding.root
 

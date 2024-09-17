@@ -63,6 +63,8 @@ class AddressFragment : Fragment() {
         navigationActions()
         formatterClass = FormatterClass(requireContext())
 
+        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.ADDRESS.name)
+
         return binding.root
 
     }

@@ -50,9 +50,13 @@ class DemographicsFragment : Fragment() {
 
         navigationActions()
 
+
         formatterClass = FormatterClass(requireContext())
 
-        // Observe the LiveData for radio button selection changes
+        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.DEMOGRAPHICS.name)
+
+
+            // Observe the LiveData for radio button selection changes
         viewModel.radioSelectedOption.observe(viewLifecycleOwner) { selectedOption ->
             val tag = selectedOption.tag // Tag of the selected radio button
             val text = selectedOption.text // Text of the selected radio button

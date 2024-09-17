@@ -48,6 +48,14 @@ class FormatterClass(private val context: Context) {
 
     }
 
+    fun toSentenceCase(input:String): String {
+        return input.lowercase()
+            .replace("_"," ")
+            .replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase() else it.toString()
+            }
+    }
+
 
     fun deleteSharedPref(
         sharedPrefName:String,
