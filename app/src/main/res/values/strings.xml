@@ -42,5 +42,18 @@
     <string name="referral_date">Referral Date</string>
     <string name="total_referrals_0">Total Referrals: 0</string>
     <string name="patient_referral_list">Patient Referral List</string>
+    <string name="id_number">ID Number</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="recover_password">Recover Password</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="submit">Submit</string>
+    <string name="profile">Profile</string>
+    <string name="patients">Patients</string>
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>French</item>
+    </string-array>
 
 </resources>

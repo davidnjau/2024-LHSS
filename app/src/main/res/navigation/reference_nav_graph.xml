@@ -36,7 +36,7 @@
     <fragment
         android:id="@+id/recoverPasswordFragment"
         android:name="com.intellisoftkenya.a24cblhss.auth.fragment.RecoverPasswordFragment"
-        android:label="@string/enter_your_password"
+        android:label="@string/enter_new_password"
         tools:layout="@layout/fragment_recover_password" >
         <action
             android:id="@+id/action_recoverPasswordFragment_to_newPasswordFragment"
@@ -259,4 +259,9 @@
             app:destination="@id/referralListFragment"
             app:popUpTo="@id/referralPatientList" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment2"
+        android:name="com.intellisoftkenya.a24cblhss.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

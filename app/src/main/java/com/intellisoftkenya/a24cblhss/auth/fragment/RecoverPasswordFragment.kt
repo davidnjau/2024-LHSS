@@ -43,34 +43,11 @@ class RecoverPasswordFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Add a callback to handle the back button press
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            // Handle the back button event
-            handleBackPressed()
+        binding.btnRecoverPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_recoverPasswordFragment_to_newPasswordFragment)
+
         }
 
-        // Optional: Enable/disable the callback depending on the fragment's state
-        callback.isEnabled = true
-
-    }
-
-    // Function to handle custom back press logic
-    private fun handleBackPressed() {
-        // You can either navigate back or perform other actions
-        if (shouldNavigateBack()) {
-            // Default back navigation using NavController
-            findNavController().popBackStack()
-        } else {
-            // Perform any custom logic
-            // E.g., show a confirmation dialog
-//            showBackConfirmationDialog()
-        }
-    }
-
-    // Example condition for whether to allow back navigation
-    private fun shouldNavigateBack(): Boolean {
-        // Example: You could check if a form is filled out and needs confirmation
-        return true // or some condition to allow/disallow back navigation
     }
 
 

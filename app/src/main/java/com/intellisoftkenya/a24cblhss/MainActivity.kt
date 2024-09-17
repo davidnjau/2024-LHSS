@@ -7,10 +7,12 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,10 +28,12 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+
         // Set up NavController
         val navHostFragment =
             supportFragmentManager.findFragmentById(
-                R.id.nav_host_fragment_activity_bottem_navigation)
+                R.id.nav_host_fragment_activity_bottom_navigation)
                     as NavHostFragment
         navController = navHostFragment.navController
 
@@ -52,6 +56,27 @@ class MainActivity : AppCompatActivity() {
                 appBarConfiguration.topLevelDestinations.contains(destination.id).not()
             )
         }
+
+        setupWithNavController(bottomNavigationView, navController)
+
+        // List of fragments where the BottomNavigationView should be hidden
+        val fragmentsToHideBottomNav = setOf(
+            R.id.splashFragment,  // Add fragment IDs where BottomNav should be hidden
+            R.id.landingPageFragment,
+            R.id.loginFragment,
+            R.id.recoverPasswordFragment,
+            R.id.newPasswordFragment,
+        )
+
+        // Add destination change listener to hide/show BottomNavigationView
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id in fragmentsToHideBottomNav) {
+                bottomNavigationView.visibility = BottomNavigationView.GONE
+            } else {
+                bottomNavigationView.visibility = BottomNavigationView.VISIBLE
+            }
+        }
+
     }
 
     // Override to handle back button clicks

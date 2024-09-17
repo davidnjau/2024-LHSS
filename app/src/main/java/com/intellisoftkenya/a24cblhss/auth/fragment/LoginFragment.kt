@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.auth.viewmodel.LoginViewModel
 import com.intellisoftkenya.a24cblhss.R
@@ -36,6 +37,18 @@ class LoginFragment : Fragment() {
         // Initialize the binding object
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.languages_array, // Use the array from strings.xml
+            android.R.layout.simple_spinner_item // Default spinner layout
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            binding.languageSpinner.adapter = adapter
+        }
+
         return binding.root
     }
 
@@ -44,7 +57,11 @@ class LoginFragment : Fragment() {
 
         // Access the button from the binding and set an action
         binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.landingPageFragment)
+            findNavController().navigate(R.id.action_loginFragment_to_landingPageFragment)
+        }
+
+        binding.tvForgotPassword.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_recoverPasswordFragment)
         }
 
     }
