@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormData
@@ -20,6 +21,7 @@ import org.hl7.fhir.r4.model.DocumentReference
 import org.hl7.fhir.r4.model.Enumerations
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
+import org.hl7.fhir.r4.model.ServiceRequest
 
 class AcknoledgementDetailsViewModel(
     application: Application,
@@ -86,8 +88,32 @@ class AcknoledgementDetailsViewModel(
         documentReference.date = java.util.Date()
 
         saveResourceToDatabase(documentReference, "DocumentReference")
+
+        /**
+         * Update the service
+         */
+        val searchResult =
+            fhirEngine.search<ServiceRequest> {
+                filter(Resource.RES_ID, { value = of(serviceRequestId) })
+            }
+
+        var serviceRequest = ServiceRequest()
+
+        if (searchResult.isNotEmpty()) {
+            searchResult.first().let {
+                serviceRequest = it.resource
+                serviceRequest.status = ServiceRequest.ServiceRequestStatus.COMPLETED
+            }
+        }
+
+        updateResourceToDatabase(serviceRequest, "update service request")
+
     }
 
+    private suspend fun updateResourceToDatabase(resource: Resource, type: String){
+        Log.e("----", "----$type")
+        fhirEngine.update(resource)
+    }
     private suspend fun saveResourceToDatabase(resource: Resource, type: String) :List<String>{
         Log.e("----", "----$type")
         return fhirEngine.create(resource)
