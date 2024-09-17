@@ -96,17 +96,16 @@ class AcknoledgementDetailsViewModel(
             fhirEngine.search<ServiceRequest> {
                 filter(Resource.RES_ID, { value = of(serviceRequestId) })
             }
-
-        var serviceRequest = ServiceRequest()
+        var serviceRequest: ServiceRequest
 
         if (searchResult.isNotEmpty()) {
             searchResult.first().let {
                 serviceRequest = it.resource
-                serviceRequest.status = ServiceRequest.ServiceRequestStatus.COMPLETED
+                serviceRequest.setStatus(ServiceRequest.ServiceRequestStatus.COMPLETED)
+                updateResourceToDatabase(serviceRequest, "update service request")
+
             }
         }
-
-        updateResourceToDatabase(serviceRequest, "update service request")
 
     }
 

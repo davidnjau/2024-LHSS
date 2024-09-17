@@ -1,8 +1,11 @@
 package com.intellisoftkenya.a24cblhss.shared
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoftkenya.a24cblhss.R
@@ -16,6 +19,7 @@ class PatientReferralAdapter(
         val referralReason: TextView = itemView.findViewById(R.id.tvReferralReason)
         val referralId: TextView = itemView.findViewById(R.id.tvReferralId)
         val referralDate: TextView = itemView.findViewById(R.id.tvReferralDate)
+        val imgBtnStatus: ImageView = itemView.findViewById(R.id.imgBtnStatus)
 
         // Bind click listener to the itemView
         fun bind(serviceRequest: DbServiceRequest?) {
@@ -35,6 +39,13 @@ class PatientReferralAdapter(
         holder.referralReason.text = serviceRequest?.referralReason
         holder.referralId.text = serviceRequest?.id?.substring(0, 5)
         holder.referralDate.text = serviceRequest?.dateRecorded
+
+        val status = serviceRequest?.status
+
+        if (status == "ACTIVE")
+            holder.imgBtnStatus.setImageResource(R.mipmap.ic_referral_completed)
+        if (status == "COMPLETED")
+            holder.imgBtnStatus.setImageResource(R.mipmap.ic_referral_active)
 
         // Call the bind function to set the click listener
         holder.bind(serviceRequest)
