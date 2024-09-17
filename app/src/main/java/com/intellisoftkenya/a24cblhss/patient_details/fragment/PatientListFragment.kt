@@ -41,6 +41,7 @@ class PatientListFragment : Fragment() {
         _binding = FragmentPatientListBinding.inflate(inflater, container, false)
 
         formatterClass = FormatterClass(requireContext())
+        formatterClass.clearData()
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 

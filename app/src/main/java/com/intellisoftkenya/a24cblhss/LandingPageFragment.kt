@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoftkenya.a24cblhss.databinding.FragmentLandingPageBinding
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.LayoutListViewModel
 import com.intellisoftkenya.a24cblhss.shared.LayoutsRecyclerViewAdapter
 
@@ -29,6 +31,8 @@ class LandingPageFragment : Fragment() {
     private var _binding: FragmentLandingPageBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var formatterClass: FormatterClass
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,8 +45,14 @@ class LandingPageFragment : Fragment() {
 
         _binding = FragmentLandingPageBinding.inflate(inflater, container, false)
 
+        formatterClass = FormatterClass(requireContext())
+
+        formatterClass.clearData()
+
         return binding.root
     }
+
+
 
     private fun onItemClick(layout: LayoutListViewModel.Layout) {
         when (layout.textId) {

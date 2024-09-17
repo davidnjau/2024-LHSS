@@ -37,7 +37,7 @@ class SplashFragment : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
         formatterClass = FormatterClass(requireContext())
-
+        formatterClass.clearData()
     }
 
     override fun onCreateView(

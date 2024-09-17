@@ -16,6 +16,20 @@ class FormatterClass(private val context: Context) {
         return UUID.randomUUID().toString()
     }
 
+    fun clearData() {
+
+        listOf(
+            DbNavigationDetails.PATIENT_REGISTRATION.name,
+            DbNavigationDetails.REFER_PATIENT.name,
+            DbNavigationDetails.REFERRALS.name).forEach {
+            clearSharedPreferences(it)
+        }
+        listOf("serviceRequestId", "patientId").forEach {
+            deleteSharedPref("", it)
+        }
+
+    }
+
     fun saveSharedPref(
         sharedPrefName:String,
         key: String,
@@ -56,6 +70,18 @@ class FormatterClass(private val context: Context) {
             }
     }
 
+    // Function to clear all SharedPreferences data
+    fun clearSharedPreferences(sharedPrefName:String,) {
+        val sharedPreferenceName = if (sharedPrefName == ""){
+            context.getString(R.string.app_name)
+        }else{
+            sharedPrefName
+        }
+        val sharedPreferences = context.getSharedPreferences(sharedPreferenceName, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()  // Clear all the stored values
+        editor.apply()  // Apply changes
+    }
 
     fun deleteSharedPref(
         sharedPrefName:String,
