@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
@@ -74,6 +75,29 @@ class MainActivity : AppCompatActivity() {
                 bottomNavigationView.visibility = BottomNavigationView.GONE
             } else {
                 bottomNavigationView.visibility = BottomNavigationView.VISIBLE
+            }
+        }
+
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.homeFragment -> {
+                    // Handle Home action
+                    navController.navigate(R.id.landingPageFragment)
+                    true
+                }
+                R.id.patientsFragment -> {
+                    // Handle Profile action
+                    navController.navigate(R.id.patientListFragment)
+
+                    true
+                }
+                R.id.profileFragment -> {
+                    // Handle Settings action
+                    navController.navigate(R.id.profileFragment2)
+
+                    true
+                }
+                else -> false
             }
         }
 

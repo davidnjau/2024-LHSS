@@ -44,6 +44,11 @@ enum class DbClasses{
 
     ACKNOWLEDGEMENT_FORM
 }
+data class Item(
+    val title: String,
+    val description: String,
+    val imageResource: Int // Assuming image is a drawable resource
+)
 
 
 data class FormData(
