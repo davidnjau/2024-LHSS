@@ -1,12 +1,23 @@
 package com.intellisoftkenya.a24cblhss.shared
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.util.Log
+import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import androidx.compose.ui.semantics.Role.Companion.RadioButton
+import androidx.core.content.ContextCompat
 import com.intellisoftkenya.a24cblhss.R
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
 
@@ -15,6 +26,162 @@ class FormatterClass(private val context: Context) {
     fun generateUuid(): String {
         return UUID.randomUUID().toString()
     }
+    fun addRadioButtonWithDatePicker(context: Context, linearLayout: LinearLayout) {
+        // Create a RadioGroup for Accurate and Estimate options
+        val radioGroup = RadioGroup(context).apply {
+            orientation = RadioGroup.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        val acc = 1
+        val est = 2
+
+        // Ensure the RadioButtons have unique IDs
+        val radioButtonAccurate = RadioButton(context).apply {
+            text = "Accurate"
+            id = acc // Use a predefined ID or ensure it's unique
+        }
+
+        val radioButtonEstimate = RadioButton(context).apply {
+            text = "Estimate"
+            id = est // Use a predefined ID or ensure it's unique
+        }
+
+        // Add both RadioButtons to the RadioGroup
+        radioGroup.addView(radioButtonAccurate)
+        radioGroup.addView(radioButtonEstimate)
+
+        val textViewDateOfBirthLabel = TextView(context).apply {
+            text = "Date of Birth *"
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8,5,8,12)
+            }
+            this.setPadding(32,16,20,16)
+        }
+
+        linearLayout.addView(textViewDateOfBirthLabel)
+
+        // Add the RadioGroup to the LinearLayout
+        linearLayout.addView(radioGroup)
+
+        // TextView to show DatePickerDialog when Accurate is selected
+        val textViewSelectedDate = TextView(context).apply {
+            text = "dd/mm/yyyy"
+            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8,5,8,12)
+            }
+            this.setPadding(32,16,20,16)
+        }
+
+        // TextView to show DatePickerDialog when Accurate is selected
+        val textViewDate = TextView(context).apply {
+            text = "Select Date"
+            visibility = View.GONE  // Initially hidden, shown when Accurate is selected
+            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
+            // Set drawable to the right (use 0 for other positions if no drawable is needed)
+            val rightIcon = ContextCompat.getDrawable(context, R.drawable.ic_action_date) // Your drawable resource
+            setCompoundDrawablesWithIntrinsicBounds(null, null, rightIcon, null)
+
+            setOnClickListener {
+                showDatePickerDialog(context, textViewSelectedDate)
+            }
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8,5,8,12)
+            }
+            this.setPadding(32,16,20,16)
+        }
+
+        // Add the TextView to the LinearLayout
+
+        linearLayout.addView(textViewSelectedDate)
+
+        linearLayout.addView(textViewDate)
+
+        // Create the two EditTexts for Estimate (Year and Month inputs)
+        val editTextYears = EditText(context).apply {
+            hint = "Years"
+            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            visibility = View.GONE  // Hidden initially, shown when Estimate is selected
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8,5,8,12)
+            }
+            this.setPadding(32,16,20,16)
+        }
+
+        val editTextMonths = EditText(context).apply {
+            hint = "Months"
+            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            visibility = View.GONE  // Hidden initially, shown when Estimate is selected
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8,5,8,12)
+            }
+            this.setPadding(32,16,20,16)
+        }
+
+        // Add the EditTexts to the LinearLayout (hidden initially)
+        linearLayout.addView(editTextYears)
+        linearLayout.addView(editTextMonths)
+
+        // Add manual click listener for RadioButtons for debugging
+        radioButtonAccurate.setOnClickListener {
+            textViewDate.visibility = View.VISIBLE
+
+            editTextYears.visibility = View.GONE
+            editTextMonths.visibility = View.GONE
+        }
+
+        radioButtonEstimate.setOnClickListener {
+            val dateFormat = "dd/mm/yyyy"
+            textViewSelectedDate.text = dateFormat
+
+            textViewDate.visibility = View.GONE
+
+            editTextYears.visibility = View.VISIBLE
+            editTextMonths.visibility = View.VISIBLE
+        }
+
+
+    }
+
+    private fun showDatePickerDialog(context: Context, textView: TextView) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            context,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                textView.text = selectedDate
+            },
+            year, month, day
+        )
+        datePickerDialog.show()
+    }
+
+
 
     fun clearData() {
 

@@ -3,6 +3,7 @@ package com.intellisoftkenya.a24cblhss.dynamic_components
 import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -14,7 +15,9 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.intellisoftkenya.a24cblhss.R
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 /**
  * This contains all the dynamic Widgets
@@ -175,3 +178,4 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
         datePickerDialog.show()
     }
 }
+

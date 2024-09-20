@@ -23,6 +23,7 @@ import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.extractAllFormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
+import java.util.Calendar
 
 class DemographicsFragment : Fragment() {
 
@@ -181,7 +182,7 @@ class DemographicsFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Document Number", true,
-                InputType.TYPE_CLASS_PHONE
+                InputType.TYPE_CLASS_NUMBER
             ),
             DbField(
                 DbWidgets.RADIO_BUTTON.name,
@@ -189,32 +190,14 @@ class DemographicsFragment : Fragment() {
                 true,
                 optionList = listOf("Male", "Female")
             ),
-            DbField(
-                DbWidgets.RADIO_BUTTON.name,
-                "Date of Birth",
-                true,
-                optionList = listOf("Accurate", "Estimate")
-            ),
-            DbField(
-                DbWidgets.DATE_PICKER.name,
-                "DOB", false
-            ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Year", false,
-                InputType.TYPE_CLASS_NUMBER // Corrected input type for numeric input
-            ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Month", false,
-                InputType.TYPE_CLASS_NUMBER // Corrected input type for numeric input
-            )
-
 
         )
 
-
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
+
+        // Call the function to add the RadioButtons and TextView dynamically
+        formatterClass.addRadioButtonWithDatePicker(requireContext(), binding.rootLayout)
+
         // Call the extractFormData function to attach listeners to RadioGroups
         viewModel.extractFormData(binding.rootLayout)
 

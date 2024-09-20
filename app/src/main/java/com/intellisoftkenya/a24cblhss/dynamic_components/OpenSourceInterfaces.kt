@@ -15,3 +15,4 @@ interface FieldCreator {
                     isMandatory: Boolean = false,
                     inputType: Int = InputType.TYPE_CLASS_TEXT): View
 }
+
