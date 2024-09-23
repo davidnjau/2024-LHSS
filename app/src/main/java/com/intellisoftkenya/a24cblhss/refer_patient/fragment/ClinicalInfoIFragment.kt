@@ -30,7 +30,7 @@ class ClinicalInfoIFragment : Fragment() {
     private lateinit var fieldManager: FieldManager
 
     private val viewModel: ClinicalInfoIViewModel by viewModels()
-    private val tbTypeList = listOf("DSTB","DSTB 2")
+    private val tbTypeList = listOf("DSTB, DRTB","PTB , EPTB")
     private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {

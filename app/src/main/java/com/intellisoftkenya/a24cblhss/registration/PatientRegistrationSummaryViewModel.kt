@@ -18,9 +18,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Address
 import org.hl7.fhir.r4.model.CodeableConcept
+import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.ContactPoint
 import org.hl7.fhir.r4.model.Enumerations
 import org.hl7.fhir.r4.model.HumanName
+import org.hl7.fhir.r4.model.Identifier
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.StringType
@@ -86,8 +88,29 @@ class PatientRegistrationSummaryViewModel(
                 }
             }
         }
+
         val id = formatterClass.generateUuid()
         patient.id = id
+
+        val identifier: MutableList<Identifier> = mutableListOf()
+        val identifierSystem0 = Identifier()
+
+        val typeCodeableConcept0 = CodeableConcept()
+
+        val codingList0 = ArrayList<Coding>()
+        val coding0 = Coding()
+        coding0.system = "system-creation"
+        coding0.code = "system_creation"
+        coding0.display = "System Creation"
+        codingList0.add(coding0)
+        typeCodeableConcept0.coding = codingList0
+        typeCodeableConcept0.text = formatterClass.formatCurrentDateTime(Date())
+
+        identifierSystem0.value = formatterClass.formatCurrentDateTime(Date())
+        identifierSystem0.system = "system-creation"
+        identifierSystem0.type = typeCodeableConcept0
+        identifier.add(identifierSystem0)
+        patient.identifier = identifier
 
         formatterClass.saveSharedPref("","patientId",id)
 

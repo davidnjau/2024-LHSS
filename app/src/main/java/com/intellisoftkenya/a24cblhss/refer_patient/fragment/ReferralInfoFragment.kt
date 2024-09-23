@@ -29,7 +29,8 @@ class ReferralInfoFragment : Fragment() {
     private lateinit var fieldManager: FieldManager
 
     private val viewModel: ReferralInfoViewModel by viewModels()
-    private var referralReasonList = listOf("Leave", "Leave 2")
+    private var referralReasonList = listOf(
+        "Leave", "Holidays", "Permanent  Return", "Medical", "Work")
     private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {

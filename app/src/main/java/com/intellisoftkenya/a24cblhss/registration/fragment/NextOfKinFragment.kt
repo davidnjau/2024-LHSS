@@ -77,20 +77,32 @@ class NextOfKinFragment : Fragment() {
             if (missingFields.isNotEmpty()){
                 Toast.makeText(context, "Please fill all mandatory fields", Toast.LENGTH_LONG).show()
             }else{
-                findNavController().navigate(R.id.action_nextOfKinFragment_to_patientRegistrationSummaryFragment)
-                val formData = FormData(
-                    DbClasses.NEXT_OF_KIN.name,
-                    addedFields)
 
-                val gson = Gson()
-                val json = gson.toJson(formData)
+                val telephoneData = addedFields.find { it.tag == "Telephone" }
+                if (telephoneData != null) {
+                    val textNumber = telephoneData.text
+                    val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
+                    if (isPhoneValid) {
 
-                formatterClass.saveSharedPref(
-                    sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
-                    DbClasses.NEXT_OF_KIN.name,
-                    json
-                )
+                        findNavController().navigate(R.id.action_nextOfKinFragment_to_patientRegistrationSummaryFragment)
 
+                        val formData = FormData(
+                            DbClasses.NEXT_OF_KIN.name,
+                            addedFields)
+
+                        val gson = Gson()
+                        val json = gson.toJson(formData)
+
+                        formatterClass.saveSharedPref(
+                            sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
+                            DbClasses.NEXT_OF_KIN.name,
+                            json
+                        )
+
+                    }else{
+                        Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }
@@ -114,7 +126,7 @@ class NextOfKinFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Telephone", true,
-                InputType.TYPE_CLASS_NUMBER
+                android.text.InputType.TYPE_CLASS_NUMBER
             )
         )
 

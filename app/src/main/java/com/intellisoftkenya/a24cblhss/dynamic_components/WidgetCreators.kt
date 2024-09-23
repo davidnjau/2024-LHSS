@@ -56,12 +56,12 @@ class EditTextFieldCreator(
         isMandatory: Boolean,
         inputType: Int
     ): View {
-        val editText = EditText(context).apply {
+        val editText = MandatoryEditText(context).apply {
             this.hint = label
             this.inputType = inputType
             this.background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext) // Set rounded border
             this.tag = label
-
+            this.isMandatory = isMandatory
             this.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -99,13 +99,14 @@ class RadioButtonFieldCreator(
 ) : FieldCreator {
     override fun createField(
         label: String,
-        isMandatory: Boolean,
+        isMandatory1: Boolean,
         inputType: Int
     ): View {
         // Create a RadioGroup
-        val radioGroup = RadioGroup(context).apply {
+        val radioGroup = MandatoryRadioGroup(context).apply {
             orientation = if (isHorizontal) RadioGroup.HORIZONTAL else RadioGroup.VERTICAL
             tag = label
+            isMandatory = isMandatory1
         }
 
         // Dynamically add RadioButtons to the RadioGroup
@@ -114,13 +115,16 @@ class RadioButtonFieldCreator(
                 text = option
                 tag = label
             }
-            radioGroup.addView(radioButton)
+            radioGroup.addRadioButton(radioButton)
+//            radioGroup.addView(radioButton)
         }
 
         // Return the RadioGroup as the view
         return radioGroup
     }
 }
+
+
 
 //Concrete implementation for creating a Datepicker
 class DatePickerFieldCreator(private val context: Context) : FieldCreator {

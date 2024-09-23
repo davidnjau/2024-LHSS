@@ -3,6 +3,7 @@ package com.intellisoftkenya.a24cblhss.registration.fragment
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,47 +57,6 @@ class DemographicsFragment : Fragment() {
 
         binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.DEMOGRAPHICS.name)
 
-
-            // Observe the LiveData for radio button selection changes
-        viewModel.radioSelectedOption.observe(viewLifecycleOwner) { selectedOption ->
-            val tag = selectedOption.tag // Tag of the selected radio button
-            val text = selectedOption.text // Text of the selected radio button
-
-            for (i in 0 until binding.rootLayout.childCount) {
-                val childView = binding.rootLayout.getChildAt(i)
-
-                // You can get the tag or label of the child view. Assuming the tag is set to match the label
-                val tagChildView = childView.tag?.toString() // Get the tag or label for the child view
-
-                if (tag == "Date of Birth") {
-                    if (text == "Estimate") {
-                        // Hide the widget with the label "Select Date of Birth"
-                        if (tagChildView == "DOB") {
-                            childView.visibility = View.GONE
-                        }
-
-                        // Ensure the "Year" and "Month" fields are visible
-                        if (tagChildView == "Year" || tagChildView == "Month") {
-                            childView.visibility = View.VISIBLE
-                        }
-                    }
-
-                    if (text == "Accurate") {
-                        // Hide the "Year" and "Month" widgets
-                        if (tagChildView == "Year" || tagChildView == "Month") {
-                            childView.visibility = View.GONE
-                        }
-
-                        // Ensure the "Select Date of Birth" field is visible
-                        if (tagChildView == "DOB") {
-                            childView.visibility = View.VISIBLE
-                        }
-                    }
-                }
-            }
-        }
-
-
         return binding.root
 
     }
@@ -116,6 +76,7 @@ class DemographicsFragment : Fragment() {
         navigationButtons.setNextButtonClickListener {
             // Handle next button click
             // Navigate to the next fragment or perform any action
+            val gson = Gson()
 
             // Call the function to extract form data
             val (addedFields, missingFields) = extractAllFormData(binding.rootLayout)
@@ -123,20 +84,35 @@ class DemographicsFragment : Fragment() {
             if (missingFields.isNotEmpty()){
                 Toast.makeText(context, "Please fill all mandatory fields", Toast.LENGTH_LONG).show()
             }else{
-                findNavController().navigate(R.id.action_demographicsFragment_to_addressFragment)
 
-                val formData = FormData(
-                    DbClasses.DEMOGRAPHICS.name,
-                    addedFields)
+                val telephoneData = addedFields.find { it.tag == "Telephone" }
+                if (telephoneData != null){
+                    val textNumber = telephoneData.text
+                    val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
+                    if (isPhoneValid){
+                        findNavController().navigate(R.id.action_demographicsFragment_to_addressFragment)
 
-                val gson = Gson()
-                val json = gson.toJson(formData)
+                        val formData = FormData(
+                            DbClasses.DEMOGRAPHICS.name,
+                            addedFields)
 
-                formatterClass.saveSharedPref(
-                    sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
-                    DbClasses.DEMOGRAPHICS.name,
-                    json
-                )
+                        val json = gson.toJson(formData)
+
+                        formatterClass.saveSharedPref(
+                            sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
+                            DbClasses.DEMOGRAPHICS.name,
+                            json
+                        )
+                    }else{
+                        Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
+                    }
+
+                }
+
+
+
+
+
 
             }
         }
@@ -199,7 +175,7 @@ class DemographicsFragment : Fragment() {
         formatterClass.addRadioButtonWithDatePicker(requireContext(), binding.rootLayout)
 
         // Call the extractFormData function to attach listeners to RadioGroups
-        viewModel.extractFormData(binding.rootLayout)
+//        viewModel.extractFormData(binding.rootLayout)
 
     }
 

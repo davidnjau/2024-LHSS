@@ -100,7 +100,7 @@ class ClnicalInfoIIFragment : Fragment() {
             DbField(
                 DbWidgets.SPINNER.name,
                 "HIV Status", true, null,
-                listOf("Negative", "Positive")
+                listOf("Negative", "Positive", "Unknown")
             ),
             DbField(
                 DbWidgets.SPINNER.name,
@@ -130,7 +130,7 @@ class ClnicalInfoIIFragment : Fragment() {
             DbField(
                 DbWidgets.SPINNER.name,
                 "Regimen", true, null,
-                listOf("Regimen")
+                listOf("2RHZE/4RH", "2RHZE/1ORH", "2RHZE/2RH")
             ),
             DbField(
                 DbWidgets.SPINNER.name,

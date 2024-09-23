@@ -31,7 +31,9 @@ class AddressFragment : Fragment() {
     private val viewModel: MainActivityViewModel by viewModels()
 
     private lateinit var fieldManager: FieldManager
-    private var countryOriginList = listOf("Kenya", "Uganda", "Tanzania", "Rwanda", "Burundi", "South Sudan")
+    private var countryOriginList = listOf(
+        "Kenya", "Uganda", "Tanzania", "Rwanda", "Burundi", "South Sudan")
+
     private var kenyaCountyList = listOf(
         "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo Marakwet", "Embu", "Garissa", "Homa Bay",
         "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii",
@@ -41,10 +43,12 @@ class AddressFragment : Fragment() {
         "Tana River", "Tharaka Nithi", "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga",
         "Wajir", "West Pokot"
     )
+
     private var ugandaDistrictList = listOf(
         "Kampala", "Mukono", "Wakiso", "Jinja", "Gulu", "Lira", "Mbarara", "Mbale",
         "Arua", "Fort Portal", "Masaka", "Entebbe", "Kabale", "Soroti", "Hoima"
     )
+
     private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {

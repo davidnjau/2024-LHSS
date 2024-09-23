@@ -1,6 +1,7 @@
 package com.intellisoftkenya.a24cblhss.dynamic_components
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.CheckBox
 import android.widget.DatePicker
@@ -154,37 +155,49 @@ object FormUtils {
 
             if (childView.visibility == View.VISIBLE) { // Only process visible views
                 when (childView) {
-                    is RadioGroup -> {
-                        // Get the selected RadioButton ID
-                        val selectedRadioButtonId = childView.checkedRadioButtonId
+                    is MandatoryRadioGroup -> {
 
-                        if (selectedRadioButtonId != -1) {
-                            // Find the selected RadioButton using the selected ID
-                            val selectedRadioButton = childView.findViewById<RadioButton>(selectedRadioButtonId)
-                            val selectedText = selectedRadioButton.text.toString()
+                        val selectedText = childView.getSelectedRadioButtonText()
+                        val isMandatory = childView.isMandatory
+                        val tag = childView.tag?.toString() ?: ""
 
-                            val tag = childView.tag?.toString() ?: ""
-                            if (tag.isNotEmpty() && selectedText.isNotEmpty()) {
+                        if (isMandatory){
+                            if (tag.isNotEmpty() && selectedText != null){
                                 val formData = DbFormData(tag, selectedText)
                                 addedFields.add(formData)
-                            } else if (tag.isNotEmpty()) {
+                            }else{
                                 // Add missing mandatory fields if text is empty
                                 missingFields.add(DbFormData(tag, ""))
+                            }
+                        }else{
+                            if (tag.isNotEmpty() && selectedText != null) {
+                                val formData = DbFormData(tag, selectedText)
+                                addedFields.add(formData)
                             }
                         }
                     }
 
-                    is EditText -> {
+                    is MandatoryEditText -> {
                         val tag = childView.tag?.toString() ?: ""
                         val text = childView.text.toString()
+                        val isMandatory = childView.isMandatory
 
-                        if (tag.isNotEmpty() && text.isNotEmpty()) {
-                            val formData = DbFormData(tag, text)
-                            addedFields.add(formData)
-                        } else if (tag.isNotEmpty()) {
-                            // Add missing mandatory fields if text is empty
-                            missingFields.add(DbFormData(tag, ""))
+                        if (isMandatory){
+                            if (tag.isNotEmpty() && text.isNotEmpty()){
+
+                                val formData = DbFormData(tag, text)
+                                addedFields.add(formData)
+                            }else{
+                                // Add missing mandatory fields if text is empty
+                                missingFields.add(DbFormData(tag, ""))
+                            }
+                        }else{
+                            if (tag.isNotEmpty() && text.isNotEmpty()) {
+                                val formData = DbFormData(tag, text)
+                                addedFields.add(formData)
+                            }
                         }
+
                     }
 
                     is Spinner -> {
