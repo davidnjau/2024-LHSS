@@ -328,7 +328,21 @@ class FormatterClass(private val context: Context) {
 
     }
 
+    fun sortPatientListByDate(patientList: List<DbPatientItem>): List<DbPatientItem> {
+        // Define the date format that matches the format of dateCreated field
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
 
+        return patientList.sortedByDescending { patient ->
+            // Parse dateCreated, return a Date object. Handle nulls safely.
+            patient.dateCreated?.let { dateStr ->
+                try {
+                    dateFormat.parse(dateStr)
+                } catch (e: Exception) {
+                    null // In case of parsing failure, handle gracefully.
+                }
+            }
+        }
+    }
     fun convertDateFormat(inputDate: String): String? {
         // Define the input date formats to check
         val inputDateFormats = arrayOf(
