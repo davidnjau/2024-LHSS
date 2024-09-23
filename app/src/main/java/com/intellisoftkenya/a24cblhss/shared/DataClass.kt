@@ -64,7 +64,8 @@ data class DbPatientItem(
     val id: String,
     val name: String,
     val crossBorderId:String,
-    val dob:String
+    val dob:String,
+    val dateCreated: String?
 )
 data class DbServiceRequest(
     val id:String,

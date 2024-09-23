@@ -117,8 +117,7 @@
         tools:layout="@layout/fragment_patient_registration_summary" >
         <action
             android:id="@+id/action_patientRegistrationSummaryFragment_to_patientCardFragment"
-            app:destination="@id/patientCardFragment"
-            app:popUpTo="@id/patientRegistrationSummaryFragment" />
+            app:destination="@id/patientCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/patientCardFragment"

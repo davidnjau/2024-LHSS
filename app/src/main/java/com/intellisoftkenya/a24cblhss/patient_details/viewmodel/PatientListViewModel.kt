@@ -1,6 +1,8 @@
 package com.intellisoftkenya.a24cblhss.patient_details.viewmodel
 
 import android.app.Application
+import android.util.Log
+import androidx.compose.ui.platform.LocalGraphicsContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +13,7 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.shared.DbPatientItem
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Patient
 
@@ -21,6 +24,7 @@ class PatientListViewModel(
 
     val liveSearchedPatients = MutableLiveData<List<DbPatientItem>>()
     val patientCount = MutableLiveData<Long>()
+    private var formatterClass = FormatterClass(application.applicationContext)
 
     init {
         updatePatientListAndPatientCount({ getSearchResults() }, { count() })
@@ -84,6 +88,19 @@ class PatientListViewModel(
         val id = fhirPatient.id
         var name = ""
         var dob = ""
+        var dateCreated = ""
+
+        if (fhirPatient.hasIdentifier()){
+            val identifierList = fhirPatient.identifier
+            identifierList.forEach {
+                if (it.hasSystem() && it.hasValue() && it.system == "system-creation"){
+                    val valueStr = formatterClass.convertDateFormat(it.value)
+                    if (valueStr != null){
+                        dateCreated = valueStr
+                    }
+                }
+            }
+        }
 
         if (fhirPatient.hasName()){
             fhirPatient.name.forEach {humanName->
@@ -99,10 +116,11 @@ class PatientListViewModel(
         }
 
         //DOB
-        if (fhirPatient.hasBirthDateElement()) {
-            if (fhirPatient.birthDateElement.hasValue()) {
-                val birthDateElement = fhirPatient.birthDateElement.valueAsString
-                dob = birthDateElement
+        if (fhirPatient.hasBirthDate()) {
+            val birthDateElement = fhirPatient.birthDate
+            val valueStr = formatterClass.convertDateFormat(birthDateElement.toString())
+            if (valueStr != null) {
+                dob = valueStr
             }
         }
 
@@ -112,7 +130,8 @@ class PatientListViewModel(
             logicalId,
             name,
             logicalId.substring(0..6),
-            dob
+            dob,
+            dateCreated
         )
 
     }

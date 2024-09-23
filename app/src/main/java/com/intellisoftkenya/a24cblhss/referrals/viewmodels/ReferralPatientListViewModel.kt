@@ -151,7 +151,8 @@ class ReferralPatientListViewModel(
                         patientId,
                         name,
                         patientId.substring(0..6),
-                        dob
+                        dob,
+                        null
                     )
 
                 }
