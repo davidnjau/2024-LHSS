@@ -53,7 +53,6 @@ class SplashFragment : Fragment() {
             } else {
                 findNavController().navigate(R.id.loginFragment)
             }
-//            findNavController().navigate(R.id.reviewReferFragment)
 
 
         }, 1000)

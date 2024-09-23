@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -86,6 +87,11 @@ class PatientCardFragment : Fragment() {
         binding.tvFullName.text = fullName
         val crossBorderId = "Cross Border Id: ${patientId.substring(0,6)}"
         binding.tvCrossBorderId.text = crossBorderId
+
+        // Handle back press
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            findNavController().navigate(R.id.action_patientCardFragment_to_patientListFragment)
+        }
 
     }
 

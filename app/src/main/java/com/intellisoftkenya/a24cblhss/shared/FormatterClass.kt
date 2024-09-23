@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
@@ -135,6 +137,10 @@ class FormatterClass(private val context: Context) {
             background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
             visibility = View.GONE  // Hidden initially, shown when Estimate is selected
+
+            // Set max length and input filters
+            filters = arrayOf(InputFilter.LengthFilter(4), YearInputFilter(this))
+
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -149,6 +155,9 @@ class FormatterClass(private val context: Context) {
             background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
             visibility = View.GONE  // Hidden initially, shown when Estimate is selected
+            // Set max length and input filters
+            filters = arrayOf(InputFilter.LengthFilter(2), MonthInputFilter())
+
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -225,6 +234,39 @@ class FormatterClass(private val context: Context) {
 
     }
 
+    // Input filter for Year
+    class YearInputFilter(private val editText: EditText) : InputFilter {
+        override fun filter(source: CharSequence?, start: Int, end: Int, dest: Spanned?, dstart: Int, dend: Int): CharSequence? {
+            if (source.isNullOrEmpty()) return null
+
+            val input = (dest.toString() + source).toIntOrNull()
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+            return if (input != null && input > currentYear) {
+                editText.setText("") // Clear the input
+                editText.error = "Year cannot be in the future" // Set error message
+                ""  // Reject input
+            } else {
+                null  // Accept input
+            }
+        }
+    }
+
+    // Input filter for Month
+    class MonthInputFilter : InputFilter {
+        override fun filter(source: CharSequence?, start: Int, end: Int, dest: Spanned?, dstart: Int, dend: Int): CharSequence? {
+            if (source.isNullOrEmpty()) return null
+
+            val input = (dest.toString() + source).toIntOrNull()
+
+            return if (input != null && (input < 1 || input > 12)) {
+                ""  // Reject input if it's not within the valid range
+            } else {
+                null  // Accept input
+            }
+        }
+    }
+
     private fun showDatePickerDialog(context: Context, editTextSelectedDate: EditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -240,6 +282,9 @@ class FormatterClass(private val context: Context) {
             },
             year, month, day
         )
+        // Block off future dates
+        datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+
         datePickerDialog.show()
     }
 

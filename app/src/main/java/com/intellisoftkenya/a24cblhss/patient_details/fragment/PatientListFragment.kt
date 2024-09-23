@@ -96,13 +96,8 @@ class PatientListFragment : Fragment() {
                 val id = selectedPatient.id
                 val dateCreated = selectedPatient.dateCreated
 
-                Log.e("--->","<---")
-                println("dateCreated $dateCreated")
-                Log.e("--->","<---")
-
                 formatterClass.saveSharedPref("","patientId", id)
-//                findNavController().navigate(R.id.action_patientListFragment_to_patientCardFragment)
-
+                findNavController().navigate(R.id.action_patientListFragment_to_patientCardFragment)
 
             }
 

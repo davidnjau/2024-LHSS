@@ -86,6 +86,7 @@ class DemographicsFragment : Fragment() {
             }else{
 
                 val telephoneData = addedFields.find { it.tag == "Telephone" }
+
                 if (telephoneData != null){
                     val textNumber = telephoneData.text
                     val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
@@ -106,14 +107,7 @@ class DemographicsFragment : Fragment() {
                     }else{
                         Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
                     }
-
                 }
-
-
-
-
-
-
             }
         }
     }
