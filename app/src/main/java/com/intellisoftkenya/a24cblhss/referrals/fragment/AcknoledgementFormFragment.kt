@@ -54,6 +54,7 @@ class AcknoledgementFormFragment : Fragment() {
         patientId = formatterClass.getSharedPref("", "patientId") ?: ""
         serviceRequestId = formatterClass.getSharedPref("", "serviceRequestId") ?: ""
 
+        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.ACKNOWLEDGEMENT_FORM.name)
 
         return binding.root
 
@@ -182,6 +183,12 @@ class AcknoledgementFormFragment : Fragment() {
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+        FormUtils.loadFormData(
+            requireContext(),
+            binding.rootLayout,
+            DbNavigationDetails.REFERRALS.name,
+            DbClasses.ACKNOWLEDGEMENT_FORM.name
+        )
 
     }
 

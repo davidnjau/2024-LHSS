@@ -47,6 +47,7 @@ class ClinicalInfoIIIFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
+        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.CLINICAL_REFERRAL_III.name)
 
         return binding.root
 
@@ -121,11 +122,17 @@ class ClinicalInfoIIIFragment : Fragment() {
              */
 
 
-
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+
+        FormUtils.loadFormData(
+            requireContext(),
+            binding.rootLayout,
+            DbNavigationDetails.REFER_PATIENT.name,
+            DbClasses.CLINICAL_REFERRAL_III.name
+        )
 
     }
 

@@ -49,6 +49,7 @@ class ClnicalInfoIIFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
+        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.CLINICAL_REFERRAL_II.name)
 
         return binding.root
     }
@@ -147,6 +148,12 @@ class ClnicalInfoIIFragment : Fragment() {
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+        FormUtils.loadFormData(
+            requireContext(),
+            binding.rootLayout,
+            DbNavigationDetails.REFER_PATIENT.name,
+            DbClasses.CLINICAL_REFERRAL_II.name
+        )
     }
 
     override fun onDestroyView() {

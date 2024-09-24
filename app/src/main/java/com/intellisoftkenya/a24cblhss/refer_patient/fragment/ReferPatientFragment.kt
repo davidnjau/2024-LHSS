@@ -48,6 +48,7 @@ class ReferPatientFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
+        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.REFERRING_FACILITY_INFO.name)
 
         return binding.root
 
@@ -137,6 +138,12 @@ class ReferPatientFragment : Fragment() {
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+        FormUtils.loadFormData(
+            requireContext(),
+            binding.rootLayout,
+            DbNavigationDetails.REFER_PATIENT.name,
+            DbClasses.REFERRING_FACILITY_INFO.name
+        )
     }
 
     override fun onDestroyView() {
