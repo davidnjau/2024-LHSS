@@ -22,6 +22,8 @@ import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.extractAllFormData
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.loadFormData
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.populateFormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 import java.util.Calendar
@@ -168,10 +170,18 @@ class DemographicsFragment : Fragment() {
         // Call the function to add the RadioButtons and TextView dynamically
         formatterClass.addRadioButtonWithDatePicker(requireContext(), binding.rootLayout)
 
+        loadFormData(
+            requireContext(),
+            binding.rootLayout,
+            DbNavigationDetails.PATIENT_REGISTRATION.name,
+            DbClasses.DEMOGRAPHICS.name
+        )
+
         // Call the extractFormData function to attach listeners to RadioGroups
 //        viewModel.extractFormData(binding.rootLayout)
 
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

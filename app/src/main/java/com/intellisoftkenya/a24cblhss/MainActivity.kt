@@ -14,12 +14,14 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         // Set up the toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        formatterClass = FormatterClass(this)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
@@ -106,5 +110,11 @@ class MainActivity : AppCompatActivity() {
     // Override to handle back button clicks
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        formatterClass.clearData()
     }
 }

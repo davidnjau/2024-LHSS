@@ -20,6 +20,7 @@ import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.registration.viewmodel.AddressViewModel
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 
@@ -28,26 +29,11 @@ class AddressFragment : Fragment() {
     private var _binding: FragmentAddressBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: AddressViewModel by viewModels()
 
     private lateinit var fieldManager: FieldManager
     private var countryOriginList = listOf(
-        "Kenya", "Uganda", "Tanzania", "Rwanda", "Burundi", "South Sudan")
-
-    private var kenyaCountyList = listOf(
-        "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo Marakwet", "Embu", "Garissa", "Homa Bay",
-        "Isiolo", "Kajiado", "Kakamega", "Kericho", "Kiambu", "Kilifi", "Kirinyaga", "Kisii",
-        "Kisumu", "Kitui", "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera",
-        "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", "Nakuru", "Nandi",
-        "Narok", "Nyamira", "Nyandarua", "Nyeri", "Samburu", "Siaya", "Taita Taveta",
-        "Tana River", "Tharaka Nithi", "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga",
-        "Wajir", "West Pokot"
-    )
-
-    private var ugandaDistrictList = listOf(
-        "Kampala", "Mukono", "Wakiso", "Jinja", "Gulu", "Lira", "Mbarara", "Mbale",
-        "Arua", "Fort Portal", "Masaka", "Entebbe", "Kabale", "Soroti", "Hoima"
-    )
+        "Kenya", "Uganda")
 
     private lateinit var formatterClass: FormatterClass
 
@@ -66,6 +52,34 @@ class AddressFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
+
+        // Observe the locations LiveData
+        viewModel.locations.observe(viewLifecycleOwner) { locations ->
+            // Update your UI with the locations
+            // For example, populate a RecyclerView or Spinner
+            val dbFieldList = listOf(
+
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Region/Province/County", true,
+                    InputType.TYPE_CLASS_TEXT),
+
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Sub County/Districts", true,
+                    InputType.TYPE_CLASS_TEXT),
+
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Ward/Village", true,
+                    InputType.TYPE_CLASS_TEXT
+                )
+
+            )
+            FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
+
+
+        }
 
         binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.ADDRESS.name)
 
@@ -125,22 +139,18 @@ class AddressFragment : Fragment() {
                 DbWidgets.SPINNER.name,
                 "Country of Residence", true, null,
                 countryOriginList),
-            DbField(
-                DbWidgets.SPINNER.name,
-                "Region/Province/County", true, null,
-                kenyaCountyList),
-            DbField(
-                DbWidgets.SPINNER.name,
-                "Sub County", true, null,
-                ugandaDistrictList),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Ward/Village", true,
-                InputType.TYPE_CLASS_PHONE
-            )
         )
+
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+//        viewModel.extractFormData(binding.rootLayout)
+
+        FormUtils.loadFormData(
+            requireContext(),
+            binding.rootLayout,
+            DbNavigationDetails.PATIENT_REGISTRATION.name,
+            DbClasses.ADDRESS.name
+        )
     }
 
     override fun onDestroyView() {

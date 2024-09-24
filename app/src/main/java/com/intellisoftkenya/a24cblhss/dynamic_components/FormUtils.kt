@@ -3,6 +3,7 @@ package com.intellisoftkenya.a24cblhss.dynamic_components
 import android.content.Context
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.DatePicker
 import android.widget.EditText
@@ -10,9 +11,14 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
+import com.google.gson.Gson
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.DbWidgets
+import com.intellisoftkenya.a24cblhss.shared.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 object FormUtils {
     fun extractFormData(
@@ -230,6 +236,73 @@ object FormUtils {
 
         return Pair(ArrayList(addedFields), ArrayList(missingFields))
 
+
+    }
+
+    fun populateFormData(formDataList: ArrayList<FormData>, parentLayout: LinearLayout) {
+
+        formDataList.forEach { formData ->
+            formData.formDataList.forEach { dbFormData ->
+                // Find the widget by its tag in the parent layout
+                val view = parentLayout.findViewWithTag<View>(dbFormData.tag)
+
+                // Check for the type of view and set the appropriate text/value
+                when (view) {
+                    is EditText -> {
+                        view.setText(dbFormData.text)
+                    }
+                    is Spinner -> {
+                        // Assuming your spinner has an ArrayAdapter with strings, find the correct position
+                        val adapter = view.adapter as ArrayAdapter<String>
+                        val position = adapter.getPosition(dbFormData.text)
+                        if (position >= 0) {
+                            view.setSelection(position)
+                        }
+                    }
+                    is RadioGroup -> {
+                        // Assuming the tag refers to the RadioGroup, and dbFormData.text refers to the text of a RadioButton
+                        for (i in 0 until view.childCount) {
+                            val radioButton = view.getChildAt(i) as RadioButton
+                            if (radioButton.text == dbFormData.text) {
+                                radioButton.isChecked = true
+                                break
+                            }
+                        }
+                    }
+                    // Add handling for other types of widgets here as needed
+                    else -> {
+                        // Optionally handle other widget types
+                    }
+                }
+            }
+        }
+    }
+
+    fun loadFormData(
+        context: Context,
+        rootLayout: LinearLayout,
+        navigationDetails:String,
+        fragmentClass:String
+    ) {
+
+        val formatterClass = FormatterClass(context)
+
+        val gson = Gson()
+        val formDataList = ArrayList<FormData>()
+
+        val savedJson = formatterClass.getSharedPref(
+            navigationDetails,
+            fragmentClass
+        )
+        if (savedJson != null){
+            val formDataFromJson = gson.fromJson(savedJson, FormData::class.java)
+            if (formDataFromJson != null){
+                formDataList.addAll(listOf(formDataFromJson))
+                if (formDataList.isNotEmpty()){
+                    populateFormData(formDataList, rootLayout)
+                }
+            }
+        }
 
     }
 

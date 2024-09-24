@@ -132,6 +132,12 @@ class NextOfKinFragment : Fragment() {
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+        FormUtils.loadFormData(
+            requireContext(),
+            binding.rootLayout,
+            DbNavigationDetails.PATIENT_REGISTRATION.name,
+            DbClasses.NEXT_OF_KIN.name
+        )
     }
 
     override fun onDestroyView() {
