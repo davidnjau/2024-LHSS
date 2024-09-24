@@ -62,6 +62,8 @@ class PatientCardFragment : Fragment() {
             )
                 .get(PatientCardViewModel::class.java)
 
+        formatterClass.clearPatientData()
+
         return binding.root
 
     }

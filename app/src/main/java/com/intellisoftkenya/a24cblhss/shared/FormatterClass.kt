@@ -303,6 +303,18 @@ class FormatterClass(private val context: Context) {
         }
 
     }
+    fun clearPatientData() {
+
+        listOf(
+            DbNavigationDetails.REFER_PATIENT.name,
+            DbNavigationDetails.REFERRALS.name).forEach {
+            clearSharedPreferences(it)
+        }
+        listOf("serviceRequestId").forEach {
+            deleteSharedPref("", it)
+        }
+
+    }
 
     fun saveSharedPref(
         sharedPrefName:String,
