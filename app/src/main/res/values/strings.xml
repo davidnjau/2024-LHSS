@@ -25,7 +25,7 @@
     <string name="acknowledgement_form_review">Acknowledgement Form Review</string>
     <string name="referral_details">Referral Details</string>
     <string name="success">Success</string>
-    <string name="query_hint_patient_search">Enter Client Name / ID</string>
+    <string name="query_hint_patient_search">Enter Patient Name</string>
     <string name="to">To</string>
     <string name="dd_mm_yyyy">DD/MM/YYYY</string>
     <string name="from">From</string>

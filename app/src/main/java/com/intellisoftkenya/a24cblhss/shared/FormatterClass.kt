@@ -37,6 +37,51 @@ class FormatterClass(private val context: Context) {
     fun generateUuid(): String {
         return UUID.randomUUID().toString()
     }
+
+    fun showDatePickerWithLimits(textView: TextView, isPast: Boolean, fromDateStr: String?) {
+        // Get current date
+        val calendar = Calendar.getInstance()
+
+        // Set a DatePickerDialog
+        val datePickerDialog = DatePickerDialog(
+            textView.context,
+            { _, year, month, dayOfMonth ->
+                // Format the chosen date and set it to the TextView
+                val selectedCalendar = Calendar.getInstance()
+                selectedCalendar.set(year, month, dayOfMonth)
+                val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.getDefault())
+                textView.text = dateFormat.format(selectedCalendar.time)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        // Set min and max date
+        val today = calendar.timeInMillis
+
+
+        if (isPast){
+            datePickerDialog.datePicker.maxDate = today
+        }else{
+            val fromDate = fromDateStr?.let { convertStringToDate(it)?.time } ?: today
+            datePickerDialog.datePicker.minDate = fromDate
+            datePickerDialog.datePicker.maxDate = today
+        }
+
+        // Show the DatePickerDialog
+        datePickerDialog.show()
+    }
+
+    private fun convertStringToDate(dateStr: String): Date? {
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
+        return try {
+            dateFormat.parse(dateStr)
+        } catch (e: Exception) {
+            null // Handle parsing errors gracefully
+        }
+    }
+
     fun formatCurrentDateTime(date: Date): String {
         return dateInverseFormatSeconds.format(date)
     }
@@ -385,21 +430,49 @@ class FormatterClass(private val context: Context) {
 
     }
 
-    fun sortPatientListByDate(patientList: List<DbPatientItem>): List<DbPatientItem> {
+    fun sortPatientListByDate(
+        patientList: List<DbPatientItem>,
+        fromDate: String?,
+        toDate: String?
+    ): List<DbPatientItem> {
         // Define the date format that matches the format of dateCreated field
         val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
 
-        return patientList.sortedByDescending { patient ->
-            // Parse dateCreated, return a Date object. Handle nulls safely.
-            patient.dateCreated?.let { dateStr ->
-                try {
-                    dateFormat.parse(dateStr)
-                } catch (e: Exception) {
-                    null // In case of parsing failure, handle gracefully.
+        // Parse the fromDate and toDate if they are not null
+        val minDate: Date? = fromDate?.let { parseDateSafely(it, dateFormat) }
+        val maxDate: Date? = toDate?.let { parseDateSafely(it, dateFormat) }
+
+        return patientList
+            // Filter based on fromDate (min) and toDate (max)
+            .filter { patient ->
+                patient.dateCreated?.let { dateStr ->
+                    val createdDate = parseDateSafely(dateStr, dateFormat)
+                    // Remove null dateCreated if minDate is specified
+                    if (minDate != null && createdDate == null) return@filter false
+                    // Check if dateCreated is after minDate (if minDate exists)
+                    if (minDate != null && createdDate != null && createdDate.before(minDate)) return@filter false
+                    // Check if dateCreated is before maxDate (if maxDate exists)
+                    if (maxDate != null && createdDate != null && createdDate.after(maxDate)) return@filter false
+                    true
+                } ?: (minDate == null && maxDate == null) // If dateCreated is null, allow only if no min or max
+            }
+            // Sort the filtered list by dateCreated in descending order
+            .sortedByDescending { patient ->
+                patient.dateCreated?.let { dateStr ->
+                    parseDateSafely(dateStr, dateFormat)
                 }
             }
+    }
+
+    // Helper function to safely parse dates and handle exceptions
+    fun parseDateSafely(dateStr: String, dateFormat: SimpleDateFormat): Date? {
+        return try {
+            dateFormat.parse(dateStr)
+        } catch (e: Exception) {
+            null // In case of parsing failure, return null
         }
     }
+
     fun convertDateFormat(inputDate: String): String? {
         // Define the input date formats to check
         val inputDateFormats = arrayOf(
