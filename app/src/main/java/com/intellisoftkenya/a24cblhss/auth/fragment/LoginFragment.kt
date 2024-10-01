@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.auth.viewmodel.LoginViewModel
 import com.intellisoftkenya.a24cblhss.R
@@ -51,6 +52,7 @@ class LoginFragment : Fragment() {
 
         return binding.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -88,6 +88,9 @@ class PatientListFragment : Fragment() {
         // Handle close DatePicker layout
         binding.closeDatePicker.setOnClickListener {
             binding.datePickerLayout.visibility = View.GONE
+
+            binding.tvFromDate.text = ""
+            binding.tvToDate.text = ""
         }
 
         binding.tvFromDate.setOnClickListener {
