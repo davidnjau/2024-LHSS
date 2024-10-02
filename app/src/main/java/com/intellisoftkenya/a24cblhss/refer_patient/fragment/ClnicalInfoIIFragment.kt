@@ -49,7 +49,12 @@ class ClnicalInfoIIFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
-        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.CLINICAL_REFERRAL_II.name)
+
+        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.CLINICAL_REFERRAL_II.name)
+        if (workflowTitles != null){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+            binding.imgBtn.setImageResource(workflowTitles.iconId)
+        }
 
         return binding.root
     }

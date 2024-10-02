@@ -557,5 +557,11 @@ class FormatterClass(private val context: Context) {
 
     }
 
+    fun getWorkflowTitles(textId: String): WorkflowTitles? {
+        val entries = WorkflowTitles.entries
+        val textIdValue = entries.find { it.textId == textId }
+        return textIdValue
+    }
+
 
 }

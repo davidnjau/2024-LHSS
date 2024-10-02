@@ -47,7 +47,12 @@ class ReferralInfoFragment : Fragment() {
         _binding = FragmentReferralInfoBinding.inflate(inflater, container, false)
         navigationActions()
         formatterClass = FormatterClass(requireContext())
-        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.REFERRAL_INFO.name)
+
+        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.REFERRAL_INFO.name)
+        if (workflowTitles != null){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+            binding.imgBtn.setImageResource(workflowTitles.iconId)
+        }
 
         return binding.root
 

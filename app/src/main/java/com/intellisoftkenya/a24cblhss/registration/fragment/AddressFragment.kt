@@ -81,7 +81,11 @@ class AddressFragment : Fragment() {
 
         }
 
-        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.ADDRESS.name)
+        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.ADDRESS.name)
+        if (workflowTitles != null){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+            binding.imgBtn.setImageResource(workflowTitles.iconId)
+        }
 
         return binding.root
 

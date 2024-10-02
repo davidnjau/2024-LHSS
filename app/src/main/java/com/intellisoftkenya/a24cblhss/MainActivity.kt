@@ -1,6 +1,7 @@
 package com.intellisoftkenya.a24cblhss
 
 import android.os.Bundle
+import android.view.Gravity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
@@ -79,6 +80,10 @@ class MainActivity : AppCompatActivity() {
                 bottomNavigationView.visibility = BottomNavigationView.GONE
             } else {
                 bottomNavigationView.visibility = BottomNavigationView.VISIBLE
+            }
+
+            if (destination.id == R.id.patientCardFragment ){
+                toolbar.foregroundGravity = Gravity.CENTER
             }
         }
 

@@ -57,7 +57,12 @@ class DemographicsFragment : Fragment() {
 
         formatterClass = FormatterClass(requireContext())
 
-        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.DEMOGRAPHICS.name)
+        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.DEMOGRAPHICS.name)
+        if (workflowTitles != null){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+            binding.imgBtn.setImageResource(workflowTitles.iconId)
+        }
+
 
         return binding.root
 

@@ -54,7 +54,11 @@ class AcknoledgementFormFragment : Fragment() {
         patientId = formatterClass.getSharedPref("", "patientId") ?: ""
         serviceRequestId = formatterClass.getSharedPref("", "serviceRequestId") ?: ""
 
-        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.ACKNOWLEDGEMENT_FORM.name)
+        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.ACKNOWLEDGEMENT_FORM.name)
+        if (workflowTitles != null){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+            binding.imgBtn.setImageResource(workflowTitles.iconId)
+        }
 
         return binding.root
 

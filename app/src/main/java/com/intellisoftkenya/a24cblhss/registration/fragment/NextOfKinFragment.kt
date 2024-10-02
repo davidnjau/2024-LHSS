@@ -52,7 +52,12 @@ class NextOfKinFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
-        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.NEXT_OF_KIN.name)
+
+        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.NEXT_OF_KIN.name)
+        if (workflowTitles != null){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+            binding.imgBtn.setImageResource(workflowTitles.iconId)
+        }
 
         return binding.root
 

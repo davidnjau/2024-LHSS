@@ -48,7 +48,12 @@ class ReferPatientFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
-        binding.tvTitle.text = formatterClass.toSentenceCase(DbClasses.REFERRING_FACILITY_INFO.name)
+
+        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.REFERRING_FACILITY_INFO.name)
+        if (workflowTitles != null){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+            binding.imgBtn.setImageResource(workflowTitles.iconId)
+        }
 
         return binding.root
 
