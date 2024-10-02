@@ -89,7 +89,16 @@ class DemographicsFragment : Fragment() {
             val (addedFields, missingFields) = extractAllFormData(binding.rootLayout)
 
             if (missingFields.isNotEmpty()){
-                Toast.makeText(context, "Please fill all mandatory fields", Toast.LENGTH_LONG).show()
+
+                var missingText = ""
+                missingFields.forEach { missingText += "\n ${it.tag}, " }
+
+                val mandatoryText = "The following are mandatory fields and " +
+                        "need to be filled before proceeding: \n" +
+                        missingText
+
+                formatterClass.showDialog("Missing Content", mandatoryText)
+
             }else{
 
                 val telephoneData = addedFields.find { it.tag == "Telephone" }

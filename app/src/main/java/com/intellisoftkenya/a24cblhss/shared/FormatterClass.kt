@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.ui.semantics.Role.Companion.RadioButton
 import androidx.core.content.ContextCompat
 import com.intellisoftkenya.a24cblhss.R
@@ -36,6 +37,29 @@ class FormatterClass(private val context: Context) {
 
     fun generateUuid(): String {
         return UUID.randomUUID().toString()
+    }
+
+    fun showDialog(title:String, message: String) {
+
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(title)
+        builder.setMessage(message)
+
+        // Positive button (Yes)
+        builder.setPositiveButton("Confirm") { dialog, _ ->
+            // Handle the Yes action
+            dialog.dismiss()
+        }
+
+        // Negative button (No)
+        builder.setNegativeButton("Back") { dialog, _ ->
+            // Handle the No action
+            dialog.dismiss()
+        }
+
+        // Create and show the dialog
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     fun showDatePickerWithLimits(textView: TextView, isPast: Boolean, fromDateStr: String?) {

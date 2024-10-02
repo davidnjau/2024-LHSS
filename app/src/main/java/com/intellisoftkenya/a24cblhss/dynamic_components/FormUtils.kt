@@ -173,7 +173,8 @@ object FormUtils {
                                 addedFields.add(formData)
                             }else{
                                 // Add missing mandatory fields if text is empty
-                                missingFields.add(DbFormData(tag, ""))
+                                val tagText = if (tag=="DOB_SELECTION") "Date of Birth" else tag
+                                missingFields.add(DbFormData(tagText, ""))
                             }
                         }else{
                             if (tag.isNotEmpty() && selectedText != null) {

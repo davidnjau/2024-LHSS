@@ -108,7 +108,14 @@ class AddressFragment : Fragment() {
             val (addedFields, missingFields) = FormUtils.extractAllFormData(binding.rootLayout)
 
             if (missingFields.isNotEmpty()){
-                Toast.makeText(context, "Please fill all mandatory fields", Toast.LENGTH_LONG).show()
+                var missingText = ""
+                missingFields.forEach { missingText += "\n ${it.tag}, " }
+
+                val mandatoryText = "The following are mandatory fields and " +
+                        "need to be filled before proceeding: \n" +
+                        missingText
+
+                formatterClass.showDialog("Missing Content", mandatoryText)
             }else{
                 findNavController().navigate(R.id.action_addressFragment_to_nextOfKinFragment)
                 val formData = FormData(
