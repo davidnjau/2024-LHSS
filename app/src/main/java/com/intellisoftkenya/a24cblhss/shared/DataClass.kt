@@ -96,3 +96,19 @@ enum class WorkflowTitles(
     ACKNOWLEDGEMENT_FORM(R.drawable.ic_action_ackno, DbClasses.ACKNOWLEDGEMENT_FORM.name,  "Acknowledgement Form"),
 }
 
+data class DbSignIn(
+    val idNumber: String,
+    val password: String,
+)
+
+data class DbSignInResponse(
+    val access_token: String,
+    val expires_in: String,
+    val refresh_expires_in: String,
+    val refresh_token: String,
+)
+data class DbResponseError(
+    val status: String,
+    val error: String,
+)
+

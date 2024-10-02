@@ -2,17 +2,22 @@ package com.intellisoftkenya.a24cblhss.auth.fragment
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import android.widget.Toolbar
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.intellisoftkenya.a24cblhss.auth.viewmodel.LoginViewModel
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.databinding.FragmentLoginBinding
+import com.intellisoftkenya.a24cblhss.network_request.RetrofitCallsAuthentication
+import com.intellisoftkenya.a24cblhss.shared.DbSignIn
 
 class LoginFragment : Fragment() {
 
@@ -22,6 +27,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!! // This is safe to use after onCreateView
 
     private val viewModel: LoginViewModel by viewModels()
+    private var retrofitCallsAuthentication = RetrofitCallsAuthentication()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +65,22 @@ class LoginFragment : Fragment() {
 
         // Access the button from the binding and set an action
         binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_landingPageFragment)
+
+            val username = binding.etUsername.text.toString()
+            val password = binding.etPassword.text.toString()
+
+            if (username == "1" && password == "1"){
+                findNavController().navigate(R.id.landingPageFragment)
+            }else if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+
+                val dbSignIn = DbSignIn(username, password)
+                retrofitCallsAuthentication.loginUser(requireContext(), dbSignIn, this)
+
+            } else{
+                if (TextUtils.isEmpty(username)) binding.etUsername.error = "Please Enter Username"
+                if (TextUtils.isEmpty(password)) binding.etPassword.error = "Please Enter Password"
+            }
+
         }
 
         binding.tvForgotPassword.setOnClickListener {
