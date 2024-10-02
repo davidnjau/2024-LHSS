@@ -1,5 +1,6 @@
 package com.intellisoftkenya.a24cblhss.shared
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoftkenya.a24cblhss.R
 
-class FormDataAdapter(private val formDataList: ArrayList<FormData>) : RecyclerView.Adapter<FormDataAdapter.FormDataViewHolder>() {
+class FormDataAdapter(
+    private val formDataList: ArrayList<FormData>,
+    private val context: Context
+    )
+    : RecyclerView.Adapter<FormDataAdapter.FormDataViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormDataViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_form_data, parent, false)
@@ -28,10 +33,22 @@ class FormDataAdapter(private val formDataList: ArrayList<FormData>) : RecyclerV
     inner class FormDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         private val expandIcon: ImageView = itemView.findViewById(R.id.expandIcon)
+        private val imgBtn: ImageView = itemView.findViewById(R.id.imgBtn)
         private val contentLayout: LinearLayout = itemView.findViewById(R.id.contentLayout)
 
         fun bind(formData: FormData) {
-            titleTextView.text = toSentenceCase(formData.title)
+//            titleTextView.text = toSentenceCase(formData.title)
+
+            val formatterClass = FormatterClass(context)
+
+            val title = formData.title
+
+            val workflowTitles = formatterClass.getWorkflowTitles(title)
+
+            if (workflowTitles != null){
+                titleTextView.text = formatterClass.toSentenceCase(workflowTitles.text)
+                imgBtn.setImageResource(workflowTitles.iconId)
+            }
 
             // Set default state
             expandIcon.setImageResource(R.drawable.ic_arrow_down)

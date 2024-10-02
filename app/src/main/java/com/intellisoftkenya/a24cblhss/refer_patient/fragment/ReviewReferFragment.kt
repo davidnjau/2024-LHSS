@@ -150,7 +150,7 @@ class ReviewReferFragment : Fragment() {
             formDataList.addAll(listOf(formDataFromJson))
         }
 
-        formDataAdapter = FormDataAdapter(formDataList)
+        formDataAdapter = FormDataAdapter(formDataList, requireContext())
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         binding.recyclerView.adapter = formDataAdapter

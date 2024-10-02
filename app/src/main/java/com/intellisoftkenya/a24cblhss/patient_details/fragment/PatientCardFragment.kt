@@ -80,7 +80,7 @@ class PatientCardFragment : Fragment() {
 
         val formDataList = patientDetailsViewModel.getPatientInfo()
 
-        formDataAdapter = FormDataAdapter(formDataList)
+        formDataAdapter = FormDataAdapter(formDataList, requireContext())
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         binding.recyclerView.adapter = formDataAdapter

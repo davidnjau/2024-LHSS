@@ -95,7 +95,7 @@ class ReferralDetailsFragment : Fragment() {
 
         val formDataList = viewModel.getServiceRequest()
 
-        formDataAdapter = FormDataAdapter(formDataList)
+        formDataAdapter = FormDataAdapter(formDataList, requireContext())
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         binding.recyclerView.adapter = formDataAdapter

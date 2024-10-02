@@ -135,7 +135,7 @@ class AcknoledgementDetailsFragment : Fragment() {
 
         }
 
-        formDataAdapter = FormDataAdapter(formDataList)
+        formDataAdapter = FormDataAdapter(formDataList, requireContext())
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
         binding.recyclerView.adapter = formDataAdapter
