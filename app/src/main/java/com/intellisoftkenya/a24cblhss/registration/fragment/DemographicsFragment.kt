@@ -36,7 +36,7 @@ class DemographicsFragment : Fragment() {
     private lateinit var formatterClass: FormatterClass
 
     private val viewModel: MainActivityViewModel by viewModels()
-    private var identificationTypes = listOf("Passport", "Identification Number", "Birth Certificate Number")
+    private var identificationTypes = listOf("Birth Certificate", "National ID", "Passport")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

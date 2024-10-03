@@ -116,20 +116,37 @@ class ClnicalInfoIIFragment : Fragment() {
                 listOf("Negative", "Positive", "Unknown")
             ),
             DbField(
-                DbWidgets.SPINNER.name,
-                "ART Regimen", true, null,
-                listOf("ART Regimen")
+                DbWidgets.EDIT_TEXT.name,
+                "ART Regimen", true,
+                InputType.TYPE_CLASS_TEXT
             ),
             DbField(
-                DbWidgets.SPINNER.name,
-                "CD4 Count", true, null,
-                listOf("CD4 Count")
+                DbWidgets.EDIT_TEXT.name,
+                "CD4 Count", true,
+                InputType.TYPE_CLASS_TEXT
             ),
             DbField(
-                DbWidgets.SPINNER.name,
-                "Viral Load", true, null,
-                listOf("Viral Load")
+                DbWidgets.EDIT_TEXT.name,
+                "Viral Load", true,
+                InputType.TYPE_CLASS_TEXT
             ),
+
+//            DbField(
+//                DbWidgets.SPINNER.name,
+//                "ART Regimen", true, null,
+//                listOf("ART Regimen")
+//            ),
+//            DbField(
+//                DbWidgets.SPINNER.name,
+//                "CD4 Count", true, null,
+//                listOf("CD4 Count")
+//            ),
+//            DbField(
+//                DbWidgets.SPINNER.name,
+//                "Viral Load", true, null,
+//                listOf("Viral Load")
+//            ),
+
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Radiological information", true,

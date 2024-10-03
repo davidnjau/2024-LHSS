@@ -150,6 +150,21 @@ class AddressFragment : Fragment() {
                 DbWidgets.SPINNER.name,
                 "Country of Residence", true, null,
                 countryOriginList),
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Region/Province/County", true,
+                InputType.TYPE_CLASS_TEXT),
+
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Sub County/Districts", true,
+                InputType.TYPE_CLASS_TEXT),
+
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Ward/Village", true,
+                InputType.TYPE_CLASS_TEXT
+            )
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())

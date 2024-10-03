@@ -34,7 +34,7 @@ class NextOfKinFragment : Fragment() {
 
     private val viewModelNextOfKin: NextOfKinViewModel by viewModels()
 
-    private val relationShipList = listOf("Wife", "Husband")
+    private val relationShipList = listOf("Wife", "Husband", "Sister", "Brother", "Son", "Daughter", "Parent")
     private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
