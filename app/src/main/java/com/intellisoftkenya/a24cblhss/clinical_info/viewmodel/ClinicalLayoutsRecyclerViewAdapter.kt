@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.intellisoftkenya.a24cblhss.databinding.LandingPageItemBinding
+import com.intellisoftkenya.a24cblhss.databinding.LandingSectionPageItemBinding
 
 class ClinicalLayoutsRecyclerViewAdapter(
     private val onItemClick: (ClinicalLayoutListViewModel.Layout) -> Unit
@@ -13,7 +13,7 @@ class ClinicalLayoutsRecyclerViewAdapter(
     ListAdapter<ClinicalLayoutListViewModel.Layout, LayoutViewHolder>(LayoutDiffUtil()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LayoutViewHolder {
         return LayoutViewHolder(
-            LandingPageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            LandingSectionPageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             onItemClick,
         )
     }
@@ -24,7 +24,7 @@ class ClinicalLayoutsRecyclerViewAdapter(
 }
 
 class LayoutViewHolder(
-    val binding: LandingPageItemBinding,
+    val binding: LandingSectionPageItemBinding,
     private val onItemClick: (ClinicalLayoutListViewModel.Layout) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(layout: ClinicalLayoutListViewModel.Layout) {

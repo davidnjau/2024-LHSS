@@ -29,6 +29,10 @@ class PatientFileFragment : Fragment() {
         binding.btnEndTreatment.setOnClickListener {
             showReceivePatientDialog()
         }
+        binding.btnAddNewPatientFile.setOnClickListener {
+            findNavController().navigate(R.id.action_patientFileFragment_to_clinicalInfoSectionsFragment)
+        }
+
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -39,7 +43,7 @@ class PatientFileFragment : Fragment() {
 
     }
 
-    fun showReceivePatientDialog() {
+    private fun showReceivePatientDialog() {
         // Create an AlertDialog builder
         val builder = AlertDialog.Builder(requireContext())
 
@@ -52,7 +56,8 @@ class PatientFileFragment : Fragment() {
         builder.setPositiveButton("Yes") { dialog, _ ->
             // Trigger the form when Yes is clicked
             dialog.dismiss() // Close the dialog
-            findNavController().navigate(R.id.action_patientFileFragment_to_endTreatmentFormFragment)
+            findNavController().navigate(
+                R.id.action_patientFileFragment_to_endTreatmentFormFragment)
         }
 
         // Set No button and its action

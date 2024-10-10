@@ -35,15 +35,20 @@ class ClinicalInfoSectionsFragment : Fragment() {
 
     private fun onItemClick(layout: ClinicalLayoutListViewModel.Layout) {
         when (layout.textId) {
-            "Search Patient" -> {
-                findNavController().navigate(R.id.patientListFragment)
+            "Clinical Info Section 1" -> {
+                findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
             }
-            "Referrals" -> {
-                findNavController().navigate(R.id.referralPatientList)
+            "Clinical Info Section 2" -> {
+                findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
             }
-
-            "Register Patient" -> {
-                findNavController().navigate(R.id.demographicsFragment)
+            "Clinical Info Section 3" -> {
+                findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
+            }
+            "Clinical Info Section 4" -> {
+                findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
+            }
+            "Clinical Info Section 5" -> {
+                findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
             }
 
         }
