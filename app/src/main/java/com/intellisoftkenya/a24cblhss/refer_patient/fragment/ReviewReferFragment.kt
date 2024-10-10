@@ -37,6 +37,7 @@ class ReviewReferFragment : Fragment() {
     private lateinit var formatterClass: FormatterClass
     private lateinit var formDataAdapter: FormDataAdapter
     private var formDataList = ArrayList<FormData>()
+
     val navigationDetails = DbNavigationDetails.REFER_PATIENT.name
     val registrationClassesList = listOf(
         DbClasses.REFERRING_FACILITY_INFO.name,

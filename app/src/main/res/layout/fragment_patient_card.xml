@@ -29,28 +29,44 @@
 
         <LinearLayout
             android:layout_margin="20dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/btnReferPatient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/refer_patient" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                <Button
+                    android:id="@+id/btnReferPatient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/refer_patient" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btnReferrals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/referrals" />
+
+            </LinearLayout>
 
             <Button
-                android:id="@+id/btnReferrals"
-                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:id="@+id/btnPatientFile"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/referrals" />
+                android:text="@string/patient_file" />
+
 
         </LinearLayout>
+
 
 
         <androidx.recyclerview.widget.RecyclerView

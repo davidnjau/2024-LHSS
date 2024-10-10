@@ -150,6 +150,9 @@
         <action
             android:id="@+id/action_patientCardFragment_to_patientListFragment"
             app:destination="@id/patientListFragment" />
+        <action
+            android:id="@+id/action_patientCardFragment_to_patientFileFragment"
+            app:destination="@id/patientFileFragment" />
 
     </fragment>
     <fragment
@@ -269,4 +272,59 @@
         android:name="com.intellisoftkenya.a24cblhss.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/patientFileFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.PatientFileFragment"
+        android:label="@string/patient_file"
+        tools:layout="@layout/fragment_patient_file" >
+        <action
+            android:id="@+id/action_patientFileFragment_to_clinicalInfoSectionsFragment"
+            app:destination="@id/clinicalInfoSectionsFragment" />
+        <action
+            android:id="@+id/action_patientFileFragment_to_endTreatmentFormFragment"
+            app:destination="@id/endTreatmentFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/clinicalInfoSectionsFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoSectionsFragment"
+        android:label="fragment_clinical_info_sections"
+        tools:layout="@layout/fragment_clinical_info_sections" />
+    <fragment
+        android:id="@+id/clinicalInfoDetailsFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoDetailsFragment"
+        android:label="fragment_clinical_info_details"
+        tools:layout="@layout/fragment_clinical_info_details" />
+    <fragment
+        android:id="@+id/clinicalInfoViewFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoViewFragment"
+        android:label="fragment_clinical_info_view"
+        tools:layout="@layout/fragment_clinical_info_view" />
+    <fragment
+        android:id="@+id/clinicalInfoFormI_IIFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoFormI_IIFragment"
+        android:label="fragment_clinical_info_form_i__i_i"
+        tools:layout="@layout/fragment_clinical_info_form_i__i_i" />
+    <fragment
+        android:id="@+id/clinicalInfoFormIII_IVFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoFormIII_IVFragment"
+        android:label="fragment_clinical_info_form_i_i_i__i_v"
+        tools:layout="@layout/fragment_clinical_info_form_i_i_i__i_v" />
+    <fragment
+        android:id="@+id/endTreatmentFormFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.EndTreatmentFormFragment"
+        android:label="@string/end_of_treatment_form"
+        tools:layout="@layout/fragment_end_treatment_form" >
+        <action
+            android:id="@+id/action_endTreatmentFormFragment_to_endTreatmentReviewFragment"
+            app:destination="@id/endTreatmentReviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/endTreatmentReviewFragment"
+        android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.EndTreatmentReviewFragment"
+        android:label="@string/end_of_treatment_review"
+        tools:layout="@layout/fragment_end_treatment_review" >
+        <action
+            android:id="@+id/action_endTreatmentReviewFragment_to_patientCardFragment"
+            app:destination="@id/patientCardFragment" />
+    </fragment>
 </navigation>

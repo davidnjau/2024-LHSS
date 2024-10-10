@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoftkenya.a24cblhss.databinding.LandingPageItemBinding
 
-class LayoutsRecyclerViewAdapter(private val onItemClick: (LayoutListViewModel.Layout) -> Unit) :
+class LayoutsRecyclerViewAdapter(
+    private val onItemClick: (LayoutListViewModel.Layout) -> Unit
+) :
     ListAdapter<LayoutListViewModel.Layout, LayoutViewHolder>(LayoutDiffUtil()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LayoutViewHolder {
         return LayoutViewHolder(

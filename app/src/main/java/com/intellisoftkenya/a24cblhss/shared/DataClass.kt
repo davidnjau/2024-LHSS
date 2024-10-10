@@ -76,7 +76,8 @@ enum class DbClasses{
     CLINICAL_REFERRAL_II,
     CLINICAL_REFERRAL_III,
 
-    ACKNOWLEDGEMENT_FORM
+    ACKNOWLEDGEMENT_FORM,
+    END_TREATMENT_FORM,
 }
 enum class WorkflowTitles(
     @DrawableRes val iconId: Int,
@@ -94,6 +95,7 @@ enum class WorkflowTitles(
     CLINICAL_REFERRAL_III(R.drawable.ic_action_next_kin, DbClasses.CLINICAL_REFERRAL_III.name,  "Clinical Referral III"),
 
     ACKNOWLEDGEMENT_FORM(R.drawable.ic_action_ackno, DbClasses.ACKNOWLEDGEMENT_FORM.name,  "Acknowledgement Form"),
+    END_TREATMENT_FORM(R.drawable.ic_action_ackno, DbClasses.END_TREATMENT_FORM.name,  "End of Treatment Form"),
 }
 
 data class DbSignIn(

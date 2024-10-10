@@ -77,6 +77,9 @@ class PatientCardFragment : Fragment() {
         binding.btnReferPatient.setOnClickListener {
             findNavController().navigate(R.id.action_patientCardFragment_to_referPatientFragment)
         }
+        binding.btnPatientFile.setOnClickListener {
+            findNavController().navigate(R.id.action_patientCardFragment_to_patientFileFragment)
+        }
 
         val formDataList = patientDetailsViewModel.getPatientInfo()
 
