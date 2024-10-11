@@ -38,39 +38,26 @@ class ClinicalInfoSectionsFragment : Fragment() {
     }
 
     private fun onItemClick(layout: ClinicalLayoutListViewModel.Layout) {
+
+        var clinicalReferral = ""
         when (layout.textId) {
-            "Tb Treatment" -> {
-                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.TB_TREATMENT.name)
-                findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
-            }
-            "HIV Status and Treatment" -> {
-                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.HIV_STATUS_TREATMENT.name)
-                findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
-            }
-            "Laboratory Results" -> {
-                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.LABORATORY_RESULTS.name)
-                findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
-            }
-            "DST" -> {
-                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.DST.name)
-                findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
-            }
-            "DR TB Follow Up Test" -> {
-                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.DR_TB_FOLLOW_UP_TEST.name)
-                findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
-            }
+            "Tb Treatment" -> { clinicalReferral = DbClasses.TB_TREATMENT.name }
+            "HIV Status and Treatment" -> { clinicalReferral = DbClasses.HIV_STATUS_TREATMENT.name }
+            "Laboratory Results" -> { clinicalReferral = DbClasses.LABORATORY_RESULTS.name }
+            "DST" -> { clinicalReferral = DbClasses.DST.name }
+            "DR TB Follow Up Test" -> { clinicalReferral = DbClasses.DR_TB_FOLLOW_UP_TEST.name }
 
         }
+        formatterClass.saveSharedPref("", "CLINICAL_REFERRAL", clinicalReferral)
+        findNavController().navigate(R.id.action_clinicalInfoSectionsFragment_to_clinicalInfoEncountersFragment)
+
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        formatterClass.deleteSharedPref("", "CLINICAL_REFERRAL")
 
         val layoutList = layoutViewModel.getLayoutList()
 

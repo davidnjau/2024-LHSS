@@ -41,6 +41,14 @@ data class FormData(
     val formDataList: ArrayList<DbFormData>
 )
 
+data class DbEncounter(
+    val id: String,
+    val date: String,
+    val status: String,
+    val filledBy: String,
+    val referralReason: String
+)
+
 
 data class DbFormData(
     val tag: String,

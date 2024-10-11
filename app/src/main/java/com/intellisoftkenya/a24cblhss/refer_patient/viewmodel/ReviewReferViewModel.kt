@@ -25,10 +25,12 @@ import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Observation
+import org.hl7.fhir.r4.model.Period
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ServiceRequest
 import org.hl7.fhir.r4.model.StringType
+import java.util.Date
 
 class ReviewReferViewModel (
     application: Application,
@@ -192,6 +194,8 @@ class ReviewReferViewModel (
         encounter.id =  formatterClass.generateUuid()  // Use timestamp as a unique ID
         encounter.subject = Reference("Patient/$patientId")
         encounter.reasonCode = listOf(CodeableConcept().setText(title))
+
+        encounter.period = Period().setStart(Date())
 
         encounter.status = status
 

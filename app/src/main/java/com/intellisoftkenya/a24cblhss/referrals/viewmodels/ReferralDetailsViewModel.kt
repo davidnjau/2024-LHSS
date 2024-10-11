@@ -12,6 +12,7 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientCardViewModel
+import com.intellisoftkenya.a24cblhss.shared.DbEncounter
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
@@ -156,6 +157,48 @@ class ReferralDetailsViewModel(
         }
         return null
     }
+
+    fun getEncounterList() = runBlocking {
+        getEncounterListBac()
+    }
+
+    private suspend fun getEncounterListBac(): ArrayList<DbEncounter> {
+
+        val formDataList = ArrayList<DbEncounter>()
+
+        fhirEngine
+            .search<Encounter> {
+                filter(Encounter.SUBJECT, { value = "Patient/$patientId" })
+                sort(Encounter.DATE, Order.ASCENDING)
+            }
+            .map { createEncounterItem(it.resource) }
+            .let {formDataList.addAll(it)}
+
+        return formDataList
+
+    }
+
+    private fun createEncounterItem(resource: Encounter): DbEncounter {
+
+        val id = resource.id
+        val status = resource.status.toString()
+
+        val dateCreated = if (resource.hasPeriod() && resource.period.hasStart()) {
+            resource.period.start.toString()
+        }else ""
+        val referralReason = if (resource.hasReasonCode()){
+            resource.reasonCodeFirstRep.text
+        }else ""
+
+        return DbEncounter(
+            id,
+            dateCreated,
+            status,
+            "",
+            referralReason)
+
+    }
+
 
 }
 class ReferralDetailsViewModelFactory(

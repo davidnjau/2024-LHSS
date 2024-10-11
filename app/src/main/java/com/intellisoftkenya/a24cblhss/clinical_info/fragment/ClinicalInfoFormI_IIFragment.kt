@@ -56,7 +56,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
         workflowTitles = formatterClass.getSharedPref("", "CLINICAL_REFERRAL")?: ""
 
         if (workflowTitles != ""){
-            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles!!)
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles)
 //            binding.imgBtn.setImageResource(workflowTitles)
         }
 
