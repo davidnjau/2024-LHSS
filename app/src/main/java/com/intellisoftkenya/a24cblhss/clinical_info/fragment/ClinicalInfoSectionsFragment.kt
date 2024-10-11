@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalLayoutListViewModel
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalLayoutsRecyclerViewAdapter
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.LayoutsRecyclerViewAdapter
 
 class ClinicalInfoSectionsFragment : Fragment() {
 
     private val layoutViewModel: ClinicalLayoutListViewModel by viewModels()
 
+    private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,7 @@ class ClinicalInfoSectionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        formatterClass = FormatterClass(requireContext())
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_clinical_info_sections, container, false)
     }
@@ -36,9 +40,13 @@ class ClinicalInfoSectionsFragment : Fragment() {
     private fun onItemClick(layout: ClinicalLayoutListViewModel.Layout) {
         when (layout.textId) {
             "Clinical Info Section 1" -> {
+                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
+                    DbClasses.CLINICAL_REFERRAL_I.name)
                 findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
             }
             "Clinical Info Section 2" -> {
+                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
+                    DbClasses.CLINICAL_REFERRAL_II.name)
                 findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
             }
             "Clinical Info Section 3" -> {
