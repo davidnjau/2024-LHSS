@@ -7,14 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.shared.ClinicalParentAdapter
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIIVBinding
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
+import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.shared.FormData
@@ -60,6 +63,24 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             bottomNavigationDrawerFragment.show(parentFragmentManager,
                 bottomNavigationDrawerFragment.tag)
         }
+
+        // Create sample data
+        val childItemList1 = listOf(
+            DbFormData("Child 1", "Description 1"),
+            DbFormData("Child 2", "Description 2")
+        )
+        val childItemList2 = listOf(
+            DbFormData("Child A", "Description A"),
+            DbFormData("Child B", "Description B")
+        )
+        val parentItemList = listOf(
+            FormData("Parent 1", ArrayList(childItemList1)),
+            FormData("Parent 2", ArrayList(childItemList2))
+        )
+
+        // Setup Parent RecyclerView
+        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.parentRecyclerView.adapter = ClinicalParentAdapter(parentItemList)
 
         return binding.root
 
