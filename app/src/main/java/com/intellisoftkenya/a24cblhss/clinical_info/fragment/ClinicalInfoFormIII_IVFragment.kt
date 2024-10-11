@@ -56,7 +56,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
 
         binding.btnAdd.setOnClickListener {
             val bottomNavigationDrawerFragment =
-                BottomNavigationDrawerFragmentWithWidgets(dbFieldList)
+                BottomNavigationDrawerFragmentWithWidgets(dbFieldList,workflowTitles)
             bottomNavigationDrawerFragment.show(parentFragmentManager,
                 bottomNavigationDrawerFragment.tag)
         }
