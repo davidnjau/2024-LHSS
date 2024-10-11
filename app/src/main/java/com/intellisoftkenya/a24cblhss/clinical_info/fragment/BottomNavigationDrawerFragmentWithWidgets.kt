@@ -5,11 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
+import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.shared.DbField
 
-class BottomNavigationDrawerFragmentWithWidgets : BottomSheetDialogFragment() {
+class BottomNavigationDrawerFragmentWithWidgets(dbFieldList: List<DbField>) : BottomSheetDialogFragment() {
+
+    private lateinit var fieldManager: FieldManager
+    private val dbFieldList: List<DbField> by lazy { dbFieldList }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,24 +30,22 @@ class BottomNavigationDrawerFragmentWithWidgets : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get references to widgets and handle interactions
-        val buttonAction1: Button = view.findViewById(R.id.button_action_1)
-        val buttonAction2: Button = view.findViewById(R.id.button_action_2)
-        val buttonAction3: Button = view.findViewById(R.id.button_action_3)
+        fieldManager = FieldManager(DefaultLabelCustomizer(), requireContext())
 
-        buttonAction1.setOnClickListener {
+        // Get references to widgets and handle interactions
+        val btnAdd: Button = view.findViewById(R.id.btnAdd)
+        val rootLayout: LinearLayout = view.findViewById(R.id.rootLayout)
+
+        FormUtils.populateView(ArrayList(dbFieldList),
+            rootLayout, fieldManager, requireContext())
+
+        btnAdd.setOnClickListener {
+
+
+
             Toast.makeText(context, "Action 1 clicked", Toast.LENGTH_SHORT).show()
             dismiss() // Close drawer if necessary
         }
 
-        buttonAction2.setOnClickListener {
-            Toast.makeText(context, "Action 2 clicked", Toast.LENGTH_SHORT).show()
-            dismiss() // Close drawer if necessary
-        }
-
-        buttonAction3.setOnClickListener {
-            Toast.makeText(context, "Action 3 clicked", Toast.LENGTH_SHORT).show()
-            dismiss() // Close drawer if necessary
-        }
     }
 }

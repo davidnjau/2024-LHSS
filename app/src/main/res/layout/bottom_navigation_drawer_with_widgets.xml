@@ -4,30 +4,25 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvText"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:paddingBottom="20dp"
+            android:layout_margin="10dp"
+            android:id="@+id/rootLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_gravity="center"
+        android:text="@string/add"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bottom Drawer"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/button_action_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Action 1" />
-
-    <Button
-        android:id="@+id/button_action_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Action 2" />
-
-    <Button
-        android:id="@+id/button_action_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Action 3" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

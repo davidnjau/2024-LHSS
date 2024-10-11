@@ -55,9 +55,13 @@ class ClinicalInfoSectionsFragment : Fragment() {
                 findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
             }
             "Clinical Info Section 4" -> {
+                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
+                    DbClasses.CLINICAL_REFERRAL_IV.name)
                 findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
             }
             "Clinical Info Section 5" -> {
+                formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
+                    DbClasses.CLINICAL_REFERRAL_V.name)
                 findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
             }
 
