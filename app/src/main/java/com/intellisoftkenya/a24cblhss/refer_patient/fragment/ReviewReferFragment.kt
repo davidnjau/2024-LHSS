@@ -41,10 +41,7 @@ class ReviewReferFragment : Fragment() {
     val navigationDetails = DbNavigationDetails.REFER_PATIENT.name
     val registrationClassesList = listOf(
         DbClasses.REFERRING_FACILITY_INFO.name,
-        DbClasses.REFERRAL_INFO.name,
-        DbClasses.CLINICAL_REFERRAL_I.name,
-        DbClasses.CLINICAL_REFERRAL_II.name,
-        DbClasses.CLINICAL_REFERRAL_III.name,
+        DbClasses.REFERRAL_INFO.name
     )
     private var patientId:String = ""
 

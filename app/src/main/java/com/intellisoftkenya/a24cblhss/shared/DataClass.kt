@@ -73,11 +73,18 @@ enum class DbClasses{
 
     REFERRING_FACILITY_INFO,
     REFERRAL_INFO,
-    CLINICAL_REFERRAL_I,
-    CLINICAL_REFERRAL_II,
-    CLINICAL_REFERRAL_III,
-    CLINICAL_REFERRAL_IV,
-    CLINICAL_REFERRAL_V,
+
+    TB_TREATMENT,
+    HIV_STATUS_TREATMENT,
+    LABORATORY_RESULTS,
+    DST,
+    DR_TB_FOLLOW_UP_TEST,
+
+//    CLINICAL_REFERRAL_I,
+//    CLINICAL_REFERRAL_II,
+//    CLINICAL_REFERRAL_III,
+//    CLINICAL_REFERRAL_IV,
+//    CLINICAL_REFERRAL_V,
 
     ACKNOWLEDGEMENT_FORM,
     END_TREATMENT_FORM,
@@ -93,9 +100,12 @@ enum class WorkflowTitles(
 
     REFERRING_FACILITY_INFO(R.drawable.ic_referring_facility_info, DbClasses.REFERRING_FACILITY_INFO.name,  "Referring Facility Information"),
     REFERRAL_INFO(R.drawable.ic_referrals, DbClasses.REFERRAL_INFO.name,  "Referral Information"),
-    CLINICAL_REFERRAL_I(R.drawable.ic_action_next_kin, DbClasses.CLINICAL_REFERRAL_I.name,  "Clinical Referral I"),
-    CLINICAL_REFERRAL_II(R.drawable.ic_action_next_kin, DbClasses.CLINICAL_REFERRAL_II.name,  "Clinical Referral II"),
-    CLINICAL_REFERRAL_III(R.drawable.ic_action_next_kin, DbClasses.CLINICAL_REFERRAL_III.name,  "Clinical Referral III"),
+
+    TB_TREATMENT(R.drawable.ic_action_next_kin, DbClasses.TB_TREATMENT.name,  "Tb Treatment"),
+    HIV_STATUS_TREATMENT(R.drawable.ic_action_next_kin, DbClasses.HIV_STATUS_TREATMENT.name,  "HIV Status and Treatment"),
+    LABORATORY_RESULTS(R.drawable.ic_action_next_kin, DbClasses.LABORATORY_RESULTS.name,  "Laboratory Results"),
+    DST(R.drawable.ic_action_next_kin, DbClasses.DST.name,  "DST"),
+    DR_TB_FOLLOW_UP_TEST(R.drawable.ic_action_next_kin, DbClasses.DR_TB_FOLLOW_UP_TEST.name,  "DR TB Follow Up Test"),
 
     ACKNOWLEDGEMENT_FORM(R.drawable.ic_action_ackno, DbClasses.ACKNOWLEDGEMENT_FORM.name,  "Acknowledgement Form"),
     END_TREATMENT_FORM(R.drawable.ic_action_ackno, DbClasses.END_TREATMENT_FORM.name,  "End of Treatment Form"),

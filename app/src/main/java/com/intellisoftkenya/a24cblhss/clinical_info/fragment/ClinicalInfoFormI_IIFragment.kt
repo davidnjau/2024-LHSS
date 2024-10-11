@@ -38,6 +38,9 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
     private var serviceRequestId:String = ""
     private var workflowTitles:String = ""
     private val tbTypeList = listOf("DSTB, DRTB","PTB , EPTB")
+    private val monthList = listOf("1 month", "2 month","3 month", "4 month",
+        "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
+        "11 month", "12 month")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,7 +109,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
     }
 
     private fun loadFormData(): List<DbField> {
-        if (workflowTitles == DbClasses.CLINICAL_REFERRAL_I.name) {
+        if (workflowTitles == DbClasses.TB_TREATMENT.name) {
             val dbFieldList = listOf(
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
@@ -119,7 +122,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     true
                 ),
                 DbField(
-                    DbWidgets.RADIO_BUTTON.name,
+                    DbWidgets.SPINNER.name,
                     "Type of Patient",
                     true,
                     optionList = listOf("New", "Previously Treated")
@@ -127,11 +130,41 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 DbField(
                     DbWidgets.SPINNER.name,
                     "Types of TB", true, null,
-                    tbTypeList)
+                    tbTypeList),
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Specify Tb Location Site", true,
+                    InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                ),
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Radiological Information (If Applicable)", true,
+                    InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                ),
+                DbField(
+                    DbWidgets.DATE_PICKER.name,
+                    "Tb Treatment initiation date",
+                    true
+                ),
+                DbField(
+                    DbWidgets.SPINNER.name,
+                    "Month of Treatment", true, null,
+                    monthList
+                ),
+                DbField(
+                    DbWidgets.SPINNER.name,
+                    "Regimen", true, null,
+                    listOf("2RHZE/4RH", "2RHZE/1ORH", "2RHZE/2RH")
+                ),
+                DbField(
+                    DbWidgets.SPINNER.name,
+                    "Drugs issued for (Indicate duration)", true, null,
+                    monthList
+                )
             )
             return dbFieldList
         }
-        if (workflowTitles == DbClasses.CLINICAL_REFERRAL_II.name) {
+        if (workflowTitles == DbClasses.HIV_STATUS_TREATMENT.name) {
             val dbFieldList = listOf(
                 DbField(
                     DbWidgets.SPINNER.name,
@@ -152,33 +185,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     DbWidgets.EDIT_TEXT.name,
                     "Viral Load", true,
                     InputType.TYPE_CLASS_TEXT
-                ),
-                DbField(
-                    DbWidgets.EDIT_TEXT.name,
-                    "Radiological information", true,
-                    InputType.TYPE_CLASS_TEXT
-                ),
-                DbField(
-                    DbWidgets.DATE_PICKER.name,
-                    "Tb Treatment initiation date",
-                    true
-                ),
-                DbField(
-                    DbWidgets.SPINNER.name,
-                    "Regimen", true, null,
-                    listOf("2RHZE/4RH", "2RHZE/1ORH", "2RHZE/2RH")
-                ),
-                DbField(
-                    DbWidgets.SPINNER.name,
-                    "Drugs issued for", true, null,
-                    listOf("3 months","6 months")
-                ),
-                DbField(
-                    DbWidgets.SPINNER.name,
-                    "Month of Treatment", true, null,
-                    listOf("Jan", "Feb", "March")
                 )
-
             )
             return dbFieldList
         }

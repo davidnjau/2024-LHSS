@@ -17,10 +17,10 @@ class ClinicalLayoutListViewModel(application: Application, private val state: S
         @DrawableRes val iconId: Int,
         val textId: String,
     ) {
-        CLINICAL_INFO_SECTION_I(R.drawable.ic_action_next_kin, "Clinical Info Section 1"),
-        CLINICAL_INFO_SECTION_II(R.drawable.ic_action_next_kin, "Clinical Info Section 2"),
-        CLINICAL_INFO_SECTION_III(R.drawable.ic_action_next_kin, "Clinical Info Section 3"),
-        CLINICAL_INFO_SECTION_IV(R.drawable.ic_action_next_kin, "Clinical Info Section 4"),
-        CLINICAL_INFO_SECTION_V(R.drawable.ic_action_next_kin, "Clinical Info Section 5"),
+        TB_TREATMENT(R.drawable.ic_action_next_kin, "Tb Treatment"),
+        HIV_STATUS_TREATMENT(R.drawable.ic_action_next_kin, "HIV Status and Treatment"),
+        LABORATORY_RESULTS(R.drawable.ic_action_next_kin, "Laboratory Results"),
+        DST(R.drawable.ic_action_next_kin, "DST"),
+        DR_TB_FOLLOW_UP_TEST(R.drawable.ic_action_next_kin, "DR TB Follow Up Test"),
     }
 }

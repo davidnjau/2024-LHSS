@@ -50,11 +50,11 @@ class ClnicalInfoIIFragment : Fragment() {
         navigationActions()
         formatterClass = FormatterClass(requireContext())
 
-        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.CLINICAL_REFERRAL_II.name)
-        if (workflowTitles != null){
-            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
-            binding.imgBtn.setImageResource(workflowTitles.iconId)
-        }
+//        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.CLINICAL_REFERRAL_II.name)
+//        if (workflowTitles != null){
+//            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+//            binding.imgBtn.setImageResource(workflowTitles.iconId)
+//        }
 
         return binding.root
     }
@@ -86,18 +86,18 @@ class ClnicalInfoIIFragment : Fragment() {
             }else{
                 findNavController().navigate(R.id.action_clnicalInfoIIFragment_to_clinicalInfoIIIFragment)
 
-                val formData = FormData(
-                    DbClasses.CLINICAL_REFERRAL_II.name,
-                    addedFields)
-
-                val gson = Gson()
-                val json = gson.toJson(formData)
-
-                formatterClass.saveSharedPref(
-                    sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
-                    DbClasses.CLINICAL_REFERRAL_II.name,
-                    json
-                )
+//                val formData = FormData(
+//                    DbClasses.CLINICAL_REFERRAL_II.name,
+//                    addedFields)
+//
+//                val gson = Gson()
+//                val json = gson.toJson(formData)
+//
+//                formatterClass.saveSharedPref(
+//                    sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
+//                    DbClasses.CLINICAL_REFERRAL_II.name,
+//                    json
+//                )
 
             }
         }
@@ -177,12 +177,12 @@ class ClnicalInfoIIFragment : Fragment() {
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
-        FormUtils.loadFormData(
-            requireContext(),
-            binding.rootLayout,
-            DbNavigationDetails.REFER_PATIENT.name,
-            DbClasses.CLINICAL_REFERRAL_II.name
-        )
+//        FormUtils.loadFormData(
+//            requireContext(),
+//            binding.rootLayout,
+//            DbNavigationDetails.REFER_PATIENT.name,
+//            DbClasses.CLINICAL_REFERRAL_II.name
+//        )
     }
 
     override fun onDestroyView() {

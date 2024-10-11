@@ -73,11 +73,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
         }
 
         // Create sample data
-        val parentItemList = viewModel.getClinicalList()
 
-        // Setup Parent RecyclerView
-        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.parentRecyclerView.adapter = ClinicalParentAdapter(parentItemList)
 
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
@@ -96,6 +92,10 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             val adapter = ClinicalParentAdapter(clinicalList)
             binding.parentRecyclerView.adapter = adapter
         }
+        val parentItemList = viewModel.getClinicalList()
+        // Setup Parent RecyclerView
+        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.parentRecyclerView.adapter = ClinicalParentAdapter(parentItemList)
 
 
         return binding.root
@@ -103,7 +103,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
     }
 
     private fun loadFormData(): List<DbField> {
-        if (workflowTitles == DbClasses.CLINICAL_REFERRAL_III.name) {
+        if (workflowTitles == DbClasses.LABORATORY_RESULTS.name) {
             val dbFieldList = listOf(
                 DbField(
                     DbWidgets.SPINNER.name,
@@ -127,7 +127,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             )
             return dbFieldList
         }
-        if (workflowTitles == DbClasses.CLINICAL_REFERRAL_IV.name) {
+        if (workflowTitles == DbClasses.DST.name) {
             val dbFieldList = listOf(
                 DbField(
                     DbWidgets.SPINNER.name,
@@ -143,7 +143,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             )
             return dbFieldList
         }
-        if (workflowTitles == DbClasses.CLINICAL_REFERRAL_V.name) {
+        if (workflowTitles == DbClasses.DR_TB_FOLLOW_UP_TEST.name) {
             val dbFieldList = listOf(
                 DbField(
                     DbWidgets.SPINNER.name,

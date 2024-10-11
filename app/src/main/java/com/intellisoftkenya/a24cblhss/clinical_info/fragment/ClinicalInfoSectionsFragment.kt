@@ -39,29 +39,29 @@ class ClinicalInfoSectionsFragment : Fragment() {
 
     private fun onItemClick(layout: ClinicalLayoutListViewModel.Layout) {
         when (layout.textId) {
-            "Clinical Info Section 1" -> {
+            "Tb Treatment" -> {
                 formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.CLINICAL_REFERRAL_I.name)
+                    DbClasses.TB_TREATMENT.name)
                 findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
             }
-            "Clinical Info Section 2" -> {
+            "HIV Status and Treatment" -> {
                 formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.CLINICAL_REFERRAL_II.name)
+                    DbClasses.HIV_STATUS_TREATMENT.name)
                 findNavController().navigate(R.id.clinicalInfoFormI_IIFragment)
             }
-            "Clinical Info Section 3" -> {
+            "Laboratory Results" -> {
                 formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.CLINICAL_REFERRAL_III.name)
+                    DbClasses.LABORATORY_RESULTS.name)
                 findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
             }
-            "Clinical Info Section 4" -> {
+            "DST" -> {
                 formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.CLINICAL_REFERRAL_IV.name)
+                    DbClasses.DST.name)
                 findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
             }
-            "Clinical Info Section 5" -> {
+            "DR TB Follow Up Test" -> {
                 formatterClass.saveSharedPref("", "CLINICAL_REFERRAL",
-                    DbClasses.CLINICAL_REFERRAL_V.name)
+                    DbClasses.DR_TB_FOLLOW_UP_TEST.name)
                 findNavController().navigate(R.id.clinicalInfoFormIII_IVFragment)
             }
 

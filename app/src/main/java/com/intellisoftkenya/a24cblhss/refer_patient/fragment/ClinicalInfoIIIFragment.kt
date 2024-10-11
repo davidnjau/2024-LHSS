@@ -48,11 +48,11 @@ class ClinicalInfoIIIFragment : Fragment() {
         navigationActions()
         formatterClass = FormatterClass(requireContext())
 
-        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.CLINICAL_REFERRAL_III.name)
-        if (workflowTitles != null){
-            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
-            binding.imgBtn.setImageResource(workflowTitles.iconId)
-        }
+//        val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.CLINICAL_REFERRAL_III.name)
+//        if (workflowTitles != null){
+//            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
+//            binding.imgBtn.setImageResource(workflowTitles.iconId)
+//        }
 
         return binding.root
 
@@ -85,18 +85,18 @@ class ClinicalInfoIIIFragment : Fragment() {
             }else{
                 findNavController().navigate(R.id.action_clinicalInfoIIIFragment_to_reviewReferFragment)
 
-                val formData = FormData(
-                    DbClasses.CLINICAL_REFERRAL_III.name,
-                    addedFields)
-
-                val gson = Gson()
-                val json = gson.toJson(formData)
-
-                formatterClass.saveSharedPref(
-                    sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
-                    DbClasses.CLINICAL_REFERRAL_III.name,
-                    json
-                )
+//                val formData = FormData(
+//                    DbClasses.CLINICAL_REFERRAL_III.name,
+//                    addedFields)
+//
+//                val gson = Gson()
+//                val json = gson.toJson(formData)
+//
+//                formatterClass.saveSharedPref(
+//                    sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
+//                    DbClasses.CLINICAL_REFERRAL_III.name,
+//                    json
+//                )
 
             }
         }
@@ -139,12 +139,12 @@ class ClinicalInfoIIIFragment : Fragment() {
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
 
-        FormUtils.loadFormData(
-            requireContext(),
-            binding.rootLayout,
-            DbNavigationDetails.REFER_PATIENT.name,
-            DbClasses.CLINICAL_REFERRAL_III.name
-        )
+//        FormUtils.loadFormData(
+//            requireContext(),
+//            binding.rootLayout,
+//            DbNavigationDetails.REFER_PATIENT.name,
+//            DbClasses.CLINICAL_REFERRAL_III.name
+//        )
 
     }
 
