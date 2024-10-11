@@ -3,14 +3,19 @@ package com.intellisoftkenya.a24cblhss.referrals.viewmodels
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientCardViewModel
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Encounter
@@ -26,9 +31,46 @@ class ReferralDetailsViewModel(
     private val serviceRequestId: String,
 ) : AndroidViewModel(application) {
 
+    // LiveData to expose the list of items
+    private val _clinicalLiveData = MutableLiveData<List<FormData>>()
+    val clinicalLiveData: LiveData<List<FormData>> = _clinicalLiveData
+
+    // LiveData to handle loading state
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    private val formatterClass = FormatterClass(application.applicationContext)
+
+    fun getClinicalList(): ArrayList<FormData> {
+        val items = ArrayList<FormData>()
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+
+                val encounter = formatterClass.getSharedPref("", "encounterId")
+                if (encounter != null) {
+
+                    //Make sure the encounter is in the form of 'Encounter/...'
+                    val dbFormData = getEncounterDetails(encounter)
+                    if (dbFormData != null) {
+                        items.add(dbFormData)
+                    }
+                }
+                _clinicalLiveData.value = items
+            } catch (e: Exception) {
+                // Handle error (e.g., log it, or show an error message)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+        return items
+    }
+
     fun getServiceRequest() = runBlocking {
         getServiceRequestBac()
     }
+
 
     private suspend fun getServiceRequestBac(): ArrayList<FormData> {
 
@@ -75,6 +117,7 @@ class ReferralDetailsViewModel(
         )
 
     }
+
 
     private suspend fun getEncounterDetails(encounter:String):FormData?{
 

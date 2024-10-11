@@ -3,11 +3,22 @@ package com.intellisoftkenya.a24cblhss.refer_patient.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.search.Order
+import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
+import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientListViewModel
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
@@ -29,6 +40,8 @@ class ReviewReferViewModel (
     private var fhirEngine: FhirEngine =
         FhirApplication.fhirEngine(application.applicationContext)
 
+
+
     fun createServiceRequest(formDataList: List<FormData>,
                              patientId: String,
                              requesterId: String?)= runBlocking {
@@ -45,8 +58,6 @@ class ReviewReferViewModel (
         // Return the text (i.e., the value) of the "Reason for Referral", or null if not found
         return reasonForReferral?.text
     }
-
-
 
     private suspend fun generateServiceRequest(
         formDataList: List<FormData>,
@@ -98,7 +109,13 @@ class ReviewReferViewModel (
         // Iterate through formDataList and create Encounters and Observations
         formDataList.forEach { formData ->
             // Create an Encounter based on the title
-            val encounter = createEncounter(formData.title, patientId, serviceRequest.id)
+            val encounter = createEncounter(
+                formData.title,
+                patientId,
+                serviceRequest.id,
+                null,
+                Encounter.EncounterStatus.FINISHED)
+
             serviceRequest.supportingInfo.add(Reference("Encounter/${encounter.id}"))
             saveResourceToDatabase(encounter, "Encounter")
 
@@ -120,19 +137,73 @@ class ReviewReferViewModel (
         return fhirEngine.create(resource)
     }
 
+    fun createClinicalInfo(formDataList: ArrayList<FormData>, workflowTitles: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            createClinicalInfoBac(formDataList, workflowTitles)
+        }
+    }
+
+    private suspend fun createClinicalInfoBac(
+        formDataList: ArrayList<FormData>,
+        workflowTitles: String) {
+
+        val patientId = formatterClass.getSharedPref("", "patientId")
+        val carePlan = formatterClass.getSharedPref("", "carePlanId")
+
+        if (patientId != null && carePlan != null) {
+
+            // Iterate through formDataList and create Encounters and Observations
+            formDataList.forEach { formData ->
+                // Create an Encounter based on the title
+                val encounter = createEncounter(
+                    workflowTitles,
+                    patientId,
+                    null,
+                    carePlan,
+                    Encounter.EncounterStatus.PLANNED
+                )
+
+                saveResourceToDatabase(encounter, "Encounter")
+
+                // Create Observations from formDataList and link them to the Encounter
+                formData.formDataList.forEach { dbFormData ->
+                    val observation = createObservation(
+                        dbFormData, patientId, encounter.id)
+                    saveResourceToDatabase(observation, "Observation")
+                }
+                // Add Observation to supportingInfo of ServiceRequest
+            }
+
+
+        }
+
+
+    }
 
     // Function to create an Encounter
     private fun createEncounter(
         title: String,
         patientId: String,
-        serviceRequestId: String
+        serviceRequestId: String?,
+        carePlanId: String?,
+        status: Encounter.EncounterStatus,
     ): Encounter {
         val encounter = Encounter()
         encounter.id =  formatterClass.generateUuid()  // Use timestamp as a unique ID
-        encounter.status = Encounter.EncounterStatus.FINISHED
         encounter.subject = Reference("Patient/$patientId")
         encounter.reasonCode = listOf(CodeableConcept().setText(title))
-        encounter.basedOn = listOf(Reference("ServiceRequest/$serviceRequestId"))
+
+        encounter.status = status
+
+        val basedOnList = ArrayList<Reference>()
+        if (serviceRequestId != null) {
+            basedOnList.add(Reference("ServiceRequest/$serviceRequestId"))
+        }
+        if (carePlanId!= null) {
+            basedOnList.add(Reference("CarePlan/$carePlanId"))
+        }
+        encounter.basedOn = basedOnList
+
 
         return encounter
     }
@@ -183,4 +254,5 @@ class ReviewReferViewModel (
         val random = (10000..99999).random()
         return "LOINC-$random"
     }
+
 }

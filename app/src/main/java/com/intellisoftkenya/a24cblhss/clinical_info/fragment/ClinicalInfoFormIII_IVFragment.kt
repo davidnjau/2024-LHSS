@@ -1,13 +1,16 @@
 package com.intellisoftkenya.a24cblhss.clinical_info.fragment
 
+import android.app.Application
 import android.os.Bundle
 import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.clinical_info.shared.ClinicalParentAdapter
@@ -15,6 +18,9 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIBin
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIIVBinding
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
@@ -26,6 +32,7 @@ import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 class ClinicalInfoFormIII_IVFragment : Fragment() {
 
     private var _binding: FragmentClinicalInfoFormIIIIVBinding? = null
+    private lateinit var viewModel: ReferralDetailsViewModel
 
     private val binding get() = _binding!!
     private lateinit var fieldManager: FieldManager
@@ -36,6 +43,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
     private val monthList = listOf("1 month", "2 month","3 month", "4 month",
         "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
         "11 month", "12 month")
+    private lateinit var fhirEngine: FhirEngine
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,22 +73,30 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
         }
 
         // Create sample data
-        val childItemList1 = listOf(
-            DbFormData("Child 1", "Description 1"),
-            DbFormData("Child 2", "Description 2")
-        )
-        val childItemList2 = listOf(
-            DbFormData("Child A", "Description A"),
-            DbFormData("Child B", "Description B")
-        )
-        val parentItemList = listOf(
-            FormData("Parent 1", ArrayList(childItemList1)),
-            FormData("Parent 2", ArrayList(childItemList2))
-        )
+        val parentItemList = viewModel.getClinicalList()
 
         // Setup Parent RecyclerView
         binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.parentRecyclerView.adapter = ClinicalParentAdapter(parentItemList)
+
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
+
+        viewModel =
+            ViewModelProvider(
+                this,
+                ReferralDetailsViewModelFactory(
+                    requireContext().applicationContext as Application,
+                    fhirEngine,
+                    patientId,
+                    serviceRequestId
+                ),
+            )[ReferralDetailsViewModel::class.java]
+
+        viewModel.clinicalLiveData.observe(viewLifecycleOwner) { clinicalList ->
+            val adapter = ClinicalParentAdapter(clinicalList)
+            binding.parentRecyclerView.adapter = adapter
+        }
+
 
         return binding.root
 

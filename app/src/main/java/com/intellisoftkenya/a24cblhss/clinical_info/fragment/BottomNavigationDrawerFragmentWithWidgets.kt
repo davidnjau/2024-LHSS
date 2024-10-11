@@ -6,18 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ReviewReferViewModel
 import com.intellisoftkenya.a24cblhss.shared.DbField
-import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class BottomNavigationDrawerFragmentWithWidgets(
     dbFieldList: List<DbField>, workflowTitles: String)
@@ -27,6 +28,7 @@ class BottomNavigationDrawerFragmentWithWidgets(
     private lateinit var formatterClass: FormatterClass
     private val dbFieldList: List<DbField> by lazy { dbFieldList }
     private val workflowTitles: String by lazy { workflowTitles }
+    private val viewModel: ReviewReferViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,23 +65,26 @@ class BottomNavigationDrawerFragmentWithWidgets(
                 formatterClass.showDialog("Missing Content", mandatoryText)
             }else{
 
+                val formDataList = ArrayList<FormData>()
                 val formData = FormData(
                     workflowTitles.toString(),
                     addedFields)
+                formDataList.add(formData)
 
-                val gson = Gson()
-                val json = gson.toJson(formData)
+                savedData(formDataList)
 
-                formatterClass.saveSharedPref(
-                    sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
-                    workflowTitles.toString(),
-                    json
-                )
+
 
             }
 
             dismiss() // Close drawer if necessary
         }
+
+    }
+
+    private fun savedData(formDataList: ArrayList<FormData>) {
+
+        viewModel.createClinicalInfo(formDataList, workflowTitles)
 
     }
 }
