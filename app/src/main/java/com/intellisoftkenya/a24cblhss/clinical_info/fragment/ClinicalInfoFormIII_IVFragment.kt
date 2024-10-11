@@ -5,56 +5,74 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIBinding
+import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIIVBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
+import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
+import com.intellisoftkenya.a24cblhss.shared.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ClinicalInfoFormIII_IVFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ClinicalInfoFormIII_IVFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentClinicalInfoFormIIIIVBinding? = null
+
+    private val binding get() = _binding!!
+    private lateinit var fieldManager: FieldManager
+    private lateinit var formatterClass: FormatterClass
+    private var patientId:String = ""
+    private var serviceRequestId:String = ""
+    private var workflowTitles:String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_clinical_info_form_i_i_i__i_v, container, false)
+
+        _binding = FragmentClinicalInfoFormIIIIVBinding.inflate(inflater, container, false)
+        formatterClass = FormatterClass(requireContext())
+        navigationActions()
+        patientId = formatterClass.getSharedPref("", "patientId")?: ""
+        serviceRequestId = formatterClass.getSharedPref("", "serviceRequestId")?: ""
+        workflowTitles = formatterClass.getSharedPref("", "CLINICAL_REFERRAL")?: ""
+
+        if (workflowTitles != ""){
+            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles!!)
+//            binding.imgBtn.setImageResource(workflowTitles)
+        }
+
+        binding.btnAdd.setOnClickListener {
+            val bottomNavigationDrawerFragment =
+                BottomNavigationDrawerFragmentWithWidgets()
+            bottomNavigationDrawerFragment.show(parentFragmentManager,
+                bottomNavigationDrawerFragment.tag)
+        }
+
+        return binding.root
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ClinicalInfoFormIII_IVFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ClinicalInfoFormIII_IVFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    private fun navigationActions() {
+        // Set the next button text to "Continue" and add click listeners
+        val navigationButtons = binding.navigationButtons
+        navigationButtons.setNextButtonText("Close")
+
+        navigationButtons.setBackButtonClickListener {
+            // Handle back button click
+            findNavController().navigateUp()
+        }
+
+        navigationButtons.setNextButtonClickListener {
+            // Handle next button click
+            // Navigate to the next fragment or perform any action
+
+
+        }
     }
+
+
 }

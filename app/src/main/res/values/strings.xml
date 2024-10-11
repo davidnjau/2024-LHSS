@@ -63,6 +63,7 @@
     <string name="created_23_5_2023">Created 23/5/2023</string>
     <string name="end_of_treatment_form">End of Treatment Form</string>
     <string name="end_of_treatment_review">End of Treatment Review</string>
+    <string name="add">Add</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>French</item>
