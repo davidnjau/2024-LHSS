@@ -37,9 +37,9 @@ class ClinicalInfoDetailsViewModel(
         }
     }
 
-    fun updateCarePlanStatus(carePlanId: String){
+    fun updateCarePlanStatus(carePlanId: String, supportingInfoList: ArrayList<Reference>){
         CoroutineScope(Dispatchers.IO).launch {
-            updateCarePlanStatusBac(carePlanId)
+            updateCarePlanStatusBac(carePlanId, supportingInfoList)
         }
     }
 
@@ -69,7 +69,8 @@ class ClinicalInfoDetailsViewModel(
 
     }
 
-    private suspend fun updateCarePlanStatusBac(carePlanId: String){
+    private suspend fun updateCarePlanStatusBac(carePlanId: String,
+                                                supportingInfoList: ArrayList<Reference>){
 
         val searchResult =
             fhirEngine.search<CarePlan> {
@@ -80,6 +81,11 @@ class ClinicalInfoDetailsViewModel(
             searchResult.first().let {
                 val carePlan = it.resource
                 carePlan.status = CarePlan.CarePlanStatus.ACTIVE
+
+                supportingInfoList.forEach { supportingInfo ->
+                    carePlan.supportingInfo.add(supportingInfo)
+                }
+
                 updateResourceToDatabase(carePlan, "CarePlan")
             }
 

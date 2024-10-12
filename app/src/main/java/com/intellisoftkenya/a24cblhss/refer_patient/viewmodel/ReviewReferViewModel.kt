@@ -3,17 +3,11 @@ package com.intellisoftkenya.a24cblhss.refer_patient.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.google.android.fhir.FhirEngine
-import com.google.android.fhir.search.Order
-import com.google.android.fhir.search.search
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
-import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientListViewModel
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
@@ -139,20 +133,30 @@ class ReviewReferViewModel (
         return fhirEngine.create(resource)
     }
 
-    fun createClinicalInfo(formDataList: ArrayList<FormData>, workflowTitles: String){
+    fun createClinicalInfo(
+        formDataList: ArrayList<FormData>,
+        workflowTitles: String,
+        clinicalViewModel: ClinicalInfoDetailsViewModel
+    ){
         CoroutineScope(Dispatchers.IO).launch {
-            createClinicalInfoBac(formDataList, workflowTitles)
+            createClinicalInfoBac(formDataList, workflowTitles, clinicalViewModel)
         }
     }
 
     private suspend fun createClinicalInfoBac(
         formDataList: ArrayList<FormData>,
-        workflowTitles: String) {
+        workflowTitles: String,
+        clinicalViewModel: ClinicalInfoDetailsViewModel
+    ) {
 
         val patientId = formatterClass.getSharedPref("", "patientId")
-        val carePlan = formatterClass.getSharedPref("", "carePlanId")
+        val carePlanId = formatterClass.getSharedPref(
+            DbNavigationDetails.CARE_PLAN.name,
+            "carePlanId")
 
-        if (patientId != null && carePlan != null) {
+        if (patientId != null && carePlanId != null) {
+
+            val supportingInfoList = ArrayList<Reference>()
 
             // Iterate through formDataList and create Encounters and Observations
             formDataList.forEach { formData ->
@@ -161,7 +165,7 @@ class ReviewReferViewModel (
                     workflowTitles,
                     patientId,
                     null,
-                    carePlan,
+                    carePlanId,
                     Encounter.EncounterStatus.PLANNED
                 )
 
@@ -173,14 +177,24 @@ class ReviewReferViewModel (
                         dbFormData, patientId, encounter.id)
                     saveResourceToDatabase(observation, "Observation")
                 }
-                // Add Observation to supportingInfo of ServiceRequest
+                val encounterReference = Reference("Encounter/${encounter.id}")
+                supportingInfoList.add(encounterReference)
+
             }
 
+            //Update the CarePlan status
+            clinicalViewModel.updateCarePlanStatus(carePlanId, supportingInfoList)
 
         }
 
 
     }
+
+    private suspend fun updateResourceToDatabase(resource: Resource, s: String) {
+        Log.e("----Upd", "----$s")
+        fhirEngine.update(resource)
+    }
+
 
     // Function to create an Encounter
     private fun createEncounter(

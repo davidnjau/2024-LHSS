@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
@@ -16,9 +18,6 @@ import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ReviewReferViewMod
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class BottomNavigationDrawerFragmentWithWidgets(
     dbFieldList: List<DbField>, workflowTitles: String)
@@ -29,6 +28,8 @@ class BottomNavigationDrawerFragmentWithWidgets(
     private val dbFieldList: List<DbField> by lazy { dbFieldList }
     private val workflowTitles: String by lazy { workflowTitles }
     private val viewModel: ReviewReferViewModel by viewModels()
+    private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
+    private var patientId:String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +44,16 @@ class BottomNavigationDrawerFragmentWithWidgets(
 
         fieldManager = FieldManager(DefaultLabelCustomizer(), requireContext())
         formatterClass = FormatterClass(requireContext())
+        patientId = formatterClass.getSharedPref("", "patientId") ?: ""
+
+        clinicalViewModel =
+            ViewModelProvider(
+                this,
+                ClinicalInfoDetailsViewModel.ClinicalInfoDetailsViewModelFactory(
+                    requireActivity().application,
+                    patientId
+                )
+            )[ClinicalInfoDetailsViewModel::class.java]
 
         // Get references to widgets and handle interactions
         val btnAdd: Button = view.findViewById(R.id.btnAdd)
@@ -84,7 +95,7 @@ class BottomNavigationDrawerFragmentWithWidgets(
 
     private fun savedData(formDataList: ArrayList<FormData>) {
 
-        viewModel.createClinicalInfo(formDataList, workflowTitles)
+        viewModel.createClinicalInfo(formDataList, workflowTitles, clinicalViewModel)
 
     }
 }
