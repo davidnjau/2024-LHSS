@@ -82,7 +82,7 @@ class ReferralInfoFragment : Fragment() {
 
                 formatterClass.showDialog("Missing Content", mandatoryText)
             }else{
-                findNavController().navigate(R.id.action_referralInfoFragment_to_clinicalInfoIFragment)
+                findNavController().navigate(R.id.action_referralInfoFragment_to_reviewReferFragment)
 
                 val formData = FormData(
                     DbClasses.REFERRAL_INFO.name,

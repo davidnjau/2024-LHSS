@@ -1,6 +1,7 @@
 package com.intellisoftkenya.a24cblhss.shared
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -27,10 +28,19 @@ class LayoutViewHolder(
     val binding: LandingPageItemBinding,
     private val onItemClick: (LayoutListViewModel.Layout) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
+
+    private val referralNumbers = FormatterClass(binding.root.context)
+        .getSharedPref("","referralNumbers")
     fun bind(layout: LayoutListViewModel.Layout) {
         binding.componentLayoutIconImageview.setImageResource(layout.iconId)
         binding.componentLayoutTextView.text = layout.textId
         binding.root.setOnClickListener { onItemClick(layout) }
+
+        if (layout.textId == "Referrals") {
+            binding.tvNumber.visibility = View.VISIBLE
+            binding.tvNumber.text = referralNumbers
+        }
+
     }
 }
 

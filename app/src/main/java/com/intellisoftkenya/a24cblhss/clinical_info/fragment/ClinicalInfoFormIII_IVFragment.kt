@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.shared.ClinicalChildAdapter
 import com.intellisoftkenya.a24cblhss.clinical_info.shared.ClinicalParentAdapter
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIIVBinding
@@ -28,6 +29,9 @@ import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ClinicalInfoFormIII_IVFragment : Fragment() {
 
@@ -44,6 +48,8 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
         "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
         "11 month", "12 month")
     private lateinit var fhirEngine: FhirEngine
+    private var carePlanId:String = ""
+    private var encounterId:String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +63,9 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
         patientId = formatterClass.getSharedPref("", "patientId")?: ""
         serviceRequestId = formatterClass.getSharedPref("", "serviceRequestId")?: ""
         workflowTitles = formatterClass.getSharedPref("", "CLINICAL_REFERRAL")?: ""
+
+        carePlanId = formatterClass.getSharedPref(DbNavigationDetails.CARE_PLAN.name,"carePlanId")?: ""
+        encounterId = formatterClass.getSharedPref("","encounterId")?: ""
 
         if (workflowTitles != ""){
             binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles!!)
@@ -89,13 +98,22 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             )[ReferralDetailsViewModel::class.java]
 
         viewModel.clinicalLiveData.observe(viewLifecycleOwner) { clinicalList ->
-            val adapter = ClinicalParentAdapter(clinicalList)
-            binding.parentRecyclerView.adapter = adapter
+
+
+
         }
-//        val parentItemList = viewModel.getClinicalList()
-        // Setup Parent RecyclerView
-//        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        binding.parentRecyclerView.adapter = ClinicalParentAdapter(parentItemList)
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val formData = viewModel.getEncounterObservationList()
+
+            CoroutineScope(Dispatchers.Main).launch {
+
+                binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                binding.parentRecyclerView.adapter = ClinicalParentAdapter(formData)
+            }
+        }
+
 
 
         return binding.root

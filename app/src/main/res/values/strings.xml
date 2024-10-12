@@ -68,6 +68,7 @@
     <string name="clinical_info">Clinical Info</string>
     <string name="clinical_form">Clinical Form</string>
     <string name="clinical_details">Clinical Details</string>
+    <string name="clinical_info_review">Clinical Info Review</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>French</item>

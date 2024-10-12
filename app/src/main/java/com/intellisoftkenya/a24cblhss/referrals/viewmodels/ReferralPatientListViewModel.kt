@@ -15,6 +15,8 @@ import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.DbPatientItem
 import com.intellisoftkenya.a24cblhss.shared.DbServiceRequest
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Observation
@@ -60,6 +62,14 @@ class ReferralPatientListViewModel(
                     },
                 )
             }
+        }
+    }
+
+    fun referralNumber(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val referralList = getSearchResults("")
+            val referralNumber = referralList.size
+            formatterClass.saveSharedPref("","referralNumbers", referralNumber.toString())
         }
     }
 

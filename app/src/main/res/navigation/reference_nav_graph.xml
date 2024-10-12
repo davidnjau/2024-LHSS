@@ -213,6 +213,10 @@
             android:id="@+id/action_referralInfoFragment_to_clinicalInfoIFragment"
             app:destination="@id/clinicalInfoIFragment"
             app:popUpTo="@id/referralInfoFragment" />
+        <action
+            android:id="@+id/action_referralInfoFragment_to_reviewReferFragment"
+            app:destination="@id/reviewReferFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/clinicalInfoIFragment"
@@ -310,7 +314,11 @@
         android:id="@+id/clinicalInfoFormI_IIFragment"
         android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoFormI_IIFragment"
         android:label="@string/clinical_form"
-        tools:layout="@layout/fragment_clinical_info_form_i__i_i" />
+        tools:layout="@layout/fragment_clinical_info_form_i__i_i" >
+        <action
+            android:id="@+id/action_clinicalInfoFormI_IIFragment_to_clinicalInfoReview"
+            app:destination="@id/clinicalInfoReview" />
+    </fragment>
     <fragment
         android:id="@+id/clinicalInfoFormIII_IVFragment"
         android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoFormIII_IVFragment"
@@ -354,4 +362,13 @@
         android:name="com.intellisoftkenya.a24cblhss.ClinicalViewEncountersFragment"
         android:label="@string/clinical_details"
         tools:layout="@layout/fragment_clinical_view_encounters" />
+    <fragment
+        android:id="@+id/clinicalInfoReview"
+        android:name="com.intellisoftkenya.a24cblhss.ClinicalInfoReview"
+        android:label="@string/clinical_info_review"
+        tools:layout="@layout/fragment_clinical_info_review" >
+        <action
+            android:id="@+id/action_clinicalInfoReview_to_patientCardFragment"
+            app:destination="@id/patientCardFragment" />
+    </fragment>
 </navigation>

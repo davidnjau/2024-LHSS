@@ -89,7 +89,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 formatterClass.showDialog("Missing Content", mandatoryText)
             }else{
                 findNavController().navigate(
-                    R.id.action_endTreatmentFormFragment_to_endTreatmentReviewFragment)
+                    R.id.action_clinicalInfoFormI_IIFragment_to_clinicalInfoReview)
 
                 val formData = FormData(
                     workflowTitles.toString(),

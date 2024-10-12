@@ -9,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.databinding.FragmentSplashBinding
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralPatientListViewModel
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +39,7 @@ class SplashFragment : Fragment() {
     private var param2: String? = null
     private lateinit var binding: FragmentSplashBinding
     private lateinit var formatterClass : FormatterClass
+    private lateinit var viewModel: ReferralPatientListViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,9 +67,19 @@ class SplashFragment : Fragment() {
 
 //            findNavController().navigate(R.id.addressFragment)
 
-
         }, 1000)
 
+        viewModel =
+            ViewModelProvider(
+                this,
+                ReferralPatientListViewModel.ReferralPatientListViewModelFactory(
+                    requireActivity().application,
+                ),
+            )[ReferralPatientListViewModel::class.java]
+
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.referralNumber()
+        }
 
 
         // Inflate the layout for this fragment

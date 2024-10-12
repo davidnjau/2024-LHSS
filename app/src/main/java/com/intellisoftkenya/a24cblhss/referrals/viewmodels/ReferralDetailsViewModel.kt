@@ -13,6 +13,7 @@ import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.shared.DbEncounter
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.launch
@@ -112,6 +113,42 @@ class ReferralDetailsViewModel(
             tag, text
         )
 
+    }
+
+    fun getEncounterObservationList():ArrayList<FormData>{
+
+        val formDataList = ArrayList<FormData>()
+
+        val carePlanId = formatterClass.getSharedPref(
+            DbNavigationDetails.CARE_PLAN.name,"carePlanId")?: ""
+
+        val encounterList = getEncounterList(carePlanId)
+
+        Log.e("----->","<-----")
+        println("carePlanId $carePlanId")
+        println("encounterList $encounterList")
+
+        encounterList.forEach {
+            val encounterId = it.id
+            val title = it.referralReason
+
+            println("encounterId $encounterId")
+            println("title $title")
+
+            val encounter = "Encounter/$encounterId"
+            println("encounter $encounter")
+
+            val formData = getEncounterObservationDetails(encounter)
+            println("formData $formData")
+
+            if (formData != null) {
+                formDataList.add(formData)
+            }
+        }
+        println("formDataList $formDataList")
+        Log.e("----->","<-----")
+
+        return formDataList
     }
 
 

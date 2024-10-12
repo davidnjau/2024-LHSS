@@ -16,18 +16,32 @@
             android:id="@+id/iconContainer"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:gravity="center"
             android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/tvNumber"
+                android:background="@drawable/landing_page"
+                android:padding="10dp"
+                android:layout_gravity="end"
+                android:text="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <ImageView
+                android:layout_gravity="center"
                 android:id="@+id/componentLayoutIconImageview"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:contentDescription="components"
                 android:scaleType="centerCrop" />
+
         </LinearLayout>
 
         <TextView
