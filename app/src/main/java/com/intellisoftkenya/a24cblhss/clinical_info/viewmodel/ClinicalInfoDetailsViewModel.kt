@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.CarePlan
+import org.hl7.fhir.r4.model.CarePlan.CarePlanStatus
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
@@ -34,6 +35,12 @@ class ClinicalInfoDetailsViewModel(
     private var fhirEngine: FhirEngine =
         FhirApplication.fhirEngine(application.applicationContext)
 
+
+    fun closeCarePlan(carePlanId: String) {
+        val supportingInfo = ArrayList<Reference>()
+        Log.e("******* ", "carePlanId: $carePlanId")
+        updateCarePlanStatus(CarePlanStatus.COMPLETED, carePlanId, supportingInfo)
+    }
 
     fun getCarePlanDetails() = runBlocking {
         getCarePlanDetailsBac()
@@ -61,7 +68,7 @@ class ClinicalInfoDetailsViewModel(
 
     }
 
-    fun List<DbCarePlan>.filterActive(status: String): List<DbCarePlan> {
+    private fun List<DbCarePlan>.filterActive(status: String): List<DbCarePlan> {
         return this.filter { it.status == status }
     }
 
@@ -90,9 +97,15 @@ class ClinicalInfoDetailsViewModel(
         }
     }
 
-    fun updateCarePlanStatus(carePlanId: String, supportingInfoList: ArrayList<Reference>){
+    fun updateCarePlanStatus(
+        status: CarePlanStatus,
+        carePlanId: String,
+        supportingInfoList: ArrayList<Reference>){
+
         CoroutineScope(Dispatchers.IO).launch {
-            updateCarePlanStatusBac(carePlanId, supportingInfoList)
+            Log.e("*******2 ", "carePlanId: $carePlanId")
+
+            updateCarePlanStatusBac(status,carePlanId, supportingInfoList)
         }
     }
 
@@ -107,7 +120,7 @@ class ClinicalInfoDetailsViewModel(
 
         val carePlan = CarePlan()
         carePlan.id = id
-        carePlan.status = CarePlan.CarePlanStatus.DRAFT
+        carePlan.status = CarePlanStatus.DRAFT
         carePlan.created = Date()
         carePlan.subject = Reference("Patient/$patientId")
         carePlan.title = "Clinical Information"
@@ -122,18 +135,27 @@ class ClinicalInfoDetailsViewModel(
 
     }
 
-    private suspend fun updateCarePlanStatusBac(carePlanId: String,
-                                                supportingInfoList: ArrayList<Reference>){
+    private suspend fun updateCarePlanStatusBac(
+        status: CarePlanStatus,
+        carePlanId: String,
+        supportingInfoList: ArrayList<Reference>){
+        Log.e("*******3 ", "carePlanId: $carePlanId")
+
+        Log.e("----Upd", "----$carePlanId")
 
         val searchResult =
             fhirEngine.search<CarePlan> {
                 filter(Resource.RES_ID, { value = of(carePlanId) })
             }
+        println("Search result: $searchResult")
+        println("status: $status")
 
         if (searchResult.isNotEmpty()) {
             searchResult.first().let {
                 val carePlan = it.resource
-                carePlan.status = CarePlan.CarePlanStatus.ACTIVE
+                carePlan.status = status
+
+                println("carePlan: ${carePlan.status} - ${carePlan.id} - ${carePlan.title} - ${carePlan.description} - ${carePlan.created} - ${carePlan.subject}")
 
                 supportingInfoList.forEach { supportingInfo ->
                     carePlan.supportingInfo.add(supportingInfo)
@@ -143,6 +165,8 @@ class ClinicalInfoDetailsViewModel(
             }
 
         }
+        Log.e("----Upd", "----$carePlanId")
+
     }
 
     private suspend fun updateResourceToDatabase(resource: Resource, s: String) {

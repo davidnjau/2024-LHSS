@@ -18,6 +18,7 @@ import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ReviewReferViewMod
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import org.hl7.fhir.r4.model.CarePlan
 
 class BottomNavigationDrawerFragmentWithWidgets(
     dbFieldList: List<DbField>, workflowTitles: String)
@@ -95,7 +96,7 @@ class BottomNavigationDrawerFragmentWithWidgets(
 
     private fun savedData(formDataList: ArrayList<FormData>) {
 
-        viewModel.createClinicalInfo(formDataList, workflowTitles, clinicalViewModel)
+        viewModel.createClinicalInfo(formDataList, workflowTitles, clinicalViewModel, CarePlan.CarePlanStatus.ACTIVE)
 
     }
 }

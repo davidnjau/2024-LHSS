@@ -16,6 +16,7 @@ import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetail
 import com.intellisoftkenya.a24cblhss.databinding.FragmentPatientFileBinding
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientCardViewModel
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientDetailsViewModelFactory
+import com.intellisoftkenya.a24cblhss.shared.DbCarePlan
 import com.intellisoftkenya.a24cblhss.shared.FormDataAdapter
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +30,8 @@ class PatientFileFragment : Fragment() {
     private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
     private var patientId:String = ""
     private lateinit var formatterClass: FormatterClass
+
+    private var carePlanList = ArrayList<DbCarePlan>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,10 +57,17 @@ class PatientFileFragment : Fragment() {
 
         binding.btnAddNewPatientFile.setOnClickListener {
 
-            clinicalViewModel.createCarePlan()
+            val hasActiveStatus = carePlanList.any { it.status == "ACTIVE" }
+            if (hasActiveStatus) {
+                formatterClass.showDialog("Active File Found",
+                    "You cannot create a new file while there is an active file.")
+            }else {
+                clinicalViewModel.createCarePlan()
 
-            findNavController().navigate(
-                R.id.action_patientFileFragment_to_clinicalInfoSectionsFragment)
+                findNavController().navigate(
+                    R.id.action_patientFileFragment_to_clinicalInfoSectionsFragment)
+            }
+
         }
 
         // Inflate the layout for this fragment
@@ -68,7 +78,7 @@ class PatientFileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val carePlanList = clinicalViewModel.getCarePlanDetails()
+            carePlanList = clinicalViewModel.getCarePlanDetails()
 
             val formDataAdapter = PatientFileAdapter(
                 requireContext(),
@@ -82,32 +92,4 @@ class PatientFileFragment : Fragment() {
         }
 
     }
-
-    private fun showReceivePatientDialog() {
-        // Create an AlertDialog builder
-        val builder = AlertDialog.Builder(requireContext())
-
-        builder.setTitle("Warning")
-        // Set dialog message
-        builder.setMessage("Ending Treatment will close the patient's file. " +
-                "Only one file can be active at once.\n\n Do you want to End Treatment?")
-
-        // Set Yes button and its action
-        builder.setPositiveButton("Yes") { dialog, _ ->
-            // Trigger the form when Yes is clicked
-            dialog.dismiss() // Close the dialog
-            findNavController().navigate(
-                R.id.action_patientFileFragment_to_endTreatmentFormFragment)
-        }
-
-        // Set No button and its action
-        builder.setNegativeButton("No") { dialog, _ ->
-            dialog.dismiss() // Just close the dialog when No is clicked
-        }
-
-        // Create and show the dialog
-        val dialog = builder.create()
-        dialog.show()
-    }
-
 }

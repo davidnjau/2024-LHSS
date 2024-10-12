@@ -7,12 +7,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.EndTreatmentReviewViewModel
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentEndTreatmentReviewBinding
+import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ReviewReferViewModel
 import com.intellisoftkenya.a24cblhss.shared.BlurBackgroundDialog
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
@@ -23,13 +26,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.CarePlan
 
 class EndTreatmentReviewFragment : Fragment() {
 
     private var _binding: FragmentEndTreatmentReviewBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: EndTreatmentReviewViewModel by viewModels()
+    private val viewModelSave: ReviewReferViewModel by viewModels()
 
     private lateinit var formatterClass: FormatterClass
 
@@ -42,6 +46,8 @@ class EndTreatmentReviewFragment : Fragment() {
         DbClasses.END_TREATMENT_FORM.name
     )
     private var patientId:String = ""
+    private var carePlanId:String = ""
+    private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +57,18 @@ class EndTreatmentReviewFragment : Fragment() {
         _binding = FragmentEndTreatmentReviewBinding.inflate(inflater, container, false)
         formatterClass = FormatterClass(requireContext())
         patientId = formatterClass.getSharedPref("", "patientId")?: ""
+        carePlanId = formatterClass.getSharedPref(DbNavigationDetails.CARE_PLAN.name, "carePlanId")?: ""
 
         navigationActions()
+
+        clinicalViewModel =
+            ViewModelProvider(
+                this,
+                ClinicalInfoDetailsViewModel.ClinicalInfoDetailsViewModelFactory(
+                    requireActivity().application,
+                    patientId
+                )
+            )[ClinicalInfoDetailsViewModel::class.java]
 
         return binding.root
 
@@ -99,7 +115,7 @@ class EndTreatmentReviewFragment : Fragment() {
 
             val progressDialog = ProgressDialog(requireContext())
             progressDialog.setTitle("Please wait")
-            progressDialog.setMessage("Referral in progress.")
+            progressDialog.setMessage("Submission in progress.")
             progressDialog.setCanceledOnTouchOutside(false)
             progressDialog.show()
 
@@ -108,8 +124,12 @@ class EndTreatmentReviewFragment : Fragment() {
             val job = Job()
             CoroutineScope(Dispatchers.IO + job).launch {
 
-//                savedResources = ArrayList(viewModel.createServiceRequest(
-//                    formDataList, patientId, null))
+                viewModelSave.createClinicalInfo(
+                    formDataList,
+                    DbClasses.END_TREATMENT_FORM.name,
+                    clinicalViewModel,
+                    CarePlan.CarePlanStatus.COMPLETED
+                )
 
                 registrationClassesList.forEach {
                     formatterClass.deleteSharedPref(navigationDetails, it)
@@ -119,21 +139,11 @@ class EndTreatmentReviewFragment : Fragment() {
 
             progressDialog.dismiss()
 
-            val blurBackgroundDialog = if (savedResources.isNotEmpty()){
-                //Save was okay
-                BlurBackgroundDialog(requireContext(),
-                    "End of Treatment Form was submitted successfully.",
-                    this@EndTreatmentReviewFragment,
-                    R.id.action_endTreatmentReviewFragment_to_patientCardFragment
-                )
-            }else{
-                //Save was not okay
-                BlurBackgroundDialog(requireContext(),
-                    "There was an issue with the referral request.",
-                    this@EndTreatmentReviewFragment,
-                    R.id.action_endTreatmentReviewFragment_to_patientCardFragment
-                )
-            }
+            val blurBackgroundDialog =BlurBackgroundDialog(requireContext(),
+                "End of Treatment Form was submitted successfully.",
+                this@EndTreatmentReviewFragment,
+                R.id.action_endTreatmentReviewFragment_to_patientCardFragment
+            )
             blurBackgroundDialog.show()
 
 

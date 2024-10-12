@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentEndTreatmentFormBinding
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
@@ -29,7 +31,8 @@ class EndTreatmentFormFragment : Fragment() {
     private lateinit var fieldManager: FieldManager
     private lateinit var formatterClass: FormatterClass
     private var patientId:String = ""
-    private var serviceRequestId:String = ""
+    private var carePlanId:String = ""
+    private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
 
 
     override fun onCreateView(
@@ -41,13 +44,22 @@ class EndTreatmentFormFragment : Fragment() {
         formatterClass = FormatterClass(requireContext())
         navigationActions()
         patientId = formatterClass.getSharedPref("", "patientId")?: ""
-        serviceRequestId = formatterClass.getSharedPref("", "serviceRequestId")?: ""
+        carePlanId = formatterClass.getSharedPref(DbNavigationDetails.CARE_PLAN.name, "carePlanId")?: ""
 
         val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.END_TREATMENT_FORM.name)
         if (workflowTitles != null){
             binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
             binding.imgBtn.setImageResource(workflowTitles.iconId)
         }
+
+        clinicalViewModel =
+            ViewModelProvider(
+                this,
+                ClinicalInfoDetailsViewModel.ClinicalInfoDetailsViewModelFactory(
+                    requireActivity().application,
+                    patientId
+                )
+            )[ClinicalInfoDetailsViewModel::class.java]
 
         return binding.root
 
@@ -67,6 +79,7 @@ class EndTreatmentFormFragment : Fragment() {
         navigationButtons.setNextButtonClickListener {
             // Handle next button click
             // Navigate to the next fragment or perform any action
+
 
             val (addedFields, missingFields) = FormUtils.extractAllFormData(binding.rootLayout)
             if (missingFields.isNotEmpty()){

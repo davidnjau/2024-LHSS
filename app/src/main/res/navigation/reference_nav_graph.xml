@@ -292,6 +292,9 @@
         <action
             android:id="@+id/action_clinicalInfoSectionsFragment_to_clinicalInfoEncountersFragment"
             app:destination="@id/clinicalInfoEncountersFragment" />
+        <action
+            android:id="@+id/action_clinicalInfoSectionsFragment_to_endTreatmentFormFragment"
+            app:destination="@id/endTreatmentFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/clinicalInfoDetailsFragment"

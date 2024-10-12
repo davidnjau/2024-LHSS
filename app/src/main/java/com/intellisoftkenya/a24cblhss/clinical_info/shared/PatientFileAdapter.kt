@@ -67,6 +67,11 @@ class PatientFileAdapter(
 
         holder.chipStatus.text = statusValue
 
+        //Add a setOnClickListener to navigate to the corresponding section when the chip is clicked
+        holder.linear.setOnClickListener {
+            findNavController(fragment).navigate(R.id.action_patientFileFragment_to_clinicalInfoSectionsFragment)
+        }
+
         // Add any additional data to the chip if needed
         // Example: holder.chipContainer.text = parentItem.additionalData
 

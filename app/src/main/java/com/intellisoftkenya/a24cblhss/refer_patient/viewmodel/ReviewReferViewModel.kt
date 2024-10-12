@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.hl7.fhir.r4.model.CarePlan
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.DateTimeType
@@ -136,17 +137,19 @@ class ReviewReferViewModel (
     fun createClinicalInfo(
         formDataList: ArrayList<FormData>,
         workflowTitles: String,
-        clinicalViewModel: ClinicalInfoDetailsViewModel
+        clinicalViewModel: ClinicalInfoDetailsViewModel,
+        status: CarePlan.CarePlanStatus
     ){
         CoroutineScope(Dispatchers.IO).launch {
-            createClinicalInfoBac(formDataList, workflowTitles, clinicalViewModel)
+            createClinicalInfoBac(formDataList, workflowTitles, clinicalViewModel, status)
         }
     }
 
     private suspend fun createClinicalInfoBac(
         formDataList: ArrayList<FormData>,
         workflowTitles: String,
-        clinicalViewModel: ClinicalInfoDetailsViewModel
+        clinicalViewModel: ClinicalInfoDetailsViewModel,
+        status: CarePlan.CarePlanStatus
     ) {
 
         val patientId = formatterClass.getSharedPref("", "patientId")
@@ -183,7 +186,9 @@ class ReviewReferViewModel (
             }
 
             //Update the CarePlan status
-            clinicalViewModel.updateCarePlanStatus(carePlanId, supportingInfoList)
+            clinicalViewModel.updateCarePlanStatus(
+                status,
+                carePlanId, supportingInfoList)
 
         }
 

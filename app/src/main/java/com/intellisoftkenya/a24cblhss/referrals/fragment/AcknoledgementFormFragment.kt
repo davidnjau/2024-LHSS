@@ -9,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.AcknoledgementFormViewModel
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentAcknoledgementFormBinding
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
@@ -34,6 +36,9 @@ class AcknoledgementFormFragment : Fragment() {
     private lateinit var formatterClass: FormatterClass
     private var patientId:String = ""
     private var serviceRequestId:String = ""
+    private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
+    private var carePlanId:String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +55,19 @@ class AcknoledgementFormFragment : Fragment() {
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
+        carePlanId = formatterClass.getSharedPref(DbNavigationDetails.CARE_PLAN.name, "carePlanId")?: ""
 
         patientId = formatterClass.getSharedPref("", "patientId") ?: ""
         serviceRequestId = formatterClass.getSharedPref("", "serviceRequestId") ?: ""
+
+        clinicalViewModel =
+            ViewModelProvider(
+                this,
+                ClinicalInfoDetailsViewModel.ClinicalInfoDetailsViewModelFactory(
+                    requireActivity().application,
+                    patientId
+                )
+            )[ClinicalInfoDetailsViewModel::class.java]
 
         val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.ACKNOWLEDGEMENT_FORM.name)
         if (workflowTitles != null){
