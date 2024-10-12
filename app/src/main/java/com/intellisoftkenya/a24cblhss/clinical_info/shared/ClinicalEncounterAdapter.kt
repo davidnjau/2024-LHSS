@@ -44,19 +44,7 @@ class ClinicalEncounterAdapter(
 
         //Create a setOnClickListener for the chip
         holder.chipContainer.setOnClickListener {
-            if (clinicalInfo != null) {
-                if (clinicalInfo == DbClasses.TB_TREATMENT.name ||
-                    clinicalInfo == DbClasses.HIV_STATUS_TREATMENT.name) {
-                    findNavController(fragment).navigate(
-                        R.id.action_clinicalInfoEncountersFragment_to_clinicalInfoFormI_IIFragment)
-                }
-                if (clinicalInfo == DbClasses.LABORATORY_RESULTS.name ||
-                    clinicalInfo == DbClasses.DST.name ||
-                    clinicalInfo == DbClasses.DR_TB_FOLLOW_UP_TEST.name) {
-                    findNavController(fragment).navigate(
-                        R.id.action_clinicalInfoEncountersFragment_to_clinicalInfoFormIII_IVFragment)
-                }
-            }
+
         }
 
         // Add any additional data to the chip if needed

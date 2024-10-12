@@ -72,7 +72,8 @@ data class DbServiceRequest(
 enum class DbNavigationDetails{
     PATIENT_REGISTRATION,
     REFER_PATIENT,
-    REFERRALS
+    REFERRALS,
+    CARE_PLAN
 }
 enum class DbClasses{
     DEMOGRAPHICS,

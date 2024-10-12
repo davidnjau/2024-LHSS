@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
@@ -61,6 +62,22 @@ class ClinicalInfoEncountersFragment : Fragment() {
             requireContext(), this, clinicalInfo, viewModel.getEncounterList())
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = formDataAdapter
+
+        binding.btnAdd.setOnClickListener {
+            if (clinicalInfo != null) {
+                if (clinicalInfo == DbClasses.TB_TREATMENT.name ||
+                    clinicalInfo == DbClasses.HIV_STATUS_TREATMENT.name) {
+                    findNavController().navigate(
+                        R.id.action_clinicalInfoEncountersFragment_to_clinicalInfoFormI_IIFragment)
+                }
+                if (clinicalInfo == DbClasses.LABORATORY_RESULTS.name ||
+                    clinicalInfo == DbClasses.DST.name ||
+                    clinicalInfo == DbClasses.DR_TB_FOLLOW_UP_TEST.name) {
+                    findNavController().navigate(
+                        R.id.action_clinicalInfoEncountersFragment_to_clinicalInfoFormIII_IVFragment)
+                }
+            }
+        }
 
     }
 

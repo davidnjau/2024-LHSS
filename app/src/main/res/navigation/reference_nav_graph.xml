@@ -287,7 +287,7 @@
     <fragment
         android:id="@+id/clinicalInfoSectionsFragment"
         android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoSectionsFragment"
-        android:label="fragment_clinical_info_sections"
+        android:label="@string/clinical_info"
         tools:layout="@layout/fragment_clinical_info_sections" >
         <action
             android:id="@+id/action_clinicalInfoSectionsFragment_to_clinicalInfoEncountersFragment"
