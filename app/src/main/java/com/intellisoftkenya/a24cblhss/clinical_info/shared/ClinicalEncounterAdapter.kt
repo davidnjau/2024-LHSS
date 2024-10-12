@@ -5,14 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbEncounter
 
 
 class ClinicalEncounterAdapter(
     private val context: Context,
+    private val fragment: Fragment,
+    private val clinicalInfo: String?,
     private val parentItemList: ArrayList<DbEncounter>
 ) : RecyclerView.Adapter<ClinicalEncounterAdapter.ParentViewHolder>() {
 
@@ -33,8 +38,29 @@ class ClinicalEncounterAdapter(
         parentItem.date.let { holder.tvDate.text = it }
         parentItem.filledBy.let { holder.tvFilledBy.text = it }
 
-        // Setup the Child RecyclerView
+        //Add an icon to the chip based on the clinical info
+        holder.chipContainer.setChipIconResource(R.drawable.ic_action_view)
 
+
+        //Create a setOnClickListener for the chip
+        holder.chipContainer.setOnClickListener {
+            if (clinicalInfo != null) {
+                if (clinicalInfo == DbClasses.TB_TREATMENT.name ||
+                    clinicalInfo == DbClasses.HIV_STATUS_TREATMENT.name) {
+                    findNavController(fragment).navigate(
+                        R.id.action_clinicalInfoEncountersFragment_to_clinicalInfoFormI_IIFragment)
+                }
+                if (clinicalInfo == DbClasses.LABORATORY_RESULTS.name ||
+                    clinicalInfo == DbClasses.DST.name ||
+                    clinicalInfo == DbClasses.DR_TB_FOLLOW_UP_TEST.name) {
+                    findNavController(fragment).navigate(
+                        R.id.action_clinicalInfoEncountersFragment_to_clinicalInfoFormIII_IVFragment)
+                }
+            }
+        }
+
+        // Add any additional data to the chip if needed
+        // Example: holder.chipContainer.text = parentItem.additionalData
 
     }
 

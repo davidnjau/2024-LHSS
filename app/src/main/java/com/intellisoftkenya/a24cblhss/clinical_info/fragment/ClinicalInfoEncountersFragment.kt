@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
 import com.intellisoftkenya.a24cblhss.R
@@ -15,6 +16,7 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoEncounters
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 class ClinicalInfoEncountersFragment : Fragment() {
@@ -24,6 +26,7 @@ class ClinicalInfoEncountersFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private lateinit var formatterClass: FormatterClass
     private var patientId:String = ""
+    private var clinicalInfo:String? = null
     private lateinit var viewModel: ReferralDetailsViewModel
 
     override fun onCreateView(
@@ -34,6 +37,7 @@ class ClinicalInfoEncountersFragment : Fragment() {
         _binding = FragmentClinicalInfoEncountersBinding.inflate(inflater, container, false)
         formatterClass = FormatterClass(requireContext())
         patientId = formatterClass.getSharedPref("", "patientId")?: ""
+        clinicalInfo = formatterClass.getSharedPref("", "CLINICAL_REFERRAL")
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         viewModel =
@@ -47,17 +51,17 @@ class ClinicalInfoEncountersFragment : Fragment() {
                 ),
             )[ReferralDetailsViewModel::class.java]
 
-        val formDataAdapter = ClinicalEncounterAdapter(requireContext(), viewModel.getEncounterList())
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = formDataAdapter
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val encounterList = viewModel.getEncounterList()
+        val formDataAdapter = ClinicalEncounterAdapter(
+            requireContext(), this, clinicalInfo, viewModel.getEncounterList())
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = formDataAdapter
+
     }
 
     override fun onDestroyView() {
