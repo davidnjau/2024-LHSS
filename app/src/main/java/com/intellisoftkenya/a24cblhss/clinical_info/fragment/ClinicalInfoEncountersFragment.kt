@@ -61,6 +61,7 @@ class ClinicalInfoEncountersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val encounterList =  viewModel.getEncounterList(carePlanId)
+        encounterList.removeIf{ it.referralReason != clinicalInfo }
 
         val formDataAdapter = ClinicalEncounterAdapter(
             requireContext(), this, clinicalInfo, encounterList)
