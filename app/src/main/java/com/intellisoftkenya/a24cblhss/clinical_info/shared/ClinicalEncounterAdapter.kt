@@ -12,6 +12,7 @@ import com.google.android.material.chip.Chip
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbEncounter
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 
 class ClinicalEncounterAdapter(
@@ -44,7 +45,9 @@ class ClinicalEncounterAdapter(
 
         //Create a setOnClickListener for the chip
         holder.chipContainer.setOnClickListener {
-
+            val id = parentItem.id.replace("Encounter/","")
+            FormatterClass(context).saveSharedPref("","encounterId", id)
+            findNavController(fragment).navigate(R.id.action_clinicalInfoEncountersFragment_to_clinicalViewEncountersFragment)
         }
 
         // Add any additional data to the chip if needed

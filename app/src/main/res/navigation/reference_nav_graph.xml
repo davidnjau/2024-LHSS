@@ -299,22 +299,22 @@
     <fragment
         android:id="@+id/clinicalInfoDetailsFragment"
         android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoDetailsFragment"
-        android:label="fragment_clinical_info_details"
+        android:label="@string/clinical_form"
         tools:layout="@layout/fragment_clinical_info_details" />
     <fragment
         android:id="@+id/clinicalInfoViewFragment"
         android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoViewFragment"
-        android:label="fragment_clinical_info_view"
+        android:label="@string/clinical_form"
         tools:layout="@layout/fragment_clinical_info_view" />
     <fragment
         android:id="@+id/clinicalInfoFormI_IIFragment"
         android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoFormI_IIFragment"
-        android:label="fragment_clinical_info_form_i__i_i"
+        android:label="@string/clinical_form"
         tools:layout="@layout/fragment_clinical_info_form_i__i_i" />
     <fragment
         android:id="@+id/clinicalInfoFormIII_IVFragment"
         android:name="com.intellisoftkenya.a24cblhss.clinical_info.fragment.ClinicalInfoFormIII_IVFragment"
-        android:label="fragment_clinical_info_form_i_i_i__i_v"
+        android:label="@string/clinical_form"
         tools:layout="@layout/fragment_clinical_info_form_i_i_i__i_v" />
     <fragment
         android:id="@+id/endTreatmentFormFragment"
@@ -345,5 +345,13 @@
         <action
             android:id="@+id/action_clinicalInfoEncountersFragment_to_clinicalInfoFormIII_IVFragment"
             app:destination="@id/clinicalInfoFormIII_IVFragment" />
+        <action
+            android:id="@+id/action_clinicalInfoEncountersFragment_to_clinicalViewEncountersFragment"
+            app:destination="@id/clinicalViewEncountersFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/clinicalViewEncountersFragment"
+        android:name="com.intellisoftkenya.a24cblhss.ClinicalViewEncountersFragment"
+        android:label="@string/clinical_details"
+        tools:layout="@layout/fragment_clinical_view_encounters" />
 </navigation>

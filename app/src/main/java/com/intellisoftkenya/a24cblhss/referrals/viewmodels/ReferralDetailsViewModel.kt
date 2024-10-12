@@ -39,21 +39,15 @@ class ReferralDetailsViewModel(
 
     private val formatterClass = FormatterClass(application.applicationContext)
 
-    fun getClinicalList(): ArrayList<FormData> {
+    fun getClinicalList(encounter:String): ArrayList<FormData> {
         val items = ArrayList<FormData>()
 
         viewModelScope.launch {
             _isLoading.value = true
             try {
-
-                val encounter = formatterClass.getSharedPref("", "encounterId")
-                if (encounter != null) {
-
-                    //Make sure the encounter is in the form of 'Encounter/...'
-                    val dbFormData = getEncounterDetails(encounter)
-                    if (dbFormData != null) {
-                        items.add(dbFormData)
-                    }
+                val dbFormData = getEncounterDetails(encounter)
+                if (dbFormData != null) {
+                    items.add(dbFormData)
                 }
                 _clinicalLiveData.value = items
             } catch (e: Exception) {
@@ -100,6 +94,10 @@ class ReferralDetailsViewModel(
 
     }
 
+    fun getEncounterObservationDetails(encounter: String)= runBlocking {
+        getEncounterDetails(encounter)
+    }
+
     private fun createObservationItem(resource: Observation):DbFormData {
 
         val tag = if(resource.hasCode() && resource.code.hasCoding()){
@@ -132,6 +130,7 @@ class ReferralDetailsViewModel(
             .map { createObservationItem(it.resource) }
             .let {observationList.addAll(it)}
 
+
         val searchResult =
             fhirEngine.search<Encounter> {
                 filter(Resource.RES_ID, { value = of(encounterId) })
@@ -144,6 +143,13 @@ class ReferralDetailsViewModel(
                 }else ""
             }
         }
+
+        Log.e("*****","*****")
+        println("encounter: ${encounter}")
+        println("encounterId: ${encounterId}")
+        println("patientId: ${patientId}")
+        println("searchResult: ${searchResult}")
+        Log.e("*****","*****")
 
         if (title != "" && observationList.isNotEmpty()){
             val formData = FormData(
@@ -172,12 +178,6 @@ class ReferralDetailsViewModel(
             .let {formDataList.addAll(it)}
 
         val newFormDataList = formDataList.filterBasedOn(carePlanId)
-
-        Log.e("---->","<-----")
-        println("formDataList $formDataList")
-        println("newFormDataList $newFormDataList")
-        println("carePlanId $carePlanId")
-        Log.e("---->","<-----")
 
         return ArrayList(newFormDataList)
 

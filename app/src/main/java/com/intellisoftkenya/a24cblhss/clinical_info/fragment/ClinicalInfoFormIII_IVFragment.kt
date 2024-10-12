@@ -92,10 +92,10 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             val adapter = ClinicalParentAdapter(clinicalList)
             binding.parentRecyclerView.adapter = adapter
         }
-        val parentItemList = viewModel.getClinicalList()
+//        val parentItemList = viewModel.getClinicalList()
         // Setup Parent RecyclerView
-        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.parentRecyclerView.adapter = ClinicalParentAdapter(parentItemList)
+//        binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        binding.parentRecyclerView.adapter = ClinicalParentAdapter(parentItemList)
 
 
         return binding.root

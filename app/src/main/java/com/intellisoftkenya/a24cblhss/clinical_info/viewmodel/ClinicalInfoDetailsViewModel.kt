@@ -41,6 +41,8 @@ class ClinicalInfoDetailsViewModel(
         getEncountersBac(carePlanId)
     }
 
+
+
     private suspend fun getEncountersBac(carePlanId: String): ArrayList<DbEncounterDetails> {
         val dbEncounterDetailsList = ArrayList<DbEncounterDetails>()
         fhirEngine
