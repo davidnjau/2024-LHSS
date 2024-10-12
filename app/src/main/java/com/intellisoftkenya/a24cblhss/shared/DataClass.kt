@@ -13,6 +13,13 @@ data class DbField(
     val optionList : List<String> = emptyList()
 )
 
+data class DbEncounterDetails(
+    val id: String,
+    val date: String,
+    val reasonCode: String,
+    val status: String
+)
+
 data class DbCarePlan(
     val id: String,
     val status: String,
@@ -54,7 +61,8 @@ data class DbEncounter(
     val date: String,
     val status: String,
     val filledBy: String,
-    val referralReason: String
+    val referralReason: String,
+    val basedOn: String,
 )
 
 

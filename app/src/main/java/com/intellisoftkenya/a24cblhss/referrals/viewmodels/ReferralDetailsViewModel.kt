@@ -11,17 +11,14 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
-import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientCardViewModel
 import com.intellisoftkenya.a24cblhss.shared.DbEncounter
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Observation
-import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ServiceRequest
 
@@ -158,11 +155,11 @@ class ReferralDetailsViewModel(
         return null
     }
 
-    fun getEncounterList() = runBlocking {
-        getEncounterListBac()
+    fun getEncounterList(carePlanId: String) = runBlocking {
+        getEncounterListBac(carePlanId)
     }
 
-    private suspend fun getEncounterListBac(): ArrayList<DbEncounter> {
+    private suspend fun getEncounterListBac(carePlanId: String): ArrayList<DbEncounter> {
 
         val formDataList = ArrayList<DbEncounter>()
 
@@ -174,8 +171,20 @@ class ReferralDetailsViewModel(
             .map { createEncounterItem(it.resource) }
             .let {formDataList.addAll(it)}
 
-        return formDataList
+        val newFormDataList = formDataList.filterBasedOn(carePlanId)
 
+        Log.e("---->","<-----")
+        println("formDataList $formDataList")
+        println("newFormDataList $newFormDataList")
+        println("carePlanId $carePlanId")
+        Log.e("---->","<-----")
+
+        return ArrayList(newFormDataList)
+
+    }
+
+    private fun List<DbEncounter>.filterBasedOn(basedOn: String): List<DbEncounter> {
+        return this.filter { it.basedOn == basedOn }
     }
 
     private fun createEncounterItem(resource: Encounter): DbEncounter {
@@ -190,12 +199,19 @@ class ReferralDetailsViewModel(
             resource.reasonCodeFirstRep.text
         }else ""
 
+        val date = formatterClass.convertDateFormat(dateCreated) ?: ""
+
+        val basedOn = if (resource.hasBasedOn()) {
+            resource.basedOnFirstRep.reference.toString().replace("CarePlan/","")
+        }else ""
+
         return DbEncounter(
             id,
-            dateCreated,
+            date,
             status,
             "",
-            referralReason)
+            referralReason,
+            basedOn)
 
     }
 

@@ -11,6 +11,7 @@ import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralPatientListViewModel
 import com.intellisoftkenya.a24cblhss.shared.DbCarePlan
+import com.intellisoftkenya.a24cblhss.shared.DbEncounterDetails
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.CarePlan
 import org.hl7.fhir.r4.model.CarePlan.CarePlanStatus
+import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
@@ -35,10 +37,46 @@ class ClinicalInfoDetailsViewModel(
     private var fhirEngine: FhirEngine =
         FhirApplication.fhirEngine(application.applicationContext)
 
+    fun getCarePlanAndEncounters(carePlanId: String) = runBlocking {
+        getEncountersBac(carePlanId)
+    }
+
+    private suspend fun getEncountersBac(carePlanId: String): ArrayList<DbEncounterDetails> {
+        val dbEncounterDetailsList = ArrayList<DbEncounterDetails>()
+        fhirEngine
+            .search<Encounter> {
+                filter(Encounter.SUBJECT, { value = "Patient/$patientId" })
+                filter(Encounter.BASED_ON, { value = "Careplan/$carePlanId" })
+                sort(Observation.DATE, Order.ASCENDING)
+            }
+            .map { createEncounterItem(it.resource) }
+            .let {dbEncounterDetailsList.addAll(it)}
+        return dbEncounterDetailsList
+    }
+
+    private fun createEncounterItem(resource: Encounter):DbEncounterDetails {
+        val id = resource.id
+        val reasonCode = if (resource.hasReasonCode()) {
+            resource.reasonCodeFirstRep.text
+        }else ""
+        val date = if (resource.hasPeriod()) {
+            formatterClass.convertDateFormat(resource.period.start.toString()) ?: ""
+        }else ""
+        val status = if (resource.hasStatus()) {
+            resource.status.toString()
+        }else ""
+
+        return DbEncounterDetails(
+            id,
+            reasonCode,
+            date,
+            status
+        )
+
+    }
 
     fun closeCarePlan(carePlanId: String) {
         val supportingInfo = ArrayList<Reference>()
-        Log.e("******* ", "carePlanId: $carePlanId")
         updateCarePlanStatus(CarePlanStatus.COMPLETED, carePlanId, supportingInfo)
     }
 
@@ -103,8 +141,6 @@ class ClinicalInfoDetailsViewModel(
         supportingInfoList: ArrayList<Reference>){
 
         CoroutineScope(Dispatchers.IO).launch {
-            Log.e("*******2 ", "carePlanId: $carePlanId")
-
             updateCarePlanStatusBac(status,carePlanId, supportingInfoList)
         }
     }
@@ -139,23 +175,16 @@ class ClinicalInfoDetailsViewModel(
         status: CarePlanStatus,
         carePlanId: String,
         supportingInfoList: ArrayList<Reference>){
-        Log.e("*******3 ", "carePlanId: $carePlanId")
-
-        Log.e("----Upd", "----$carePlanId")
 
         val searchResult =
             fhirEngine.search<CarePlan> {
                 filter(Resource.RES_ID, { value = of(carePlanId) })
             }
-        println("Search result: $searchResult")
-        println("status: $status")
 
         if (searchResult.isNotEmpty()) {
             searchResult.first().let {
                 val carePlan = it.resource
                 carePlan.status = status
-
-                println("carePlan: ${carePlan.status} - ${carePlan.id} - ${carePlan.title} - ${carePlan.description} - ${carePlan.created} - ${carePlan.subject}")
 
                 supportingInfoList.forEach { supportingInfo ->
                     carePlan.supportingInfo.add(supportingInfo)
@@ -165,7 +194,6 @@ class ClinicalInfoDetailsViewModel(
             }
 
         }
-        Log.e("----Upd", "----$carePlanId")
 
     }
 

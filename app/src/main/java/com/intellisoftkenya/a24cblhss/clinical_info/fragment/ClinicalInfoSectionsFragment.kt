@@ -1,6 +1,7 @@
 package com.intellisoftkenya.a24cblhss.clinical_info.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,15 +9,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalLayoutListViewModel
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalLayoutsRecyclerViewAdapter
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoSectionsBinding
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.LayoutsRecyclerViewAdapter
 
@@ -28,6 +32,10 @@ class ClinicalInfoSectionsFragment : Fragment() {
 
     private val _binding: FragmentClinicalInfoSectionsBinding? = null
     private val binding get() = _binding!!
+    private var patientId:String = ""
+    private var carePlanId:String = ""
+    private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
+
 
 
     override fun onCreateView(
@@ -35,7 +43,17 @@ class ClinicalInfoSectionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         formatterClass = FormatterClass(requireContext())
+        patientId = formatterClass.getSharedPref("", "patientId") ?: ""
+        carePlanId = formatterClass.getSharedPref(DbNavigationDetails.CARE_PLAN.name,"carePlanId") ?: ""
 
+        clinicalViewModel =
+            ViewModelProvider(
+                this,
+                ClinicalInfoDetailsViewModel.ClinicalInfoDetailsViewModelFactory(
+                    requireActivity().application,
+                    patientId
+                )
+            )[ClinicalInfoDetailsViewModel::class.java]
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_clinical_info_sections, container, false)
@@ -91,9 +109,19 @@ class ClinicalInfoSectionsFragment : Fragment() {
 
         formatterClass.deleteSharedPref("", "CLINICAL_REFERRAL")
 
+        val btnEndTreatment = view.findViewById<Button>(R.id.btnEndTreatment)
+
+
+//        val hasActiveStatus = carePlanList.any { it.status == "ACTIVE" }
+//        if (hasActiveStatus) {
+//            btnEndTreatment.visibility = View.VISIBLE
+//        }else{
+//            btnEndTreatment.visibility = View.GONE
+//        }
+
+
         val layoutList = layoutViewModel.getLayoutList()
 
-        val btnEndTreatment = view.findViewById<Button>(R.id.btnEndTreatment)
         btnEndTreatment.setOnClickListener { showEndPatientDialog() }
 
         val adapter = ClinicalLayoutsRecyclerViewAdapter(::onItemClick).apply { submitList(layoutList) }

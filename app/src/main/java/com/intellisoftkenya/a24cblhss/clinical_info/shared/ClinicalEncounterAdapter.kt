@@ -36,7 +36,7 @@ class ClinicalEncounterAdapter(
         val parentItem = parentItemList[position]
 
         parentItem.date.let { holder.tvDate.text = it }
-        parentItem.filledBy.let { holder.tvFilledBy.text = it }
+        parentItem.filledBy.let { holder.tvFilledBy.text = "Filled By:" }
 
         //Add an icon to the chip based on the clinical info
         holder.chipContainer.setChipIconResource(R.drawable.ic_action_view)

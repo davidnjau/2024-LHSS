@@ -17,6 +17,7 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentPatientFileBinding
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientCardViewModel
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientDetailsViewModelFactory
 import com.intellisoftkenya.a24cblhss.shared.DbCarePlan
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormDataAdapter
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
@@ -44,6 +45,9 @@ class PatientFileFragment : Fragment() {
 //        }
 
         formatterClass = FormatterClass(requireContext())
+
+        formatterClass.deleteSharedPref(DbNavigationDetails.CARE_PLAN.name,"carePlanId")
+
         patientId = formatterClass.getSharedPref("", "patientId") ?: ""
 
         clinicalViewModel =

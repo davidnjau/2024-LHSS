@@ -14,6 +14,8 @@ import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.shared.DbCarePlan
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbEncounter
+import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 
 class PatientFileAdapter(
@@ -69,6 +71,8 @@ class PatientFileAdapter(
 
         //Add a setOnClickListener to navigate to the corresponding section when the chip is clicked
         holder.linear.setOnClickListener {
+            val carePlanId = parentItem.id.replace("CarePlan/", "")
+            FormatterClass(context).saveSharedPref(DbNavigationDetails.CARE_PLAN.name, "carePlanId", carePlanId)
             findNavController(fragment).navigate(R.id.action_patientFileFragment_to_clinicalInfoSectionsFragment)
         }
 
