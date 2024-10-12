@@ -13,6 +13,14 @@ data class DbField(
     val optionList : List<String> = emptyList()
 )
 
+data class DbCarePlan(
+    val id: String,
+    val status: String,
+    val fileNumber: String,
+    val dateCreated: String,
+    val supportingInfoList: ArrayList<Reference>
+)
+
 data class DbCounty(
     val id: Int,
     val name: String

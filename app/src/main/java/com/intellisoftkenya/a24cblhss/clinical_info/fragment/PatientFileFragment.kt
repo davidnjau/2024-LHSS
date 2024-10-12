@@ -9,12 +9,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.shared.PatientFileAdapter
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentPatientFileBinding
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientCardViewModel
 import com.intellisoftkenya.a24cblhss.patient_details.viewmodel.PatientDetailsViewModelFactory
+import com.intellisoftkenya.a24cblhss.shared.FormDataAdapter
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PatientFileFragment : Fragment() {
 
@@ -61,6 +67,19 @@ class PatientFileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        CoroutineScope(Dispatchers.IO).launch {
+            val carePlanList = clinicalViewModel.getCarePlanDetails()
+
+            val formDataAdapter = PatientFileAdapter(
+                requireContext(),
+                this@PatientFileFragment,
+                carePlanList)
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.recyclerView.layoutManager = LinearLayoutManager(context)
+                binding.recyclerView.adapter = formDataAdapter
+            }
+
+        }
 
     }
 

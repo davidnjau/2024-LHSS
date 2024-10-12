@@ -6,15 +6,19 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.fhir.FhirEngine
+import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralPatientListViewModel
+import com.intellisoftkenya.a24cblhss.shared.DbCarePlan
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.CarePlan
+import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ServiceRequest
@@ -30,6 +34,55 @@ class ClinicalInfoDetailsViewModel(
     private var fhirEngine: FhirEngine =
         FhirApplication.fhirEngine(application.applicationContext)
 
+
+    fun getCarePlanDetails() = runBlocking {
+        getCarePlanDetailsBac()
+    }
+
+    private suspend fun getCarePlanDetailsBac(): ArrayList<DbCarePlan> {
+
+        val carePlanList = ArrayList<DbCarePlan>()
+
+        fhirEngine
+            .search<CarePlan> {
+                filter(Observation.SUBJECT, { value = "Patient/$patientId" })
+                sort(Observation.DATE, Order.ASCENDING)
+            }
+            .map { createCarePlanItem(it.resource) }
+            .let {carePlanList.addAll(it)}
+
+        val activeCarePlans = carePlanList.filterActive("ACTIVE")
+        val completedCarePlans = carePlanList.filterActive("COMPLETED")
+
+        //Combine active and completed care plans into a single list
+        val combinedCarePlans = activeCarePlans + completedCarePlans
+
+        return ArrayList(combinedCarePlans)
+
+    }
+
+    fun List<DbCarePlan>.filterActive(status: String): List<DbCarePlan> {
+        return this.filter { it.status == status }
+    }
+
+    private fun createCarePlanItem(resource: CarePlan): DbCarePlan {
+
+        val id = resource.id
+        val date = resource.created.toString()
+        val status = resource.status.toString()
+        val supportingInfoList = resource.supportingInfo
+
+        val dateCreated = formatterClass.convertDateFormat(date) ?: ""
+
+        return DbCarePlan(
+            id,
+            status,
+            "",
+            dateCreated,
+            ArrayList(supportingInfoList)
+        )
+
+    }
 
     fun createCarePlan(){
         CoroutineScope(Dispatchers.IO).launch {
