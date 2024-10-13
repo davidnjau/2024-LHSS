@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
@@ -31,6 +32,7 @@ import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ClinicalInfoFormIII_IVFragment : Fragment() {
@@ -97,11 +99,6 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
                 ),
             )[ReferralDetailsViewModel::class.java]
 
-        viewModel.clinicalLiveData.observe(viewLifecycleOwner) { clinicalList ->
-
-
-
-        }
 
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -114,10 +111,25 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             }
         }
 
-
+        startRepeatingTask()
 
         return binding.root
 
+    }
+
+    fun startRepeatingTask() {
+        // Use lifecycleScope to ensure coroutines respect the Activity/Fragment lifecycle
+        lifecycleScope.launch {
+            while (true) {
+                // Invoke the function and get the result
+                val formData = viewModel.getEncounterObservationList(workflowTitles)
+                binding.parentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                binding.parentRecyclerView.adapter = ClinicalParentAdapter(formData)
+
+                // Suspend for 5 seconds before the next iteration
+                delay(5000)
+            }
+        }
     }
 
     private fun loadFormData(): List<DbField> {
@@ -199,7 +211,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             // Handle next button click
             // Navigate to the next fragment or perform any action
 
-
+            findNavController().navigateUp()
         }
     }
 

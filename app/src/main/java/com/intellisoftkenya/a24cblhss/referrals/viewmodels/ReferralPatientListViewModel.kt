@@ -11,18 +11,16 @@ import com.google.android.fhir.search.StringFilterModifier
 import com.google.android.fhir.search.count
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
-import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.DbPatientItem
-import com.intellisoftkenya.a24cblhss.shared.DbServiceRequest
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.hl7.fhir.r4.model.Coding
-import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ServiceRequest
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ReferralPatientListViewModel(
     application: Application
@@ -89,10 +87,27 @@ class ReferralPatientListViewModel(
             .mapIndexed { index, fhirPatient -> createServiceRequest(fhirPatient.resource) }
             .let { dbPatientItemList.addAll(it) }
 
-        patients = dbPatientItemList.filterNotNull().toMutableList()
+        val sortedPatients = sortByMostRecentDateCreated(dbPatientItemList)
+
+        patients = sortedPatients.filterNotNull().toMutableList()
 
 
         return ArrayList(patients)
+    }
+
+    fun sortByMostRecentDateCreated(patientList: ArrayList<DbPatientItem?>): List<DbPatientItem?> {
+        val dateFormat = SimpleDateFormat("MMM d yyyy", Locale.ENGLISH)
+
+        return patientList.sortedByDescending { patient ->
+            // Parse dateCreated, return null if date is not valid
+            patient?.dateCreated?.let { dateString ->
+                try {
+                    dateFormat.parse(dateString)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
     }
 
     private suspend fun createServiceRequest(resource: ServiceRequest):DbPatientItem? {
@@ -157,12 +172,19 @@ class ReferralPatientListViewModel(
                             dob = birthDateElement.toString()
                         }
                     }
+                    //DateCreated
+                    var dateCreated = ""
+                    if (resource.hasAuthoredOn()) {
+                        val dateAuthoredOn = formatterClass.convertDateFormat(resource.authoredOn.toString())
+                        if (dateAuthoredOn != null) dateCreated = dateAuthoredOn
+                    }
+
                     return DbPatientItem(
                         patientId,
                         name,
                         patientId.substring(0..6),
                         dob,
-                        null
+                        dateCreated
                     )
 
                 }

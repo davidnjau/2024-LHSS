@@ -12,7 +12,9 @@ data class DbField(
     val inputType: Int? = null, // InputType for EditText (e.g., InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
     val optionList : List<String> = emptyList(),
 
-    val isEnabled: Boolean = true)
+    val isEnabled: Boolean = true,
+    val fhirCode: String? = null,
+    )
 
 data class DbEncounterDetails(
     val id: String,
@@ -70,6 +72,7 @@ data class DbEncounter(
 data class DbFormData(
     val tag: String,
     val text: String,
+    val fhirCode: String? = null,
 )
 data class DbPatientItem(
     val id: String,

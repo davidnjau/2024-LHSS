@@ -1,5 +1,6 @@
 package com.intellisoftkenya.a24cblhss.referrals.fragment
 
+import android.app.Application
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
@@ -8,9 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.AcknoledgementFormViewModel
 import com.intellisoftkenya.a24cblhss.R
@@ -24,6 +27,10 @@ import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.fhir.Constants
+import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 class AcknoledgementFormFragment : Fragment() {
@@ -37,7 +44,9 @@ class AcknoledgementFormFragment : Fragment() {
     private var patientId:String = ""
     private var serviceRequestId:String = ""
     private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
+    private lateinit var referralViewModel: ReferralDetailsViewModel
     private var carePlanId:String = ""
+    private lateinit var fhirEngine: FhirEngine
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +61,7 @@ class AcknoledgementFormFragment : Fragment() {
     ): View {
 
         _binding = FragmentAcknoledgementFormBinding.inflate(inflater, container, false)
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
 
         navigationActions()
         formatterClass = FormatterClass(requireContext())
@@ -68,6 +78,18 @@ class AcknoledgementFormFragment : Fragment() {
                     patientId
                 )
             )[ClinicalInfoDetailsViewModel::class.java]
+
+        referralViewModel =
+            ViewModelProvider(
+                this,
+                ReferralDetailsViewModelFactory(
+                    requireContext().applicationContext as Application,
+                    fhirEngine,
+                    patientId,
+                    serviceRequestId
+                ),
+            )
+                .get(ReferralDetailsViewModel::class.java)
 
         val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.ACKNOWLEDGEMENT_FORM.name)
         if (workflowTitles != null){
@@ -207,6 +229,17 @@ class AcknoledgementFormFragment : Fragment() {
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
         //Get and populate form data from the database if available
+        val fhirCode = Constants.TB_REGISTRATION_CODE
+        val tbRegistration = referralViewModel.getObservationCode(fhirCode)
+
+        val rootViewParent = binding.rootLayout.findViewWithTag<View>("Your TB Registration No")
+        if (rootViewParent != null && tbRegistration != null) {
+            //Check if rootViewParent is EditText and set its text from the retrieved observation
+            if (rootViewParent is EditText) {
+                rootViewParent.setText(tbRegistration.text)
+            }
+        }
+
 
         FormUtils.loadFormData(
             requireContext(),

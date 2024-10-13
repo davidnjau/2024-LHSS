@@ -49,7 +49,7 @@ class ClinicalInfoDetailsViewModel(
             .search<Encounter> {
                 filter(Encounter.SUBJECT, { value = "Patient/$patientId" })
                 filter(Encounter.BASED_ON, { value = "Careplan/$carePlanId" })
-                sort(Observation.DATE, Order.ASCENDING)
+                sort(Encounter.DATE, Order.ASCENDING)
             }
             .map { createEncounterItem(it.resource) }
             .let {dbEncounterDetailsList.addAll(it)}
@@ -92,8 +92,8 @@ class ClinicalInfoDetailsViewModel(
 
         fhirEngine
             .search<CarePlan> {
-                filter(Observation.SUBJECT, { value = "Patient/$patientId" })
-                sort(Observation.DATE, Order.ASCENDING)
+                filter(CarePlan.SUBJECT, { value = "Patient/$patientId" })
+                sort(CarePlan.DATE, Order.ASCENDING)
             }
             .map { createCarePlanItem(it.resource) }
             .let {carePlanList.addAll(it)}

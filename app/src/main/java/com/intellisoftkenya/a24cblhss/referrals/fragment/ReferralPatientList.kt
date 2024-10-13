@@ -17,6 +17,7 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentReferralPatientListBin
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.AcknoledgementDetailsViewModel
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralPatientListViewModel
+import com.intellisoftkenya.a24cblhss.shared.DbPatientItem
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.PatientAdapter
@@ -29,6 +30,8 @@ class ReferralPatientList : Fragment() {
     private lateinit var formatterClass: FormatterClass
 
     private lateinit var viewModel: ReferralPatientListViewModel
+
+    private var patientList =  ArrayList<DbPatientItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,9 +73,17 @@ class ReferralPatientList : Fragment() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let { viewModel.searchPatientsByName(it) }
+
+                if (newText != null) {
+                    patientList.clear()
+                    patientList = searchPatientsByName(patientList, newText)
+                    populateRecyclerView(patientList)
+                }
                 return false
             }
         })
+
+
 
         // Handle DatePicker icon click
         binding.datepickerIcon.setOnClickListener {
@@ -86,26 +97,31 @@ class ReferralPatientList : Fragment() {
 
         viewModel.liveSearchedPatients.observe(viewLifecycleOwner) {
 
-            val patientList = ArrayList(it)
+            patientList = ArrayList(it)
             // Initialize RecyclerView and adapter
-            val patientAdapter = PatientAdapter(patientList) { selectedPatient ->
-
-                val id = selectedPatient.id
-                formatterClass.saveSharedPref("","patientId", id)
-                findNavController().navigate(R.id.action_referralPatientList_to_referralListFragment)
-
-            }
-
-            binding.patientRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            binding.patientRecyclerView.adapter = patientAdapter
-
-            // Set total patients
-            binding.totalPatientsTextView.text = "Total Patients: ${patientList.size}"
-
+            populateRecyclerView(patientList)
         }
 
     }
 
+    fun populateRecyclerView(patientList: List<DbPatientItem>) {
+        val patientAdapter = PatientAdapter(patientList) { selectedPatient ->
+
+            val id = selectedPatient.id
+            formatterClass.saveSharedPref("","patientId", id)
+            findNavController().navigate(R.id.action_referralPatientList_to_referralListFragment)
+
+        }
+
+        binding.patientRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.patientRecyclerView.adapter = patientAdapter
+
+        // Set total patients
+        binding.totalPatientsTextView.text = "Total Patients: ${patientList.size}"
+    }
+    fun searchPatientsByName(patients: List<DbPatientItem>, query: String): ArrayList<DbPatientItem> {
+        return ArrayList(patients.filter { it.name.contains(query, ignoreCase = true) })
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

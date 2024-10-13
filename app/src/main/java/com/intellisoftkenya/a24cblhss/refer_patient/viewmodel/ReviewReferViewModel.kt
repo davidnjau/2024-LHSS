@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.google.android.fhir.FhirEngine
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
+import com.intellisoftkenya.a24cblhss.fhir.Constants
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
@@ -69,6 +70,7 @@ class ReviewReferViewModel (
         if (requesterId != null){
             serviceRequest.requester = Reference("Practitioner/$requesterId")
         }
+        serviceRequest.authoredOn = Date()
 
 
         val reasonCodeList = ArrayList<CodeableConcept>()
@@ -242,11 +244,20 @@ class ReviewReferViewModel (
         observation.status = Observation.ObservationStatus.FINAL
         observation.subject = Reference("Patient/$patientId")
 
+        val fhirCode = if (dbFormData.tag == "TB Registration Number"){
+            Constants.TB_REGISTRATION_CODE
+        }else{
+            generateRandomLoincCode()
+        }
+
+//        val fhirCode = dbFormData.fhirCode ?: generateRandomLoincCode()
+
+
         // Generate a random LOINC code for the observation
         observation.code = CodeableConcept()
             .addCoding(
                 Coding().setSystem("http://loinc.org")
-                    .setCode(generateRandomLoincCode())
+                    .setCode(fhirCode)
                     .setDisplay(dbFormData.tag)
             )
 

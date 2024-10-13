@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -96,7 +97,15 @@ class BottomNavigationDrawerFragmentWithWidgets(
 
     private fun savedData(formDataList: ArrayList<FormData>) {
 
-        viewModel.createClinicalInfo(formDataList, workflowTitles, clinicalViewModel, CarePlan.CarePlanStatus.ACTIVE)
+        viewModel.createClinicalInfo(formDataList,
+            workflowTitles,
+            clinicalViewModel,
+            CarePlan.CarePlanStatus.ACTIVE)
+
+        val successMessage = formatterClass.toSentenceCase(workflowTitles)
+        Toast.makeText(this.context,
+            "Data saved successfully for $successMessage",
+            Toast.LENGTH_SHORT).show()
 
     }
 }

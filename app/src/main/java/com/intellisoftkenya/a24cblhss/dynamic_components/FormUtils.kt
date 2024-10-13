@@ -252,7 +252,9 @@ object FormUtils {
 
     }
 
-    fun populateFormData(formDataList: ArrayList<FormData>, parentLayout: LinearLayout) {
+    fun populateFormData(
+        formDataList: ArrayList<FormData>,
+        parentLayout: LinearLayout) {
 
         formDataList.forEach { formData ->
             formData.formDataList.forEach { dbFormData ->

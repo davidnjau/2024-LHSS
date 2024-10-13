@@ -40,16 +40,42 @@ class ReferralDetailsViewModel(
 
     private val formatterClass = FormatterClass(application.applicationContext)
 
-    fun getClinicalList(encounter:String): ArrayList<FormData> {
-        val items = ArrayList<FormData>()
+    fun getEncounterObservationList(title: String):ArrayList<FormData>{
+
+        val formDataList = ArrayList<FormData>()
+
+        val carePlanId = formatterClass.getSharedPref(
+            DbNavigationDetails.CARE_PLAN.name,"carePlanId")?: ""
+
+        val encounterList = getEncounterList(carePlanId)
+        encounterList.forEach {
+            val encounter = it.id
+            val title = it.referralReason
+
+            val formData = getEncounterObservationDetails(encounter)
+
+            if (formData != null) {
+                formDataList.add(formData)
+            }
+        }
+        val newFormDataList = formDataList.filterTitle(title)
+
+        viewModelScope.launch {
+            _clinicalLiveData.value = newFormDataList
+        }
+
+
+
+        return ArrayList(newFormDataList)
+    }
+
+    fun getClinicalList(title: String): ArrayList<FormData> {
+        var items = ArrayList<FormData>()
 
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val dbFormData = getEncounterDetails(encounter)
-                if (dbFormData != null) {
-                    items.add(dbFormData)
-                }
+                items = getEncounterObservationList(title)
                 _clinicalLiveData.value = items
             } catch (e: Exception) {
                 // Handle error (e.g., log it, or show an error message)
@@ -115,32 +141,32 @@ class ReferralDetailsViewModel(
 
     }
 
-    fun getEncounterObservationList(title: String):ArrayList<FormData>{
-
-        val formDataList = ArrayList<FormData>()
-
-        val carePlanId = formatterClass.getSharedPref(
-            DbNavigationDetails.CARE_PLAN.name,"carePlanId")?: ""
-
-        val encounterList = getEncounterList(carePlanId)
-        encounterList.forEach {
-            val encounter = it.id
-            val title = it.referralReason
-
-            val formData = getEncounterObservationDetails(encounter)
-
-            if (formData != null) {
-                formDataList.add(formData)
-            }
-        }
-        val newFormDataList = formDataList.filterTitle(title)
-
-
-        return ArrayList(newFormDataList)
-    }
 
     private fun List<FormData>.filterTitle(title: String): List<FormData> {
         return this.filter { it.title == title }
+    }
+
+    fun getObservationCode(fhirCode: String) = runBlocking {
+        getObservationCodeBac(fhirCode)
+    }
+
+    private suspend fun getObservationCodeBac(fhirCode: String): DbFormData? {
+
+        // Search for the code in the fhir engine
+        val searchResult =
+            fhirEngine.search<Observation> {
+                filter(Observation.CODE, { value = of(fhirCode) })
+                //Sort by dat
+            }
+
+        if (searchResult.isEmpty()) {
+            return null
+        }
+
+        val observation = searchResult.first()
+        val observationData = createObservationItem(observation.resource)
+        return observationData
+
     }
 
     private suspend fun getEncounterDetails(encounter:String):FormData?{

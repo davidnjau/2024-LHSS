@@ -16,6 +16,7 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentEndTreatmentFormBindin
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.fhir.Constants
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
@@ -118,7 +119,10 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
                     "TB Registration Number", true,
-                    InputType.TYPE_CLASS_TEXT
+                    InputType.TYPE_CLASS_TEXT,
+                    emptyList(),
+                    true,
+                    Constants.SYSTEM_TB_REGISTRATION
                 ),
                 DbField(
                     DbWidgets.DATE_PICKER.name,
