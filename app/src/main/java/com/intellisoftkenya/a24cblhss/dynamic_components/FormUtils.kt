@@ -60,6 +60,8 @@ object FormUtils {
             val optionList = field.optionList
             val label = field.label
             val isMandatory = field.isMandatory
+            val isEnabled = field.isEnabled
+            val inputType = field.inputType
 
             // Look for an existing view with the same label as the tag in the root layout
             var existingView: View? = null
@@ -87,7 +89,10 @@ object FormUtils {
                         }
                     }
                     is RadioButton -> {
-                        RadioButtonFieldCreator(optionList, context, isHorizontal = true)
+                        RadioButtonFieldCreator(
+                            optionList,
+                            context,
+                            isHorizontal = true)
                     }
                     is DatePicker -> {
                         DatePickerFieldCreator(
@@ -130,7 +135,14 @@ object FormUtils {
 
                 // Add the new widget to the layout
                 if (newField != null) {
-                    fieldManager.addField(newField, label, isMandatory, rootLayout)
+                    fieldManager.addField(
+                        newField,
+                        label,
+                        isMandatory,
+                        rootLayout,
+                        inputType,
+                        isEnabled
+                    )
                 }
             }
         }

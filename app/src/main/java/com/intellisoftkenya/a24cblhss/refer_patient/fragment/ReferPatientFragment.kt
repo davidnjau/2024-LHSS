@@ -83,21 +83,35 @@ class ReferPatientFragment : Fragment() {
 
                 formatterClass.showDialog("Missing Content", mandatoryText)
             }else{
-                findNavController().navigate(R.id.action_referPatientFragment_to_referralInfoFragment)
 
-                val formData = FormData(
-                    DbClasses.REFERRING_FACILITY_INFO.name,
-                    addedFields)
+                val telephoneData = addedFields.find { it.tag == "Telephone" }
+                val emailData = addedFields.find { it.tag == "Email" }
 
-                val gson = Gson()
-                val json = gson.toJson(formData)
+                if (telephoneData != null && emailData != null){
+                    val textNumber = telephoneData.text
+                    val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
+                    val isEmailValid = formatterClass.isValidEmail(emailData.text)
 
-                formatterClass.saveSharedPref(
-                    sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
-                    DbClasses.REFERRING_FACILITY_INFO.name,
-                    json
-                )
+                    if (isPhoneValid && isEmailValid){
+                        findNavController().navigate(R.id.action_referPatientFragment_to_referralInfoFragment)
 
+                        val formData = FormData(
+                            DbClasses.REFERRING_FACILITY_INFO.name,
+                            addedFields)
+
+                        val gson = Gson()
+                        val json = gson.toJson(formData)
+
+                        formatterClass.saveSharedPref(
+                            sharedPrefName = DbNavigationDetails.REFER_PATIENT.name,
+                            DbClasses.REFERRING_FACILITY_INFO.name,
+                            json
+                        )
+                    }else{
+                        if (!isPhoneValid) Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
+                        if (!isEmailValid) Toast.makeText(context, "You have provided an invalid email address", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }

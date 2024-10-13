@@ -3,7 +3,7 @@ package com.intellisoftkenya.a24cblhss.dynamic_components
 import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
+import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -15,9 +15,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.intellisoftkenya.a24cblhss.R
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 /**
  * This contains all the dynamic Widgets
@@ -54,14 +52,20 @@ class EditTextFieldCreator(
     override fun createField(
         label: String,
         isMandatory: Boolean,
-        inputType: Int
+        inputType: Int?,
+        isEnable: Boolean
     ): View {
         val editText = MandatoryEditText(context).apply {
             this.hint = label
-            this.inputType = inputType
+            if (inputType != null) {
+                this.inputType = inputType
+            }else{
+                this.inputType = InputType.TYPE_CLASS_TEXT
+            }
             this.background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext) // Set rounded border
             this.tag = label
             this.isMandatory = isMandatory
+            this.isEnabled = isEnable
             this.layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -81,7 +85,8 @@ class SpinnerFieldCreator(
     override fun createField(
         label: String,
         isMandatory: Boolean,
-        inputType: Int): View {
+        inputType: Int?,
+        isEnabled: Boolean): View {
         val spinner = Spinner(context)
         spinner.tag = label
         val adapter = ArrayAdapter(context, R.layout.simple_spinner_item, options)
@@ -95,16 +100,18 @@ class SpinnerFieldCreator(
 class RadioButtonFieldCreator(
     private val optionList: List<String>,
     private val context: Context,
-    private val isHorizontal: Boolean = false // Default is vertical
+    private val isHorizontal: Boolean = true // Default is vertical
 ) : FieldCreator {
     override fun createField(
         label: String,
         isMandatory1: Boolean,
-        inputType: Int
+        inputType: Int?,
+        isEnabled: Boolean
     ): View {
         // Create a RadioGroup
         val radioGroup = MandatoryRadioGroup(context).apply {
-            orientation = if (isHorizontal) RadioGroup.HORIZONTAL else RadioGroup.VERTICAL
+            // Set orientation to horizontal
+            orientation = RadioGroup.HORIZONTAL
             tag = label
             isMandatory = isMandatory1
         }
@@ -132,7 +139,8 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
     override fun createField(
         label: String,
         isMandatory: Boolean,
-        inputType: Int
+        inputType: Int?,
+        isEnabled: Boolean
     ): View {
 
         // Create an EditText field to display the selected date

@@ -158,7 +158,7 @@ class DemographicsFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Telephone", true,
-                InputType.TYPE_CLASS_NUMBER
+                InputType.TYPE_CLASS_PHONE
             ),
             DbField(
                 DbWidgets.SPINNER.name,

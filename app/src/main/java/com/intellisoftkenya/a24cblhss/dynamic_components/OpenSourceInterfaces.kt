@@ -11,8 +11,11 @@ interface LabelCustomizer {
 
 // Interface for creating input fields (SRP)
 interface FieldCreator {
-    fun createField(label: String,
-                    isMandatory: Boolean = false,
-                    inputType: Int = InputType.TYPE_CLASS_TEXT): View
+    fun createField(
+        label: String,
+        isMandatory: Boolean = false,
+        inputType: Int?,
+        isEnable: Boolean = true,
+    ): View
 }
 

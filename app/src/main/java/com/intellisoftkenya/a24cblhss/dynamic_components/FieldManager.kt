@@ -37,11 +37,16 @@ class FieldManager(
         fieldCreator: FieldCreator,
         label: String,
         isMandatory: Boolean,
-        parentLayout: LinearLayout) {
+        parentLayout: LinearLayout,
+        inputType: Int?,
+        isEnabled: Boolean = true
+        ) {
 
         val field = fieldCreator.createField(
             label,
-            isMandatory
+            isMandatory,
+            inputType,
+            isEnabled
         )
         parentLayout.addView(field)
     }

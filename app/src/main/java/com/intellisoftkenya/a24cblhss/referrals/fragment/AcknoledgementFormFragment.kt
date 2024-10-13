@@ -151,28 +151,30 @@ class AcknoledgementFormFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Your TB Registration No", true,
-                InputType.TYPE_CLASS_NUMBER
+                InputType.TYPE_CLASS_NUMBER,
+                emptyList(),
+                false
             ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Name of Health Facility", true,
-                InputType.TYPE_CLASS_TEXT
-            ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Country", true,
-                InputType.TYPE_CLASS_TEXT
-            ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Region/Province/County", true,
-                InputType.TYPE_CLASS_TEXT
-            ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "District/Sub-county", true,
-                InputType.TYPE_CLASS_TEXT
-            ),
+//            DbField(
+//                DbWidgets.EDIT_TEXT.name,
+//                "Name of Health Facility", true,
+//                InputType.TYPE_CLASS_TEXT
+//            ),
+//            DbField(
+//                DbWidgets.EDIT_TEXT.name,
+//                "Country", true,
+//                InputType.TYPE_CLASS_TEXT
+//            ),
+//            DbField(
+//                DbWidgets.EDIT_TEXT.name,
+//                "Region/Province/County", true,
+//                InputType.TYPE_CLASS_TEXT
+//            ),
+//            DbField(
+//                DbWidgets.EDIT_TEXT.name,
+//                "District/Sub-county", true,
+//                InputType.TYPE_CLASS_TEXT
+//            ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Telephone Number", true,
@@ -198,12 +200,7 @@ class AcknoledgementFormFragment : Fragment() {
                 "Referral of PTLD",
                 true,
                 optionList = listOf("Yes", "No")
-            ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Signature", true,
-                InputType.TYPE_TEXT_VARIATION_PERSON_NAME
-            ),
+            )
 
         )
 

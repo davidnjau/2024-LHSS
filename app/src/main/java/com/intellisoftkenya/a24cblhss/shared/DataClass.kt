@@ -10,8 +10,9 @@ data class DbField(
     val isMandatory: Boolean = false,
 
     val inputType: Int? = null, // InputType for EditText (e.g., InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
-    val optionList : List<String> = emptyList()
-)
+    val optionList : List<String> = emptyList(),
+
+    val isEnabled: Boolean = true)
 
 data class DbEncounterDetails(
     val id: String,
