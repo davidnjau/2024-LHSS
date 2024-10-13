@@ -37,7 +37,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
     private var patientId:String = ""
     private var serviceRequestId:String = ""
     private var workflowTitles:String = ""
-    private val tbTypeList = listOf("DSTB, DRTB","PTB , EPTB")
+    private val tbTypeList = listOf("PTB" , "EPTB")
     private val monthList = listOf("1 month", "2 month","3 month", "4 month",
         "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
         "11 month", "12 month")
@@ -56,7 +56,11 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
         workflowTitles = formatterClass.getSharedPref("", "CLINICAL_REFERRAL")?: ""
 
         if (workflowTitles != ""){
-            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles)
+            var title = formatterClass.toSentenceCase(workflowTitles)
+            if (workflowTitles == DbClasses.TB_TREATMENT.name){
+                title = "Tb Treatment"
+            }
+            binding.tvTitle.text = title
 //            binding.imgBtn.setImageResource(workflowTitles)
         }
 
@@ -114,7 +118,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
                     "TB Registration Number", true,
-                    InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                    InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.DATE_PICKER.name,
@@ -133,13 +137,13 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     tbTypeList),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "Specify Tb Location Site", true,
-                    InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                    "Specify Tb Location Site", false,
+                    InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "Radiological Information (If Applicable)", true,
-                    InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                    "Radiological Information (If Applicable)", false,
+                    InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.DATE_PICKER.name,
@@ -157,10 +161,11 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     listOf("2RHZE/4RH", "2RHZE/1ORH", "2RHZE/2RH")
                 ),
                 DbField(
-                    DbWidgets.SPINNER.name,
-                    "Drugs issued for (Indicate duration)", true, null,
-                    monthList
+                    DbWidgets.EDIT_TEXT.name,
+                    "Drugs issued for (Indicate duration)", false,
+                    InputType.TYPE_CLASS_TEXT
                 )
+
             )
             return dbFieldList
         }
@@ -173,17 +178,17 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "ART Regimen", true,
+                    "ART Regimen", false,
                     InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "CD4 Count", true,
+                    "CD4 Count", false,
                     InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "Viral Load", true,
+                    "Viral Load", false,
                     InputType.TYPE_CLASS_TEXT
                 )
             )
