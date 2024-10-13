@@ -6,10 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoViewViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentAcknoledgementDetailsBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentEndTreatmentFormBinding
@@ -42,6 +50,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
     private val monthList = listOf("1 month", "2 month","3 month", "4 month",
         "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
         "11 month", "12 month")
+    private val clinicalInfoViewViewModel: ClinicalInfoViewViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +73,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
             binding.tvTitle.text = title
 //            binding.imgBtn.setImageResource(workflowTitles)
         }
+
 
         return binding.root
     }
@@ -196,10 +206,33 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     InputType.TYPE_CLASS_TEXT
                 )
             )
+
+
             return dbFieldList
         }
 
         return emptyList()
+    }
+
+    fun findTextViewByText(rootLayout: ViewGroup, searchText: String): TextView? {
+        for (i in 0 until rootLayout.childCount) {
+            val child = rootLayout.getChildAt(i)
+
+            // Check if the child is a TextView
+            if (child is TextView) {
+                // Compare the text of the TextView
+                if (child.text.toString() == searchText) {
+                    return child
+                }
+            }
+
+            // If the child is a ViewGroup (like LinearLayout), recursively search its children
+            if (child is ViewGroup) {
+                val result = findTextViewByText(child, searchText)
+                if (result != null) return result
+            }
+        }
+        return null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -210,8 +243,62 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
 
         val dbFieldList = loadFormData()
 
+
         FormUtils.populateView(ArrayList(dbFieldList),
             binding.rootLayout, fieldManager, requireContext())
+
+        val rootViewParent = binding.rootLayout.findViewWithTag<View>("HIV Status")
+        if (rootViewParent != null) {
+            //Check if rootViewParent is EditText and set its text from the retrieved observation
+            if (rootViewParent is Spinner) {
+
+                rootViewParent.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                        val selectedItem = parent.getItemAtPosition(position) as String
+                        clinicalInfoViewViewModel.updateSelectedItem(selectedItem)
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>) {
+                        // Handle case where no item is selected if needed
+                    }
+                }
+
+            }
+        }
+
+        // Observe the LiveData and react to changes
+        clinicalInfoViewViewModel.selectedItem.observe(viewLifecycleOwner) { selectedItem ->
+            // Update UI or perform actions based on selected item
+            // For example, updating edit texts based on spinner selection
+            val artRegimen = binding.rootLayout.findViewWithTag<View>("ART Regimen")
+            val cd4Count = binding.rootLayout.findViewWithTag<View>("CD4 Count")
+            val viralLoad = binding.rootLayout.findViewWithTag<View>("Viral Load")
+
+            val artRegimenText = findTextViewByText(binding.rootLayout, "ART Regimen")
+            val cd4CountText = findTextViewByText(binding.rootLayout, "CD4 Count")
+            val viralLoadText = findTextViewByText(binding.rootLayout, "Viral Load")
+
+            if (selectedItem == "Positive") {
+                artRegimen?.visibility = View.VISIBLE
+                artRegimenText?.visibility = View.VISIBLE
+
+                cd4Count?.visibility = View.VISIBLE
+                cd4CountText?.visibility = View.VISIBLE
+
+                viralLoad?.visibility = View.VISIBLE
+                viralLoadText?.visibility = View.VISIBLE
+            }else{
+                artRegimen?.visibility = View.GONE
+                artRegimenText?.visibility = View.GONE
+
+                cd4Count?.visibility = View.GONE
+                cd4CountText?.visibility = View.GONE
+
+                viralLoad?.visibility = View.GONE
+                viralLoadText?.visibility = View.GONE
+            }
+
+        }
 
         FormUtils.loadFormData(
             requireContext(),
