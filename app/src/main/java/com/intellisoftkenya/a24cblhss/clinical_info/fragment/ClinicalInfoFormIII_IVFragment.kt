@@ -105,7 +105,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val formData = viewModel.getEncounterObservationList()
+            val formData = viewModel.getEncounterObservationList(workflowTitles)
 
             CoroutineScope(Dispatchers.Main).launch {
 

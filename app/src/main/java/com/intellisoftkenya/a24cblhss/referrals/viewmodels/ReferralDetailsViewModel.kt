@@ -115,7 +115,7 @@ class ReferralDetailsViewModel(
 
     }
 
-    fun getEncounterObservationList():ArrayList<FormData>{
+    fun getEncounterObservationList(title: String):ArrayList<FormData>{
 
         val formDataList = ArrayList<FormData>()
 
@@ -123,34 +123,25 @@ class ReferralDetailsViewModel(
             DbNavigationDetails.CARE_PLAN.name,"carePlanId")?: ""
 
         val encounterList = getEncounterList(carePlanId)
-
-        Log.e("----->","<-----")
-        println("carePlanId $carePlanId")
-        println("encounterList $encounterList")
-
         encounterList.forEach {
-            val encounterId = it.id
+            val encounter = it.id
             val title = it.referralReason
 
-            println("encounterId $encounterId")
-            println("title $title")
-
-            val encounter = "Encounter/$encounterId"
-            println("encounter $encounter")
-
             val formData = getEncounterObservationDetails(encounter)
-            println("formData $formData")
 
             if (formData != null) {
                 formDataList.add(formData)
             }
         }
-        println("formDataList $formDataList")
-        Log.e("----->","<-----")
+        val newFormDataList = formDataList.filterTitle(title)
 
-        return formDataList
+
+        return ArrayList(newFormDataList)
     }
 
+    private fun List<FormData>.filterTitle(title: String): List<FormData> {
+        return this.filter { it.title == title }
+    }
 
     private suspend fun getEncounterDetails(encounter:String):FormData?{
 
@@ -181,12 +172,6 @@ class ReferralDetailsViewModel(
             }
         }
 
-        Log.e("*****","*****")
-        println("encounter: ${encounter}")
-        println("encounterId: ${encounterId}")
-        println("patientId: ${patientId}")
-        println("searchResult: ${searchResult}")
-        Log.e("*****","*****")
 
         if (title != "" && observationList.isNotEmpty()){
             val formData = FormData(
