@@ -260,6 +260,9 @@
         <action
             android:id="@+id/action_reviewReferFragment_to_patientCardFragment"
             app:destination="@id/patientCardFragment" />
+        <action
+            android:id="@+id/action_reviewReferFragment_to_patientFileFragment"
+            app:destination="@id/patientFileFragment" />
     </fragment>
     <fragment
         android:id="@+id/referralPatientList"

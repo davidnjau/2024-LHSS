@@ -118,7 +118,7 @@ class ReviewReferFragment : Fragment() {
                 BlurBackgroundDialog(requireContext(),
                     "Referral has been completed Successfully.",
                     this@ReviewReferFragment,
-                    R.id.action_reviewReferFragment_to_patientCardFragment
+                    R.id.action_reviewReferFragment_to_patientFileFragment
                 )
             }else{
                 //Save was not okay

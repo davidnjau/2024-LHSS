@@ -150,7 +150,7 @@ class AcknoledgementFormFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Your TB Registration No", true,
+                "Your TB Registration No", false,
                 InputType.TYPE_CLASS_NUMBER,
                 emptyList(),
                 false
@@ -205,6 +205,8 @@ class AcknoledgementFormFragment : Fragment() {
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
+
+        //Get and populate form data from the database if available
 
         FormUtils.loadFormData(
             requireContext(),

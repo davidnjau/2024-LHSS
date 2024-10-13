@@ -31,6 +31,7 @@ class ReferPatientFragment : Fragment() {
 
     private val viewModel: ReferPatientViewModel by viewModels()
     private val countryList = listOf("Kenya", "Uganda")
+    private val titleList = listOf("Mr", "Miss", "Mrs", "Dr")
     private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,7 +150,7 @@ class ReferPatientFragment : Fragment() {
             DbField(
                 DbWidgets.SPINNER.name,
                 "Title", true, null,
-                countryList),
+                titleList),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Telephone", true,
@@ -158,7 +159,7 @@ class ReferPatientFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Email", true,
-                InputType.TYPE_CLASS_PHONE
+                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             )
         )
 
