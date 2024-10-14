@@ -93,10 +93,11 @@ class PatientCardFragment : Fragment() {
         val crossBorderId = "Cross Border Id: ${patientId.substring(0,6)}"
         binding.tvCrossBorderId.text = crossBorderId
 
-        // Handle back press
+     //Make sure that the back button works properly. That it moves back to the PatientListFragment.
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_patientCardFragment_to_patientListFragment)
+            findNavController().navigateUp()
         }
+        
 
     }
 

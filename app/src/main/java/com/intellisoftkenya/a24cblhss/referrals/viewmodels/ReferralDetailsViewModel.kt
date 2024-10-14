@@ -156,7 +156,8 @@ class ReferralDetailsViewModel(
         val searchResult =
             fhirEngine.search<Observation> {
                 filter(Observation.CODE, { value = of(fhirCode) })
-                //Sort by dat
+                //Sort by date such that the most recent observation is first
+                sort(Observation.DATE, Order.DESCENDING)
             }
 
         if (searchResult.isEmpty()) {

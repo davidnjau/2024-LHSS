@@ -157,8 +157,10 @@ class AcknoledgementFormFragment : Fragment() {
         val dbFieldList = listOf(
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Name of Patient", true,
-                InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                "Name of Patient", false,
+                InputType.TYPE_TEXT_VARIATION_PERSON_NAME,
+                emptyList(),
+                false
             ),
             DbField(
                 DbWidgets.DATE_PICKER.name,
@@ -227,6 +229,17 @@ class AcknoledgementFormFragment : Fragment() {
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
+
+        //get the patient name from the database if available
+        val patientName = formatterClass.getSharedPref("", "patientName")?: ""
+
+        val rootViewParentName = binding.rootLayout.findViewWithTag<View>("Name of Patient")
+        if (rootViewParentName!= null && patientName!= "") {
+            //Check if rootViewParent is EditText and set its text from the retrieved patient name
+            if (rootViewParentName is EditText) {
+                rootViewParentName.setText(patientName)
+            }
+        }
 
         //Get and populate form data from the database if available
         val fhirCode = Constants.TB_REGISTRATION_CODE

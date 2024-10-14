@@ -9,6 +9,7 @@ import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormData
+import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Patient
 import org.hl7.fhir.r4.model.Resource
@@ -19,11 +20,14 @@ class PatientCardViewModel(
     private val patientId: String,
 ) : AndroidViewModel(application) {
 
+    private val formatterClass = FormatterClass(application.applicationContext)
+
     fun getPatientInfo() = runBlocking {
         getPatientDetailDataModel()
     }
 
     private suspend fun getPatientDetailDataModel(): ArrayList<FormData> {
+
 
         val formDataList = ArrayList<FormData>()
 
@@ -43,6 +47,7 @@ class PatientCardViewModel(
 
                 //Name
                 if (patient.hasName()){
+                    var name = ""
                     patient.name.forEach {humanName->
                         val tag = if (humanName.hasText()) humanName.text else ""
                         val text = if (humanName.hasGiven()){
@@ -53,12 +58,15 @@ class PatientCardViewModel(
                             ""
                         }
                         if (tag != "" && text != ""){
+                            name = "$name $text"
                             demographicFormDataList.add(
                                 DbFormData(tag, text)
                             )
                         }
 
                     }
+                    formatterClass.saveSharedPref("", "patientName", name)
+
                 }
 
                 //Gender

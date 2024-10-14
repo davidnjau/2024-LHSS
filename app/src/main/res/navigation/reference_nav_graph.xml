@@ -371,6 +371,8 @@
         android:label="@string/clinical_info_review"
         tools:layout="@layout/fragment_clinical_info_review" >
         <action
+            app:popUpTo="@id/clinicalInfoReview"
+            app:popUpToInclusive="true"
             android:id="@+id/action_clinicalInfoReview_to_patientCardFragment"
             app:destination="@id/patientCardFragment" />
     </fragment>
