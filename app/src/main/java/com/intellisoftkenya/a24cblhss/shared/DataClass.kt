@@ -14,6 +14,7 @@ data class DbField(
 
     val isEnabled: Boolean = true,
     val fhirCode: String? = null,
+    val isPastDate: Boolean = true,
     )
 
 data class DbEncounterDetails(

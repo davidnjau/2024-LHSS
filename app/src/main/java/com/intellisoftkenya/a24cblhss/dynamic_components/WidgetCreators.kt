@@ -53,7 +53,8 @@ class EditTextFieldCreator(
         label: String,
         isMandatory: Boolean,
         inputType: Int?,
-        isEnable: Boolean
+        isEnable: Boolean,
+        isPastDate: Boolean
     ): View {
         val editText = MandatoryEditText(context).apply {
             this.hint = label
@@ -86,7 +87,10 @@ class SpinnerFieldCreator(
         label: String,
         isMandatory: Boolean,
         inputType: Int?,
-        isEnabled: Boolean): View {
+        isEnabled: Boolean,
+        isPastDate: Boolean
+    ): View {
+
         val spinner = Spinner(context)
         spinner.tag = label
         val adapter = ArrayAdapter(context, R.layout.simple_spinner_item, options)
@@ -106,7 +110,8 @@ class RadioButtonFieldCreator(
         label: String,
         isMandatory1: Boolean,
         inputType: Int?,
-        isEnabled: Boolean
+        isEnabled: Boolean,
+        isPastDate: Boolean
     ): View {
         // Create a RadioGroup
         val radioGroup = MandatoryRadioGroup(context).apply {
@@ -140,7 +145,8 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
         label: String,
         isMandatory: Boolean,
         inputType: Int?,
-        isEnabled: Boolean
+        isEnabled: Boolean,
+        isPastDate: Boolean
     ): View {
 
         // Create an EditText field to display the selected date
@@ -155,7 +161,7 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
 
             setOnClickListener {
                 // Show DatePickerDialog on click
-                showDatePickerDialog(this)
+                showDatePickerDialog(this, isPastDate)
             }
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -170,7 +176,7 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
     }
 
     // Function to show DatePickerDialog
-    private fun showDatePickerDialog(editText: EditText) {
+    private fun showDatePickerDialog(editText: EditText, isPast: Boolean = true) {
         // Get the current date
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -185,6 +191,13 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
             editText.setText(selectedDate)
         }, year, month, day)
 
+        // Block off future dates if isPast is true
+        if (isPast) {
+            datePickerDialog.datePicker.maxDate = calendar.timeInMillis
+        }else{
+            // Block off past dates if isPast is false
+            datePickerDialog.datePicker.minDate = 0
+        }
 
         // Show the dialog
         datePickerDialog.show()

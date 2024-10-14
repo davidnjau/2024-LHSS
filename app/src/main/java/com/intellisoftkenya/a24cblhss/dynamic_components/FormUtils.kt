@@ -62,6 +62,7 @@ object FormUtils {
             val isMandatory = field.isMandatory
             val isEnabled = field.isEnabled
             val inputType = field.inputType
+            val isPastDate = field.isPastDate
 
             // Look for an existing view with the same label as the tag in the root layout
             var existingView: View? = null
@@ -141,7 +142,8 @@ object FormUtils {
                         isMandatory,
                         rootLayout,
                         inputType,
-                        isEnabled
+                        isEnabled,
+                        isPastDate
                     )
                 }
             }

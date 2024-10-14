@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.dynamicfeatures.Constants
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
@@ -128,6 +129,11 @@ class ReferPatientFragment : Fragment() {
             DbField(
                 DbWidgets.DATE_PICKER.name,
                 "Date of Referral",
+                true,
+                null,
+                emptyList(),
+                true,
+                com.intellisoftkenya.a24cblhss.fhir.Constants.REFERRAL_DATE,
                 true
             ),
             DbField(

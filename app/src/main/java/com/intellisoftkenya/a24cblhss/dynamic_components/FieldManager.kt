@@ -39,14 +39,16 @@ class FieldManager(
         isMandatory: Boolean,
         parentLayout: LinearLayout,
         inputType: Int?,
-        isEnabled: Boolean = true
+        isEnabled: Boolean = true,
+        isPastDate: Boolean = true
         ) {
 
         val field = fieldCreator.createField(
             label,
             isMandatory,
             inputType,
-            isEnabled
+            isEnabled,
+            isPastDate
         )
         parentLayout.addView(field)
     }

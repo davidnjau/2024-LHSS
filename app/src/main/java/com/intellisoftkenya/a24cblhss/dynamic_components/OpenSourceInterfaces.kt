@@ -16,6 +16,7 @@ interface FieldCreator {
         isMandatory: Boolean = false,
         inputType: Int?,
         isEnable: Boolean = true,
+        isPastDate: Boolean = true,
     ): View
 }
 
