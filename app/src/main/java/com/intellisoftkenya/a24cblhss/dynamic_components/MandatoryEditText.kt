@@ -78,7 +78,7 @@ class MandatoryRadioGroup @JvmOverloads constructor(
     private var radioGroup: RadioGroup
 
     init {
-        orientation = VERTICAL
+        orientation = HORIZONTAL
 
         // Initialize the RadioGroup and add it to this custom view
         radioGroup = RadioGroup(context)

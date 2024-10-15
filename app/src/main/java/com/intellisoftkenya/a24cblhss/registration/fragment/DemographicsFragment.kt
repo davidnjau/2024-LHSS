@@ -4,11 +4,16 @@ import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.compose.ui.Modifier
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
@@ -24,6 +29,7 @@ import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.extractAllFormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.loadFormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils.populateFormData
+import com.intellisoftkenya.a24cblhss.dynamic_components.MandatoryRadioGroup
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 import java.util.Calendar

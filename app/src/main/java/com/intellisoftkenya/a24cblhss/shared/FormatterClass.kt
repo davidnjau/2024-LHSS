@@ -4,12 +4,12 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.os.Build
 import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -17,15 +17,15 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.compose.ui.semantics.Role.Companion.RadioButton
 import androidx.core.content.ContextCompat
 import com.intellisoftkenya.a24cblhss.R
-import com.intellisoftkenya.a24cblhss.dynamic_components.MandatoryEditText
-import com.intellisoftkenya.a24cblhss.dynamic_components.MandatoryRadioGroup
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -138,199 +138,263 @@ class FormatterClass(private val context: Context) {
     fun formatCurrentDateTime(date: Date): String {
         return dateInverseFormatSeconds.format(date)
     }
+
     fun addRadioButtonWithDatePicker(context: Context, linearLayout: LinearLayout) {
-        // Create a RadioGroup for Accurate and Estimate options
-        val radioGroup = MandatoryRadioGroup(context).apply {
+
+        // Create a new LinearLayout with horizontal orientation
+        val horizontalLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8, 5, 8, 12)
+            }
+            setPadding(16, 8, 16, 8)
+        }
+
+        // Add the RadioGroup inside this horizontal layout
+        val radioGroup = RadioGroup(context).apply {
+            // Set orientation to horizontal
             orientation = RadioGroup.HORIZONTAL
+            tag = "DOB_SELECTION"
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            isMandatory = true
-            tag = "DOB_SELECTION"
         }
 
-        val acc = 1
-        val est = 2
+        val acc = View.generateViewId() // Use unique view IDs
+        val est = View.generateViewId() // Use unique view IDs
 
-        // Ensure the RadioButtons have unique IDs
         val radioButtonAccurate = RadioButton(context).apply {
             text = "Accurate"
-            tag= "Accurate"
-            id = acc // Use a predefined ID or ensure it's unique
+            tag = "Accurate"
+            id = acc // Assign unique ID to the RadioButton
+            layoutParams = LinearLayout.LayoutParams(
+                0, // Width is 0 to allow weight distribution
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
         }
 
         val radioButtonEstimate = RadioButton(context).apply {
             text = "Estimate"
             tag = "Estimate"
-            id = est // Use a predefined ID or ensure it's unique
+            id = est // Assign unique ID to the RadioButton
+            layoutParams = LinearLayout.LayoutParams(
+                0, // Width is 0 to allow weight distribution
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
         }
 
-        // Add both RadioButtons to the RadioGroup
-        radioGroup.addRadioButton(radioButtonAccurate)
-        radioGroup.addRadioButton(radioButtonEstimate)
+        //////////////////////////////////////////////
 
         val textViewDateOfBirthLabel = TextView(context).apply {
             text = "Date of Birth *"
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(8,5,8,12)
-            }
-            this.setPadding(32,16,20,16)
+            )
+            this.setPadding(32, 16, 20, 16)
             textSize = 18f
         }
 
-        linearLayout.addView(textViewDateOfBirthLabel)
-
-        // Add the RadioGroup to the LinearLayout
-        linearLayout.addView(radioGroup)
-
-        // TextView to show DatePickerDialog when Accurate is selected
-        val editTextSelectedDate = MandatoryEditText(context).apply {
-            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
-            isEnabled = false
-            tag = "DOB"
-            isMandatory = true
+        val textViewDateOfBirthLabel1 = TextView(context).apply {
+            text = "Date of Birth *"
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(8,5,8,12)
-            }
-            this.setPadding(32,16,20,16)
+            )
+            this.setPadding(32, 16, 20, 16)
+            textSize = 18f
         }
+
+        // Add both RadioButtons to the RadioGroup (ensures exclusive selection)
+        radioGroup.addView(radioButtonAccurate)
+        radioGroup.addView(radioButtonEstimate)
+
+        linearLayout.addView(textViewDateOfBirthLabel1)
+
+        // Add the RadioGroup to the horizontal layout
+        horizontalLayout.addView(radioGroup)
+
+        // Add the horizontal layout to the parent linearLayout
+        linearLayout.addView(horizontalLayout)
+
+
+        // EditText to show DatePickerDialog when Accurate is selected
+//        val editTextSelectedDate = MandatoryEditText(context).apply {
+//            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
+//            isEnabled = false
+//            tag = "DOB"
+//            isMandatory = true
+//            layoutParams = LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//            ).apply {
+//                setMargins(8, 5, 8, 12)
+//            }
+//            this.setPadding(32, 16, 20, 16)
+//        }
 
         // TextView to show DatePickerDialog when Accurate is selected
         val textViewDate = TextView(context).apply {
             text = "Select Date"
-            visibility = View.GONE  // Initially hidden, shown when Accurate is selected
+            tag = "DOB"
             background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
-            // Set drawable to the right (use 0 for other positions if no drawable is needed)
+            // Set drawable to the right
             val rightIcon = ContextCompat.getDrawable(context, R.drawable.ic_action_date) // Your drawable resource
             setCompoundDrawablesWithIntrinsicBounds(null, null, rightIcon, null)
 
             setOnClickListener {
-                showDatePickerDialog(context, editTextSelectedDate)
+                showDatePickerDialog(context, this)
             }
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(8,5,8,12)
+                setMargins(8, 5, 8, 12)
             }
-            this.setPadding(32,16,20,16)
+            this.setPadding(32, 16, 20, 16)
         }
 
-        // Add the TextView to the LinearLayout
+        // Add the EditText and TextView to the LinearLayout
+//        linearLayout.addView(editTextSelectedDate)
 
-        linearLayout.addView(editTextSelectedDate)
+        // Create a new LinearLayout for horizontal orientation of Estimate fields
+        val horizontalLayoutForEstimate = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 5, 0, 12)
+            }
+            setPadding(16, 8, 16, 8)
+        }
 
+        // EditText for Year input (for Estimate)
+        val editTextYears = EditText(context).apply {
+            hint = "Years"
+            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            visibility = View.GONE // Hidden initially
+            filters = arrayOf(InputFilter.LengthFilter(4), YearInputFilter(this))
+            layoutParams = LinearLayout.LayoutParams(
+                0, // Set width to 0 for equal distribution
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f // Weight of 1 to distribute space equally between Year and Month inputs
+            ).apply {
+                setMargins(0, 5, 8, 12)
+            }
+            setPadding(32, 16, 20, 16)
+        }
+
+        // EditText for Month input (for Estimate)
+        val editTextMonths = EditText(context).apply {
+            hint = "Months"
+            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            visibility = View.GONE // Hidden initially
+            filters = arrayOf(InputFilter.LengthFilter(2), MonthInputFilter())
+            layoutParams = LinearLayout.LayoutParams(
+                0, // Set width to 0 for equal distribution
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f // Weight of 1 to distribute space equally between Year and Month inputs
+            ).apply {
+                setMargins(0, 5, 8, 12)
+            }
+            setPadding(32, 16, 20, 16)
+        }
+
+        // Add the EditTexts to the horizontal layout
+        horizontalLayoutForEstimate.addView(editTextYears)
+        horizontalLayoutForEstimate.addView(editTextMonths)
+
+        // Add the horizontal layout to the parent LinearLayout
+        linearLayout.addView(horizontalLayoutForEstimate)
+
+        linearLayout.addView(textViewDateOfBirthLabel)
         linearLayout.addView(textViewDate)
 
-        // Create the two EditTexts for Estimate (Year and Month inputs)
-        val editTextYears = EditText(context).apply {
-            hint = "Year"
-            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
-            visibility = View.GONE  // Hidden initially, shown when Estimate is selected
 
-            // Set max length and input filters
-            filters = arrayOf(InputFilter.LengthFilter(4), YearInputFilter(this))
-
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(8,5,8,12)
-            }
-            this.setPadding(32,16,20,16)
-        }
-
-        val editTextMonths = EditText(context).apply {
-            hint = "Month"
-            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
-            visibility = View.GONE  // Hidden initially, shown when Estimate is selected
-            // Set max length and input filters
-            filters = arrayOf(InputFilter.LengthFilter(2), MonthInputFilter())
-
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(8,5,8,12)
-            }
-            this.setPadding(32,16,20,16)
-        }
-
-        // Add the EditTexts to the LinearLayout (hidden initially)
-        linearLayout.addView(editTextYears)
-        linearLayout.addView(editTextMonths)
-
-        // Add manual click listener for RadioButtons for debugging
+        // Add manual click listener for RadioButtons
         radioButtonAccurate.setOnClickListener {
-            textViewDate.visibility = View.VISIBLE
-
+            textViewDate.isEnabled = true
             editTextYears.visibility = View.GONE
             editTextMonths.visibility = View.GONE
         }
 
         radioButtonEstimate.setOnClickListener {
-            val dateFormat = "dd/mm/yyyy"
-            editTextSelectedDate.setText(dateFormat)
-
-            textViewDate.visibility = View.GONE
-
+            textViewDate.isEnabled = false
             editTextYears.visibility = View.VISIBLE
             editTextMonths.visibility = View.VISIBLE
         }
 
         // Add a TextWatcher to editTextYears
         editTextYears.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // You can log or take action before the text is changed
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Handle text changes here (e.g., validate input)
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun afterTextChanged(s: Editable?) {
-                if (s != null){
+                if (s != null) {
                     val selectedYear = s.toString()
-                    val selectedMonth = editTextMonths.text
-                    val month = if (!TextUtils.isEmpty(selectedMonth)) selectedMonth else ""
-                    val selectedDate = "$selectedYear-${month}-01"
-                    editTextSelectedDate.setText(selectedDate)
-                }
+                    val selectedMonth = editTextMonths.text.toString()
 
-                // Action after the text is changed (e.g., process the input)
+                    if (!TextUtils.isEmpty(selectedMonth)) {
+                        val selectedDate = approximateDate(selectedYear, selectedMonth)
+                        textViewDate.text = selectedDate
+                    }
+
+                }
             }
         })
 
         // Add a TextWatcher to editTextMonths
         editTextMonths.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // You can log or take action before the text is changed
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun afterTextChanged(s: Editable?) {
-                if (s != null){
+                if (s != null) {
                     val selectedMonth = s.toString()
-                    val years = editTextYears.text
-                    val selectedYear = if (!TextUtils.isEmpty(years)) years else ""
-                    val selectedDate = "$selectedYear-$selectedMonth-01"
-                    editTextSelectedDate.setText(selectedDate)
+                    val years = editTextYears.text.toString()
+                    if (!TextUtils.isEmpty(years)) {
+                        val selectedDate = approximateDate(years, selectedMonth)
+                        textViewDate.text = selectedDate
+                    }
+
+
                 }
             }
         })
-
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun approximateDate(yearsInput: String, monthsInput: String): String {
+        // Parse the years and months from the input strings
+        val years = yearsInput.toIntOrNull() ?: 0
+        val months = monthsInput.toIntOrNull() ?: 0
+
+        // Get the current date
+        val currentDate = LocalDate.now()
+
+        // Subtract the years and months from the current date
+        val approximateDate = currentDate.minusYears(years.toLong()).minusMonths(months.toLong())
+
+        // Format the resulting date as yyyy-MM-dd (day will always be '01')
+        val formattedDate =
+            approximateDate.withDayOfMonth(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+        return formattedDate
+    }
+
 
     // Input filter for Year
     class YearInputFilter(private val editText: EditText) : InputFilter {
@@ -365,7 +429,7 @@ class FormatterClass(private val context: Context) {
         }
     }
 
-    private fun showDatePickerDialog(context: Context, editTextSelectedDate: EditText) {
+    private fun showDatePickerDialog(context: Context, editTextSelectedDate: TextView) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -375,7 +439,7 @@ class FormatterClass(private val context: Context) {
             context,
             { _, selectedYear, selectedMonth, selectedDay ->
                 val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
-                editTextSelectedDate.setText(selectedDate)
+                editTextSelectedDate.text = selectedDate
 
             },
             year, month, day
