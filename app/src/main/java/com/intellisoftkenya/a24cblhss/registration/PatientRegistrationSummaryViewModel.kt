@@ -181,7 +181,7 @@ class PatientRegistrationSummaryViewModel(
                         }
                     )
                 }
-                "Telephone in referring country" -> {
+                "Telephone in referring country" , "Telephone", "Telephone in receiving country" -> {
                     contactComponent.addTelecom(ContactPoint().apply {
                         system = ContactPoint.ContactPointSystem.PHONE
                         value = dbFormData.text

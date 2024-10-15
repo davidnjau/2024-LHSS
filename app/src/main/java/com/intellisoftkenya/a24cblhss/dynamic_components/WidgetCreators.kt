@@ -7,6 +7,7 @@ import android.text.InputType
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -201,6 +202,46 @@ class DatePickerFieldCreator(private val context: Context) : FieldCreator {
 
         // Show the dialog
         datePickerDialog.show()
+    }
+}
+
+class CheckboxFieldCreator(
+    private val context: Context
+) : FieldCreator {
+    override fun createField(
+        label: String,
+        isMandatory: Boolean,
+        inputType: Int?,
+        isEnabled: Boolean,
+        isPastDate: Boolean
+    ): View {
+
+        // Create a LinearLayout to hold the checkbox and label
+        val linearLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        // Create the CheckBox
+        val checkBox = CheckBox(context).apply {
+            isChecked = false
+            tag = label
+        }
+
+        // Create the label TextView
+        val textView = TextView(context).apply {
+            text = label
+            setPadding(8, 0, 0, 0) // Padding to space out the label from the checkbox
+        }
+
+        // Add the CheckBox and the label to the layout
+        linearLayout.addView(checkBox)
+        linearLayout.addView(textView)
+
+        return linearLayout
     }
 }
 

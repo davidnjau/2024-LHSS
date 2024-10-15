@@ -127,6 +127,12 @@ class NextOfKinFragment : Fragment() {
 
         val dbFieldList = listOf(
             DbField(
+                DbWidgets.RADIO_BUTTON.name,
+                "Can we contact your Next of Kin/Relative?",
+                true,
+                optionList = listOf("Yes", "No")
+            ),
+            DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Full Name", true,
                 InputType.TYPE_TEXT_VARIATION_PERSON_NAME

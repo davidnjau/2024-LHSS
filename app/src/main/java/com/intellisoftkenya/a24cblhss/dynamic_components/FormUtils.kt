@@ -101,6 +101,11 @@ object FormUtils {
                             context
                         )
                     }
+                    is CheckBox -> {
+                        CheckboxFieldCreator(
+                            context
+                        )
+                    }
                 }
             } else {
                 // Create a new widget if it doesn't exist
@@ -126,6 +131,11 @@ object FormUtils {
                     }
                     DbWidgets.DATE_PICKER.name -> {
                         DatePickerFieldCreator(
+                            context
+                        )
+                    }
+                    DbWidgets.CHECK_BOX.name -> {
+                        CheckboxFieldCreator(
                             context
                         )
                     }

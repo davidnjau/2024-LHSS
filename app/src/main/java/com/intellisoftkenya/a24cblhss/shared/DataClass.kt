@@ -45,7 +45,8 @@ enum class DbWidgets{
     EDIT_TEXT,
     SPINNER,
     RADIO_BUTTON,
-    DATE_PICKER
+    DATE_PICKER,
+    CHECK_BOX
 }
 
 data class Item(
