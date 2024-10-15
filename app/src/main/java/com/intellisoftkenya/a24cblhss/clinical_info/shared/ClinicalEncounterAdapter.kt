@@ -36,8 +36,11 @@ class ClinicalEncounterAdapter(
     override fun onBindViewHolder(holder: ParentViewHolder, position: Int) {
         val parentItem = parentItemList[position]
 
+        val formatterClass = FormatterClass(context)
+        val facilityName = formatterClass.getSharedPref("","facilityName") ?: ""
+
         parentItem.date.let { holder.tvDate.text = it }
-        parentItem.filledBy.let { holder.tvFilledBy.text = "Filled By:" }
+        parentItem.filledBy.let { holder.tvFilledBy.text = "Filled By: $facilityName" }
 
         //Add an icon to the chip based on the clinical info
         holder.chipContainer.setChipIconResource(R.drawable.ic_action_view)

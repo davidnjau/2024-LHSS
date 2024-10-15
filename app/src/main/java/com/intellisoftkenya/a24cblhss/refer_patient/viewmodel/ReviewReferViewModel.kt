@@ -246,6 +246,8 @@ class ReviewReferViewModel (
 
         val fhirCode = if (dbFormData.tag == "TB Registration Number"){
             Constants.TB_REGISTRATION_CODE
+        }else if (dbFormData.tag == "Name of Receiving facility"){
+            Constants.RECEIVING_FACILITY_NAME
         }else{
             generateRandomLoincCode()
         }

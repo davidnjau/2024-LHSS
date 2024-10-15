@@ -13,6 +13,7 @@ import com.google.android.fhir.FhirEngine
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.clinical_info.shared.ClinicalEncounterAdapter
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoEncountersBinding
+import com.intellisoftkenya.a24cblhss.fhir.Constants
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
@@ -64,6 +65,13 @@ class ClinicalInfoEncountersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         CoroutineScope(Dispatchers.IO).launch {
+
+            val fhirCode = Constants.RECEIVING_FACILITY_NAME
+            val tbRegistration = viewModel.getObservationCode(fhirCode)
+            if (tbRegistration!= null) {
+                formatterClass.saveSharedPref("","facilityName", tbRegistration.text)
+            }
+
 
             val encounterList =  viewModel.getEncounterList(carePlanId)
             encounterList.removeIf{ it.referralReason != clinicalInfo }

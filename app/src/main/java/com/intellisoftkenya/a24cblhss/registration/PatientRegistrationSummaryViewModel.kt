@@ -60,6 +60,11 @@ class PatientRegistrationSummaryViewModel(
                             "DOB" -> {
                                 patient.birthDate = parseDate(dbFormData.text)
                             }
+                            "Telephone in referring country" , "Telephone", "Telephone in receiving country" -> {
+                                val contactPoint = ContactPoint()
+                                contactPoint.value = dbFormData.text
+                                patient.addTelecom(contactPoint)
+                            }
                         }
                     }
                     patient.name = humanNameList
@@ -73,10 +78,10 @@ class PatientRegistrationSummaryViewModel(
                             "Country of Origin", "Country of Residence" -> {
                                 address.country = dbFormData.text
                             }
-                            "Region/Province/County" -> {
+                            "Residential Address in Referring Country" -> {
                                 address.state = dbFormData.text
                             }
-                            "Sub County", "Ward/Village" -> {
+                            "Residential Address in Receiving Country" -> {
                                 address.city = dbFormData.text
                             }
                         }

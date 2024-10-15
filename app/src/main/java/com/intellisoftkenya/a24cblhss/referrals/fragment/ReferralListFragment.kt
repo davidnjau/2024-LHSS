@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
@@ -97,9 +98,16 @@ class ReferralListFragment : Fragment() {
             val patientAdapter = PatientReferralAdapter(requestList) { selectedPatient ->
 
                 val serviceId = selectedPatient?.id
-                showReceivePatientDialog()
+                val status = selectedPatient?.status
+                if (status == "COMPLETED") {
+                    Toast.makeText(requireContext(), "Patient has already been received. " +
+                            "The action cannot be performNoed twice.", Toast.LENGTH_SHORT).show()
+                }else{
+                    showReceivePatientDialog()
 
-                formatterClass.saveSharedPref("","serviceRequestId", serviceId.toString())
+                    formatterClass.saveSharedPref("","serviceRequestId", serviceId.toString())
+                }
+
                 
             }
 

@@ -140,19 +140,45 @@ class ReferPatientFragment : Fragment() {
                 DbWidgets.SPINNER.name,
                 "Country", true, null,
                 countryList),
+//            DbField(
+//                DbWidgets.SPINNER.name,
+//                "Region/Province/County", true, null,
+//                countryList),
+//            DbField(
+//                DbWidgets.SPINNER.name,
+//                "District/Sub County", true, null,
+//                countryList),
             DbField(
-                DbWidgets.SPINNER.name,
-                "Region/Province/County", true, null,
-                countryList),
+                DbWidgets.EDIT_TEXT.name,
+                "Region/Province/County", true,
+                InputType.TYPE_CLASS_TEXT
+            ),
             DbField(
-                DbWidgets.SPINNER.name,
-                "District/Sub County", true, null,
-                countryList),
+                DbWidgets.EDIT_TEXT.name,
+                "District/Sub County", true,
+                InputType.TYPE_CLASS_TEXT
+            ),
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Ward", true,
+                InputType.TYPE_CLASS_TEXT
+            ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Name of Referring Officer", true,
                 InputType.TYPE_TEXT_VARIATION_PERSON_NAME
             ),
+            DbField(
+                DbWidgets.SPINNER.name,
+                "Name of Receiving facility", true, null,
+                listOf("Pumwani", "Avenue Hospital"), true,
+                com.intellisoftkenya.a24cblhss.fhir.Constants.RECEIVING_FACILITY_NAME,
+            ),
+//            DbField(
+//                DbWidgets.EDIT_TEXT.name,
+//                "Name of Receiving facility", true,
+//                InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+//            ),
             DbField(
                 DbWidgets.SPINNER.name,
                 "Title", true, null,
@@ -167,11 +193,7 @@ class ReferPatientFragment : Fragment() {
                 "Email", true,
                 InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Name of Receiving facility", true,
-                InputType.TYPE_TEXT_VARIATION_PERSON_NAME
-            ),
+
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())

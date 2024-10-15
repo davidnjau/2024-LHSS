@@ -11,6 +11,7 @@ object Constants {
     // Custom Codes for your TB system (You can define other relevant codes)
     const val TB_REGISTRATION_CODE = "TB123456"
     const val REFERRAL_DATE = "RD20220101"
+    const val RECEIVING_FACILITY_NAME = "RFN4355345355"
 
 
 
