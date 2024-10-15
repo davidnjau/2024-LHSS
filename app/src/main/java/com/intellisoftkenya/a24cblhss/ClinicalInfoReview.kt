@@ -141,7 +141,7 @@ class ClinicalInfoReview : Fragment() {
             val blurBackgroundDialog = BlurBackgroundDialog(requireContext(),
                 "Form has been saved successfully.",
                 this@ClinicalInfoReview,
-                R.id.action_clinicalInfoReview_to_patientCardFragment
+                R.id.action_clinicalInfoReview_to_patientFileFragment
             )
             blurBackgroundDialog.show()
 

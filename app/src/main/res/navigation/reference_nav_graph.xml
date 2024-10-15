@@ -375,5 +375,10 @@
             app:popUpToInclusive="true"
             android:id="@+id/action_clinicalInfoReview_to_patientCardFragment"
             app:destination="@id/patientCardFragment" />
+        <action
+            android:id="@+id/action_clinicalInfoReview_to_patientFileFragment"
+            app:destination="@id/patientFileFragment"
+            app:popUpTo="@id/patientFileFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

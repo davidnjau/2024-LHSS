@@ -169,7 +169,7 @@ class ReferPatientFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Name of Referring facility", true,
+                "Name of Receiving facility", true,
                 InputType.TYPE_TEXT_VARIATION_PERSON_NAME
             ),
         )
