@@ -101,12 +101,17 @@ class DemographicsFragment : Fragment() {
 
             }else{
 
-                val telephoneData = addedFields.find { it.tag == "Telephone" }
+                val telephoneReferringData = addedFields.find { it.tag == "Telephone in referring country" }
+                val telephoneReceivingData = addedFields.find { it.tag == "Telephone in receiving country" }
 
-                if (telephoneData != null){
-                    val textNumber = telephoneData.text
-                    val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
-                    if (isPhoneValid){
+                if (telephoneReferringData != null && telephoneReceivingData != null){
+                    val textReferringNumber = telephoneReferringData.text
+                    val textReceivingNumber = telephoneReceivingData.text
+
+                    val isReferringPhoneValid = formatterClass.getStandardPhoneNumber(textReferringNumber)
+                    val isReceivingPhoneValid = formatterClass.getStandardPhoneNumber(textReceivingNumber)
+
+                    if (isReferringPhoneValid && isReceivingPhoneValid){
                         findNavController().navigate(R.id.action_demographicsFragment_to_addressFragment)
 
                         val formData = FormData(
@@ -157,7 +162,12 @@ class DemographicsFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Telephone", true,
+                "Telephone in referring country", true,
+                InputType.TYPE_CLASS_PHONE
+            ),
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Telephone in receiving country", true,
                 InputType.TYPE_CLASS_PHONE
             ),
             DbField(

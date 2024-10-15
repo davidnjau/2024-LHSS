@@ -53,34 +53,6 @@ class AddressFragment : Fragment() {
         navigationActions()
         formatterClass = FormatterClass(requireContext())
 
-        // Observe the locations LiveData
-        viewModel.locations.observe(viewLifecycleOwner) { locations ->
-            // Update your UI with the locations
-            // For example, populate a RecyclerView or Spinner
-            val dbFieldList = listOf(
-
-                DbField(
-                    DbWidgets.EDIT_TEXT.name,
-                    "Region/Province/County", true,
-                    InputType.TYPE_CLASS_TEXT),
-
-                DbField(
-                    DbWidgets.EDIT_TEXT.name,
-                    "Sub County/Districts", true,
-                    InputType.TYPE_CLASS_TEXT),
-
-                DbField(
-                    DbWidgets.EDIT_TEXT.name,
-                    "Ward/Village", true,
-                    InputType.TYPE_CLASS_TEXT
-                )
-
-            )
-            FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
-
-
-        }
-
         val workflowTitles = formatterClass.getWorkflowTitles(DbClasses.ADDRESS.name)
         if (workflowTitles != null){
             binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles.text)
@@ -152,19 +124,13 @@ class AddressFragment : Fragment() {
                 countryOriginList),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Region/Province/County", true,
+                "Residential Address in Referring Country", true,
                 InputType.TYPE_CLASS_TEXT),
 
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Sub County/Districts", true,
+                "Residential Address in Receiving Country", true,
                 InputType.TYPE_CLASS_TEXT),
-
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Ward/Village", true,
-                InputType.TYPE_CLASS_TEXT
-            )
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
