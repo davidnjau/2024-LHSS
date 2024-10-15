@@ -187,11 +187,11 @@ class DemographicsFragment : Fragment() {
                 InputType.TYPE_CLASS_NUMBER
             ),
             DbField(
-                DbWidgets.RADIO_BUTTON.name,
-                "Sex",
-                true,
-                optionList = listOf("Male", "Female")
-            ),
+                DbWidgets.SPINNER.name,
+                "Sex", true, null,
+                listOf("Male", "Female")
+            )
+
 
         )
 

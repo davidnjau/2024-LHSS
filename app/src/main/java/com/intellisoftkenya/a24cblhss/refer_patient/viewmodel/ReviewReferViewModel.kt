@@ -250,6 +250,7 @@ class ReviewReferViewModel (
             generateRandomLoincCode()
         }
 
+
 //        val fhirCode = dbFormData.fhirCode ?: generateRandomLoincCode()
 
 

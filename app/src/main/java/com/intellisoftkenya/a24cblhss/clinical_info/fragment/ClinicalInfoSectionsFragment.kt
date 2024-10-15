@@ -66,7 +66,7 @@ class ClinicalInfoSectionsFragment : Fragment() {
             "Tb Treatment" -> { clinicalReferral = DbClasses.TB_TREATMENT.name }
             "HIV Status and Treatment" -> { clinicalReferral = DbClasses.HIV_STATUS_TREATMENT.name }
             "Laboratory Results" -> { clinicalReferral = DbClasses.LABORATORY_RESULTS.name }
-            "DST" -> { clinicalReferral = DbClasses.DST.name }
+            "DST/Cultures/LPA" -> { clinicalReferral = DbClasses.DST.name }
             "DR TB Follow Up Test" -> { clinicalReferral = DbClasses.DR_TB_FOLLOW_UP_TEST.name }
 
         }

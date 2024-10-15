@@ -134,7 +134,7 @@ enum class WorkflowTitles(
     TB_TREATMENT(R.drawable.ic_action_next_kin, DbClasses.TB_TREATMENT.name,  "Tb Treatment"),
     HIV_STATUS_TREATMENT(R.drawable.ic_action_next_kin, DbClasses.HIV_STATUS_TREATMENT.name,  "HIV Status and Treatment"),
     LABORATORY_RESULTS(R.drawable.ic_action_next_kin, DbClasses.LABORATORY_RESULTS.name,  "Laboratory Results"),
-    DST(R.drawable.ic_action_next_kin, DbClasses.DST.name,  "DST"),
+    DST(R.drawable.ic_action_next_kin, DbClasses.DST.name,  "DST/Cultures/LPA"),
     DR_TB_FOLLOW_UP_TEST(R.drawable.ic_action_next_kin, DbClasses.DR_TB_FOLLOW_UP_TEST.name,  "DR TB Follow Up Test"),
 
     ACKNOWLEDGEMENT_FORM(R.drawable.ic_action_ackno, DbClasses.ACKNOWLEDGEMENT_FORM.name,  "Acknowledgement Form"),

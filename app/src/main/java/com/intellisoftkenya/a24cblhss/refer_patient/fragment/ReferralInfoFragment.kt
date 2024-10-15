@@ -138,7 +138,12 @@ class ReferralInfoFragment : Fragment() {
             DbField(
                 DbWidgets.DATE_PICKER.name,
                 "Expected date of return",
-                true
+                true,
+                null,
+                emptyList(),
+                true,
+                "",
+                false,
             )
 
         )

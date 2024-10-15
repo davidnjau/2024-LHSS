@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.TextView
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
@@ -240,6 +241,19 @@ object FormUtils {
 
                         if (tag.isNotEmpty()) {
                             val formData = DbFormData(tag, if (isChecked) "Checked" else "Unchecked")
+                            addedFields.add(formData)
+                        }
+                    }
+
+                    is TextView -> {
+                        val text = childView.text.toString()
+                        val tag = childView.tag?.toString()?: ""
+
+                        println("text1 $text")
+                        println("tag1 $tag")
+
+                        if (tag.isNotEmpty() && text.isNotEmpty()) {
+                            val formData = DbFormData(tag, text)
                             addedFields.add(formData)
                         }
                     }

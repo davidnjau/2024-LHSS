@@ -19,12 +19,17 @@
             android:layout_height="wrap_content">
 
             <TextView
+
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
                 android:id="@+id/tvFilledBy"
                 android:text="Filled By: Pumwani"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
                 android:id="@+id/tvDate"
                 android:layout_marginTop="10dp"
                 android:text="Date: 23/06/2026"

@@ -1,13 +1,16 @@
 package com.intellisoftkenya.a24cblhss.clinical_info.fragment
 
+import android.app.Application
 import android.os.Bundle
 import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.fhir.FhirEngine
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
@@ -15,6 +18,10 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentEndTreatmentFormBindin
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.fhir.Constants
+import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
@@ -33,6 +40,8 @@ class EndTreatmentFormFragment : Fragment() {
     private var patientId:String = ""
     private var carePlanId:String = ""
     private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
+    private lateinit var referralViewModel: ReferralDetailsViewModel
+    private lateinit var fhirEngine: FhirEngine
 
 
     override fun onCreateView(
@@ -41,6 +50,9 @@ class EndTreatmentFormFragment : Fragment() {
     ): View? {
 
         _binding = FragmentEndTreatmentFormBinding.inflate(inflater, container, false)
+        fhirEngine = FhirApplication.fhirEngine(requireContext())
+
+
         formatterClass = FormatterClass(requireContext())
         navigationActions()
         patientId = formatterClass.getSharedPref("", "patientId")?: ""
@@ -60,6 +72,18 @@ class EndTreatmentFormFragment : Fragment() {
                     patientId
                 )
             )[ClinicalInfoDetailsViewModel::class.java]
+
+        referralViewModel =
+            ViewModelProvider(
+                this,
+                ReferralDetailsViewModelFactory(
+                    requireContext().applicationContext as Application,
+                    fhirEngine,
+                    patientId,
+                    ""
+                ),
+            )
+                .get(ReferralDetailsViewModel::class.java)
 
         return binding.root
 
@@ -121,8 +145,10 @@ class EndTreatmentFormFragment : Fragment() {
         val dbFieldList = listOf(
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Name of Patient", true,
-                InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+                "Name of Patient", false,
+                InputType.TYPE_TEXT_VARIATION_PERSON_NAME,
+                emptyList(),
+                false
             ),
             DbField(
                 DbWidgets.DATE_PICKER.name,
@@ -136,17 +162,14 @@ class EndTreatmentFormFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Your TB Registration No", true,
-                InputType.TYPE_CLASS_NUMBER
+                "Your TB Registration No", false,
+                InputType.TYPE_CLASS_NUMBER,
+                emptyList(),
+                false
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Final Outcome of treatment", true,
-                InputType.TYPE_CLASS_TEXT
-            ),
-            DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Name of Health Facility", true,
                 InputType.TYPE_CLASS_TEXT
             ),
             DbField(
@@ -173,6 +196,29 @@ class EndTreatmentFormFragment : Fragment() {
         )
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
+
+        //get the patient name from the database if available
+        val patientName = formatterClass.getSharedPref("", "patientName")?: ""
+
+        val rootViewParentName = binding.rootLayout.findViewWithTag<View>("Name of Patient")
+        if (rootViewParentName!= null && patientName!= "") {
+            //Check if rootViewParent is EditText and set its text from the retrieved patient name
+            if (rootViewParentName is EditText) {
+                rootViewParentName.setText(patientName)
+            }
+        }
+
+        //Get and populate form data from the database if available
+        val fhirCode = Constants.TB_REGISTRATION_CODE
+        val tbRegistration = referralViewModel.getObservationCode(fhirCode)
+
+        val rootViewParent = binding.rootLayout.findViewWithTag<View>("Your TB Registration No")
+        if (rootViewParent != null && tbRegistration != null) {
+            //Check if rootViewParent is EditText and set its text from the retrieved observation
+            if (rootViewParent is EditText) {
+                rootViewParent.setText(tbRegistration.text)
+            }
+        }
 
         FormUtils.loadFormData(
             requireContext(),

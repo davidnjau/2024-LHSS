@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.dynamic_components.MandatoryRadioGroup
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -147,14 +148,12 @@ class FormatterClass(private val context: Context) {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(8, 5, 8, 12)
-            }
+            )
             setPadding(16, 8, 16, 8)
         }
 
         // Add the RadioGroup inside this horizontal layout
-        val radioGroup = RadioGroup(context).apply {
+        val radioGroup = MandatoryRadioGroup(context).apply {
             // Set orientation to horizontal
             orientation = RadioGroup.HORIZONTAL
             tag = "DOB_SELECTION"
@@ -189,15 +188,13 @@ class FormatterClass(private val context: Context) {
             )
         }
 
-        //////////////////////////////////////////////
-
         val textViewDateOfBirthLabel = TextView(context).apply {
             text = "Date of Birth *"
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            this.setPadding(32, 16, 20, 16)
+            this.setPadding(32, 8, 20, 8)
             textSize = 18f
         }
 
@@ -207,7 +204,7 @@ class FormatterClass(private val context: Context) {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            this.setPadding(32, 16, 20, 16)
+            this.setPadding(32, 8, 20, 8)
             textSize = 18f
         }
 
@@ -222,22 +219,6 @@ class FormatterClass(private val context: Context) {
 
         // Add the horizontal layout to the parent linearLayout
         linearLayout.addView(horizontalLayout)
-
-
-        // EditText to show DatePickerDialog when Accurate is selected
-//        val editTextSelectedDate = MandatoryEditText(context).apply {
-//            background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
-//            isEnabled = false
-//            tag = "DOB"
-//            isMandatory = true
-//            layoutParams = LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT
-//            ).apply {
-//                setMargins(8, 5, 8, 12)
-//            }
-//            this.setPadding(32, 16, 20, 16)
-//        }
 
         // TextView to show DatePickerDialog when Accurate is selected
         val textViewDate = TextView(context).apply {
@@ -259,9 +240,6 @@ class FormatterClass(private val context: Context) {
             }
             this.setPadding(32, 16, 20, 16)
         }
-
-        // Add the EditText and TextView to the LinearLayout
-//        linearLayout.addView(editTextSelectedDate)
 
         // Create a new LinearLayout for horizontal orientation of Estimate fields
         val horizontalLayoutForEstimate = LinearLayout(context).apply {

@@ -20,7 +20,7 @@ class ClinicalLayoutListViewModel(application: Application, private val state: S
         TB_TREATMENT(R.drawable.ic_action_next_kin, "Tb Treatment"),
         HIV_STATUS_TREATMENT(R.drawable.ic_action_next_kin, "HIV Status and Treatment"),
         LABORATORY_RESULTS(R.drawable.ic_action_next_kin, "Laboratory Results"),
-        DST(R.drawable.ic_action_next_kin, "DST"),
+        DST(R.drawable.ic_action_next_kin, "DST/Cultures/LPA"),
         DR_TB_FOLLOW_UP_TEST(R.drawable.ic_action_next_kin, "DR TB Follow Up Test"),
     }
 }
