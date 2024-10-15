@@ -123,7 +123,8 @@ class PatientListFragment : Fragment() {
         val fromDateStr = if (!TextUtils.isEmpty(fromDate)) fromDate else null
         val toDateStr = if (!TextUtils.isEmpty(toDate)) toDate else null
 
-        val patientSortedList = formatterClass.sortPatientListByDate(patientList, fromDateStr, toDateStr)
+        val patientSortedList = formatterClass.sortPatientListByDate(
+            patientList, fromDateStr, toDateStr)
 
         // Initialize RecyclerView and adapter
         val patientAdapter = PatientAdapter(patientSortedList) { selectedPatient ->

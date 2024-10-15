@@ -303,12 +303,16 @@ class FormatterClass(private val context: Context) {
             textViewDate.isEnabled = true
             editTextYears.visibility = View.GONE
             editTextMonths.visibility = View.GONE
+
+            radioButtonEstimate.isChecked = false
         }
 
         radioButtonEstimate.setOnClickListener {
             textViewDate.isEnabled = false
             editTextYears.visibility = View.VISIBLE
             editTextMonths.visibility = View.VISIBLE
+
+            radioButtonAccurate.isChecked = false
         }
 
         // Add a TextWatcher to editTextYears
