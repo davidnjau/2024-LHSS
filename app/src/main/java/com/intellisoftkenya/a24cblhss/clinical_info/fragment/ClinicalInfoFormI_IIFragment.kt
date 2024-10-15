@@ -176,7 +176,12 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 DbField(
                     DbWidgets.SPINNER.name,
                     "Regimen", true, null,
-                    listOf("2RHZE/4RH", "2RHZE/1ORH", "2RHZE/2RH")
+                    listOf("2RHZE/4RH", "2RHZE/1ORH", "2RHZE/2RH", "Others (Specify Regimen)")
+                ),
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Other Specify DRTB Regimen", false,
+                    InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
@@ -246,7 +251,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
         // Make a function that will handle multiple tags from a
 
         setSpinnerListener(
-            listOf("HIV Status", "Tb Location")
+            listOf("HIV Status", "Tb Location", "Regimen")
         )
 
 
@@ -265,9 +270,20 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
             val eptbSiteText = formatterClass.findTextViewByText(binding.rootLayout, "Specify Site (EPTB)")
             val eptbSite = binding.rootLayout.findViewWithTag<View>("Specify Site (EPTB)")
 
+            val regimenOthersText = formatterClass.findTextViewByText(binding.rootLayout, "Other Specify DRTB Regimen")
+            val regimenOthers = binding.rootLayout.findViewWithTag<View>("Other Specify DRTB Regimen")
+
 
             //Use when for below
             when (selectedItem) {
+                "Others (Specify Regimen)" -> {
+                    regimenOthersText?.visibility = View.VISIBLE
+                    regimenOthers?.visibility = View.VISIBLE
+                }
+                "2RHZE/4RH","2RHZE/1ORH","2RHZE/2RH" -> {
+                    regimenOthersText?.visibility = View.GONE
+                    regimenOthers?.visibility = View.GONE
+                }
                 "PTB" -> {
                     eptbSite?.visibility = View.GONE
                     eptbSiteText?.visibility = View.GONE

@@ -2,23 +2,28 @@ package com.intellisoftkenya.a24cblhss.refer_patient.fragment
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoViewViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentReferralInfoBinding
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
+import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultSpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.dynamic_components.SpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.refer_patient.viewmodel.ReferralInfoViewModel
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
@@ -27,10 +32,12 @@ class ReferralInfoFragment : Fragment() {
     private var _binding: FragmentReferralInfoBinding? = null
     private val binding get() = _binding!!
     private lateinit var fieldManager: FieldManager
+    private val clinicalInfoViewViewModel: ClinicalInfoViewViewModel by viewModels()
+    private val spinnerSelectionHandler: SpinnerSelectionHandler = DefaultSpinnerSelectionHandler()
 
     private val viewModel: ReferralInfoViewModel by viewModels()
     private var referralReasonList = listOf(
-        "Leave", "Holidays", "Permanent  Return", "Medical", "Work")
+        "Leave", "Holidays", "Permanent  Return", "Medical", "Work", "Others")
     private lateinit var formatterClass: FormatterClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +63,16 @@ class ReferralInfoFragment : Fragment() {
 
         return binding.root
 
+    }
+    private fun setSpinnerListener(tagList: List<String>) {
+        tagList.forEach { tag ->
+            val rootViewParent = binding.rootLayout.findViewWithTag<View>(tag)
+            if (rootViewParent is Spinner) {
+                spinnerSelectionHandler.handleSelection(rootViewParent) { selectedItem ->
+                    clinicalInfoViewViewModel.updateSelectedItem(selectedItem)
+                }
+            }
+        }
     }
     private fun navigationActions() {
         // Set the next button text to "Continue" and add click listeners
@@ -114,6 +131,11 @@ class ReferralInfoFragment : Fragment() {
                 "Reason for Referral", true, null,
                 referralReasonList),
             DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Specify Other Referral Reasons", false,
+                InputType.TYPE_CLASS_TEXT
+            ),
+            DbField(
                 DbWidgets.DATE_PICKER.name,
                 "Expected date of return",
                 true
@@ -123,12 +145,34 @@ class ReferralInfoFragment : Fragment() {
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+        setSpinnerListener(
+            listOf("Reason for Referral")
+        )
+
         FormUtils.loadFormData(
             requireContext(),
             binding.rootLayout,
             DbNavigationDetails.REFER_PATIENT.name,
             DbClasses.REFERRAL_INFO.name
         )
+
+        clinicalInfoViewViewModel.selectedItem.observe(viewLifecycleOwner) { selectedItem ->
+            val otherReasons = binding.rootLayout.findViewWithTag<View>("Specify Other Referral Reasons")
+            val otherReasonsText = formatterClass.findTextViewByText(binding.rootLayout, "Specify Other Referral Reasons")
+
+            when (selectedItem) {
+                "Others" -> {
+                    otherReasons?.visibility = View.VISIBLE
+                    otherReasonsText?.visibility = View.VISIBLE
+                }
+                else -> {
+                    otherReasons?.visibility = View.GONE
+                    otherReasonsText?.visibility = View.GONE
+                }
+            }
+
+        }
+
     }
 
     override fun onDestroyView() {
