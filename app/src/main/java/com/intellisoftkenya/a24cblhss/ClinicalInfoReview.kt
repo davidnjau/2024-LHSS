@@ -137,11 +137,11 @@ class ClinicalInfoReview : Fragment() {
             }.join()
 
             progressDialog.dismiss()
-
+            var title = formatterClass.toSentenceCase(workflowTitles)
             val blurBackgroundDialog = BlurBackgroundDialog(requireContext(),
-                "Form has been saved successfully.",
+                "$title has been saved successfully.",
                 this@ClinicalInfoReview,
-                R.id.action_clinicalInfoReview_to_patientFileFragment
+                R.id.action_clinicalInfoReview_to_clinicalInfoSectionsFragment
             )
             blurBackgroundDialog.show()
 

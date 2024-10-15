@@ -380,5 +380,10 @@
             app:destination="@id/patientFileFragment"
             app:popUpTo="@id/patientFileFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_clinicalInfoReview_to_clinicalInfoSectionsFragment"
+            app:destination="@id/clinicalInfoSectionsFragment"
+            app:popUpTo="@id/patientFileFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

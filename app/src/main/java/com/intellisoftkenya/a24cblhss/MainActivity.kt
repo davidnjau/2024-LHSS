@@ -112,6 +112,26 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+    override fun onBackPressed() {
+        val navController = findNavController(R.id.nav_host_fragment_activity_bottom_navigation) // Replace with your NavHostFragment ID
+        if (navController.currentDestination?.id == R.id.patientCardFragment) { // Current fragment to handle back press
+            clearBackStackAndNavigateToFragment()
+        } else {
+            super.onBackPressed() // Default behavior
+        }
+    }
+
+    private fun clearBackStackAndNavigateToFragment() {
+        val navController = findNavController(R.id.nav_host_fragment_activity_bottom_navigation) // Replace with your NavHostFragment ID
+
+        // Clear the back stack
+        navController.popBackStack(navController.graph.startDestinationId, false)
+
+        // Navigate to your specific fragment
+        navController.navigate(R.id.landingPageFragment) // Replace with your target fragment ID
+    }
+
     // Override to handle back button clicks
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
