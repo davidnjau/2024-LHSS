@@ -2,6 +2,7 @@ package com.intellisoftkenya.a24cblhss.clinical_info.fragment
 
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,8 +23,10 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentAcknoledgementDetailsB
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentEndTreatmentFormBinding
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
+import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultSpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.dynamic_components.SpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.fhir.Constants
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
@@ -51,6 +54,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
         "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
         "11 month", "12 month")
     private val clinicalInfoViewViewModel: ClinicalInfoViewViewModel by viewModels()
+    private val spinnerSelectionHandler: SpinnerSelectionHandler = DefaultSpinnerSelectionHandler()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -147,11 +151,11 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 ),
                 DbField(
                     DbWidgets.SPINNER.name,
-                    "Types of TB", true, null,
+                    "Tb Location", true, null,
                     tbTypeList),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "Specify Tb Location Site", false,
+                    "Specify Site (EPTB)", false,
                     InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
@@ -214,25 +218,17 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
         return emptyList()
     }
 
-    fun findTextViewByText(rootLayout: ViewGroup, searchText: String): TextView? {
-        for (i in 0 until rootLayout.childCount) {
-            val child = rootLayout.getChildAt(i)
 
-            // Check if the child is a TextView
-            if (child is TextView) {
-                // Compare the text of the TextView
-                if (child.text.toString() == searchText) {
-                    return child
+
+    private fun setSpinnerListener(tagList: List<String>) {
+        tagList.forEach { tag ->
+            val rootViewParent = binding.rootLayout.findViewWithTag<View>(tag)
+            if (rootViewParent is Spinner) {
+                spinnerSelectionHandler.handleSelection(rootViewParent) { selectedItem ->
+                    clinicalInfoViewViewModel.updateSelectedItem(selectedItem)
                 }
             }
-
-            // If the child is a ViewGroup (like LinearLayout), recursively search its children
-            if (child is ViewGroup) {
-                val result = findTextViewByText(child, searchText)
-                if (result != null) return result
-            }
         }
-        return null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -247,24 +243,12 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
         FormUtils.populateView(ArrayList(dbFieldList),
             binding.rootLayout, fieldManager, requireContext())
 
-        val rootViewParent = binding.rootLayout.findViewWithTag<View>("HIV Status")
-        if (rootViewParent != null) {
-            //Check if rootViewParent is EditText and set its text from the retrieved observation
-            if (rootViewParent is Spinner) {
+        // Make a function that will handle multiple tags from a
 
-                rootViewParent.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                        val selectedItem = parent.getItemAtPosition(position) as String
-                        clinicalInfoViewViewModel.updateSelectedItem(selectedItem)
-                    }
+        setSpinnerListener(
+            listOf("HIV Status", "Tb Location")
+        )
 
-                    override fun onNothingSelected(parent: AdapterView<*>) {
-                        // Handle case where no item is selected if needed
-                    }
-                }
-
-            }
-        }
 
         // Observe the LiveData and react to changes
         clinicalInfoViewViewModel.selectedItem.observe(viewLifecycleOwner) { selectedItem ->
@@ -274,29 +258,46 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
             val cd4Count = binding.rootLayout.findViewWithTag<View>("CD4 Count")
             val viralLoad = binding.rootLayout.findViewWithTag<View>("Viral Load")
 
-            val artRegimenText = findTextViewByText(binding.rootLayout, "ART Regimen")
-            val cd4CountText = findTextViewByText(binding.rootLayout, "CD4 Count")
-            val viralLoadText = findTextViewByText(binding.rootLayout, "Viral Load")
+            val artRegimenText = formatterClass.findTextViewByText(binding.rootLayout, "ART Regimen")
+            val cd4CountText = formatterClass.findTextViewByText(binding.rootLayout, "CD4 Count")
+            val viralLoadText = formatterClass.findTextViewByText(binding.rootLayout, "Viral Load")
 
-            if (selectedItem == "Positive") {
-                artRegimen?.visibility = View.VISIBLE
-                artRegimenText?.visibility = View.VISIBLE
+            val eptbSiteText = formatterClass.findTextViewByText(binding.rootLayout, "Specify Site (EPTB)")
+            val eptbSite = binding.rootLayout.findViewWithTag<View>("Specify Site (EPTB)")
 
-                cd4Count?.visibility = View.VISIBLE
-                cd4CountText?.visibility = View.VISIBLE
 
-                viralLoad?.visibility = View.VISIBLE
-                viralLoadText?.visibility = View.VISIBLE
-            }else{
-                artRegimen?.visibility = View.GONE
-                artRegimenText?.visibility = View.GONE
+            //Use when for below
+            when (selectedItem) {
+                "PTB" -> {
+                    eptbSite?.visibility = View.GONE
+                    eptbSiteText?.visibility = View.GONE
+                }
+                "EPTB" -> {
+                    eptbSite?.visibility = View.VISIBLE
+                    eptbSiteText?.visibility = View.VISIBLE
+                }
+                "Positive" -> {
+                    artRegimen?.visibility = View.VISIBLE
+                    artRegimenText?.visibility = View.VISIBLE
 
-                cd4Count?.visibility = View.GONE
-                cd4CountText?.visibility = View.GONE
+                    cd4Count?.visibility = View.VISIBLE
+                    cd4CountText?.visibility = View.VISIBLE
 
-                viralLoad?.visibility = View.GONE
-                viralLoadText?.visibility = View.GONE
+                    viralLoad?.visibility = View.VISIBLE
+                    viralLoadText?.visibility = View.VISIBLE
+                }
+                "Negative", "Unknown" -> {
+                    artRegimen?.visibility = View.GONE
+                    artRegimenText?.visibility = View.GONE
+
+                    cd4Count?.visibility = View.GONE
+                    cd4CountText?.visibility = View.GONE
+
+                    viralLoad?.visibility = View.GONE
+                    viralLoadText?.visibility = View.GONE
+                }
             }
+
 
         }
 

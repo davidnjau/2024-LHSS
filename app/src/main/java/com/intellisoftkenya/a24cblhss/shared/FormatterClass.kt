@@ -11,6 +11,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -33,6 +34,26 @@ import java.util.regex.Pattern
 
 class FormatterClass(private val context: Context) {
 
+    fun findTextViewByText(rootLayout: ViewGroup, searchText: String): TextView? {
+        for (i in 0 until rootLayout.childCount) {
+            val child = rootLayout.getChildAt(i)
+
+            // Check if the child is a TextView
+            if (child is TextView) {
+                // Compare the text of the TextView
+                if (child.text.toString() == searchText) {
+                    return child
+                }
+            }
+
+            // If the child is a ViewGroup (like LinearLayout), recursively search its children
+            if (child is ViewGroup) {
+                val result = findTextViewByText(child, searchText)
+                if (result != null) return result
+            }
+        }
+        return null
+    }
     fun isValidEmail(email: String): Boolean {
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
         val pattern = Pattern.compile(emailPattern)
