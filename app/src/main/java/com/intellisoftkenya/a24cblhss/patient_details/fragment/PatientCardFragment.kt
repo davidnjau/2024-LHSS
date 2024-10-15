@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentPatientCardBinding
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
@@ -31,12 +33,8 @@ class PatientCardFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private var patientId:String = ""
     private lateinit var formDataAdapter: FormDataAdapter
+    private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +60,15 @@ class PatientCardFragment : Fragment() {
             )
                 .get(PatientCardViewModel::class.java)
 
+        clinicalViewModel =
+            ViewModelProvider(
+                this,
+                ClinicalInfoDetailsViewModel.ClinicalInfoDetailsViewModelFactory(
+                    requireActivity().application,
+                    patientId
+                )
+            )[ClinicalInfoDetailsViewModel::class.java]
+
         formatterClass.clearPatientData()
 
         return binding.root
@@ -78,7 +85,12 @@ class PatientCardFragment : Fragment() {
             findNavController().navigate(R.id.action_patientCardFragment_to_referPatientFragment)
         }
         binding.btnPatientFile.setOnClickListener {
-            findNavController().navigate(R.id.action_patientCardFragment_to_patientFileFragment)
+            val isCarePlan = getClinicalInfo()
+            if (isCarePlan) {
+                findNavController().navigate(R.id.action_patientCardFragment_to_patientFileFragment)
+            } else {
+                Toast.makeText(requireContext(), "Kindly start with performing a referral first", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val formDataList = patientDetailsViewModel.getPatientInfo()
@@ -99,6 +111,12 @@ class PatientCardFragment : Fragment() {
         }
         
 
+    }
+
+    private fun getClinicalInfo():Boolean {
+        val carePlanList = clinicalViewModel.getCarePlanDetails()
+        val carePlanNo = carePlanList.size
+        return carePlanNo > 0
     }
 
     override fun onDestroyView() {
