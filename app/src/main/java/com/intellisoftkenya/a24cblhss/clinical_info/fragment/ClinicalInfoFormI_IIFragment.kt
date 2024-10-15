@@ -213,6 +213,11 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     DbWidgets.EDIT_TEXT.name,
                     "Viral Load", false,
                     InputType.TYPE_CLASS_TEXT
+                ),
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Others", false,
+                    InputType.TYPE_CLASS_TEXT
                 )
             )
 

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,10 +17,13 @@ import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.clinical_info.shared.ClinicalChildAdapter
 import com.intellisoftkenya.a24cblhss.clinical_info.shared.ClinicalParentAdapter
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoViewViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIBinding
 import com.intellisoftkenya.a24cblhss.databinding.FragmentClinicalInfoFormIIIIVBinding
+import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultSpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.dynamic_components.SpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
@@ -52,6 +56,9 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
     private lateinit var fhirEngine: FhirEngine
     private var carePlanId:String = ""
     private var encounterId:String = ""
+    private val clinicalInfoViewViewModel: ClinicalInfoViewViewModel by viewModels()
+    private val spinnerSelectionHandler: SpinnerSelectionHandler = DefaultSpinnerSelectionHandler()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -117,6 +124,7 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
 
     }
 
+
     fun startRepeatingTask() {
         // Use lifecycleScope to ensure coroutines respect the Activity/Fragment lifecycle
         lifecycleScope.launch {
@@ -161,13 +169,18 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
             val dbFieldList = listOf(
                 DbField(
                     DbWidgets.SPINNER.name,
-                    "HIV Status", true, null,
-                    listOf("BDQ", "Unknown")
+                    "Drug", true, null,
+                    listOf("R", "BDQ","H","LZD", "LFX", "MFX", "CFZ","Cs","DLM","ETO","SLIDs","Others, Specify")
+                ),
+                DbField(
+                    DbWidgets.EDIT_TEXT.name,
+                    "Specify Others", false,
+                    InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.SPINNER.name,
                     "Result", true, null,
-                    listOf("Susceptible", "Unknown")
+                    listOf("Resistance", "Susceptible","Not Done","Done Awaiting Results")
                 ),
 
             )
