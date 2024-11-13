@@ -38,6 +38,24 @@ class NotificationServiceViewModel(
         FhirApplication.fhirEngine(application.applicationContext)
 
 
+    fun updateCommunicationStatus(communicationId: String) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val communicationDataId = communicationId.replace("Communication/","")
+            val searchResult =
+                fhirEngine.search<Communication> {
+                    filter(Resource.RES_ID, { value = of(communicationDataId) })
+                }
+
+            if (searchResult.isNotEmpty()) {
+                searchResult.first().let {
+                    it.resource.status = Communication.CommunicationStatus.COMPLETED
+                    fhirEngine.update(it.resource)
+                }
+            }
+        }
+
+    }
 
     fun createNotification(dbCommunication: DbCommunication) {
 

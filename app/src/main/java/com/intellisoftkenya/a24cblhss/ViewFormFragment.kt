@@ -49,16 +49,10 @@ class ViewFormFragment : Fragment() {
             .getSharedPref("","notificationBasedOn")
         if (notificationBasedOn != null){
 
-            Log.e("----->","<-----")
-            println("Notification based on: $notificationBasedOn")
-
             CoroutineScope(Dispatchers.IO).launch {
 
                 val notificationData =
                     viewModel.getNotificationDataList(notificationBasedOn)
-
-                println("notificationData: $notificationData")
-
 
                 CoroutineScope(Dispatchers.Main).launch {
 
@@ -66,13 +60,14 @@ class ViewFormFragment : Fragment() {
 
                     binding.childRecyclerView.layoutManager = LinearLayoutManager(context)
                     binding.childRecyclerView.adapter = formDataAdapter
-
                     binding.tvTitle.text = notificationData.title
+                }
 
-
+                val communicationId = formatterClass.getSharedPref("","communicationId")
+                if (communicationId != null) {
+                    viewModel.updateCommunicationStatus(communicationId)
                 }
             }
-            Log.e("----->","<-----")
         }
     }
 }

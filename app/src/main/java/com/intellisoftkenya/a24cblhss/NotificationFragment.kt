@@ -54,11 +54,12 @@ class NotificationFragment : Fragment() {
             formatterClass.deleteSharedPref("","notificationBasedOn")
             formatterClass.deleteSharedPref("","communicationId")
 
-            notificationList.sortByDescending { it.dateTime }
+            val notificationSortedList =
+                notificationList.sortedBy { it.dateTime }
 
             val formDataAdapter = NotificationAdapter(
                 requireActivity().applicationContext,
-                notificationList, this@NotificationFragment)
+                ArrayList(notificationSortedList), this@NotificationFragment)
 
             CoroutineScope(Dispatchers.Main).launch {
                 binding.recyclerView.layoutManager = LinearLayoutManager(context)

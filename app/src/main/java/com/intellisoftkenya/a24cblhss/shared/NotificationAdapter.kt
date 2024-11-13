@@ -1,6 +1,7 @@
 package com.intellisoftkenya.a24cblhss.shared
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +44,8 @@ class NotificationAdapter(
         val navigationId = parentItem.navigationId
         val status = parentItem.status
         val basedOn = parentItem.basedOn.first()
-        val dateTime = formatterClass.convertDateFormat(parentItem.dateTime) ?: ""
+        val date = parentItem.dateTime
+        val dateTime = formatterClass.convertDateFormat(date) ?: ""
         val content = parentItem.content.replace("_", " ")
         val title = parentItem.title
 
@@ -51,10 +53,11 @@ class NotificationAdapter(
         holder.tvNotificationDateTime.text = dateTime
         holder.tvNotificationContent.text = content
 
-        if (status == "completed"){
+        if (status == "COMPLETED"){
             holder.imgBtnUnread.visibility = View.GONE
         } else {
             holder.imgBtnUnread.visibility = View.VISIBLE
+
             holder.tvNotificationTitle.setTypeface(null, android.graphics.Typeface.BOLD)
             holder.tvNotificationDateTime.setTypeface(null, android.graphics.Typeface.BOLD)
             holder.tvNotificationContent.setTypeface(null, android.graphics.Typeface.BOLD)
