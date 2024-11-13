@@ -54,7 +54,7 @@ class NotificationFragment : Fragment() {
 
             val formDataAdapter = NotificationAdapter(
                 requireActivity().applicationContext,
-                notificationList)
+                notificationList, this@NotificationFragment)
 
             CoroutineScope(Dispatchers.Main).launch {
                 binding.recyclerView.layoutManager = LinearLayoutManager(context)

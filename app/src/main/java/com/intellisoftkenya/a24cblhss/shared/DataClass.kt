@@ -23,7 +23,8 @@ data class DbCommunicationData(
     val title: String,
     val content: String,
     val dateTime: String,
-    val status: String
+    val status: String,
+    val basedOn: String
 )
 
 data class DbField(

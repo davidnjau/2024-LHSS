@@ -401,5 +401,15 @@
         android:id="@+id/notificationFragment"
         android:name="com.intellisoftkenya.a24cblhss.NotificationFragment"
         android:label="Notification"
-        tools:layout="@layout/fragment_notification" />
+        tools:layout="@layout/fragment_notification" >
+        <action
+            android:id="@+id/action_notificationFragment_to_viewFormFragment"
+            app:destination="@id/viewFormFragment"
+            app:popUpTo="@id/notificationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewFormFragment"
+        android:name="com.intellisoftkenya.a24cblhss.ViewFormFragment"
+        android:label="@string/form_details"
+        tools:layout="@layout/fragment_view_form" />
 </navigation>

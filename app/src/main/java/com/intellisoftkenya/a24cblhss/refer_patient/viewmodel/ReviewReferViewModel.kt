@@ -214,7 +214,7 @@ class ReviewReferViewModel (
                 content = "A new ${workflowTitles.toLowerCase()} Form has been submitted."
             }
 
-            val basedOnReference = Reference("Careplan/$carePlanId")
+            val basedOnReference = Reference("CarePlan/$carePlanId")
             val subjectReference = Reference("Patient/$carePlanId")
 
             /**

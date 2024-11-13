@@ -113,6 +113,7 @@ class NotificationServiceViewModel(
         var content: String = ""
         var dateTime: String = ""
         var status: String = ""
+        var basedOn: String = ""
 
         val id = resource.id
 
@@ -167,6 +168,14 @@ class NotificationServiceViewModel(
 
         val dateCreated = formatterClass.convertDateFormat(dateTime) ?: ""
 
+        //6. This is the Notification basedOn
+        if (resource.hasBasedOn()){
+            val basedOnReference = resource.basedOn[0].reference
+            basedOn = basedOnReference
+        }
+
+//        val annotationList = ArrayList<DbAnnotation>()
+
 
 
         return DbCommunicationData(
@@ -176,7 +185,8 @@ class NotificationServiceViewModel(
             title,
             content,
             dateCreated,
-            status
+            status,
+            basedOn
         )
 
     }

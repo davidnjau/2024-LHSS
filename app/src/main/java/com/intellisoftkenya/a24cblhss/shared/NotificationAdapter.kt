@@ -18,8 +18,9 @@ import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 
 class NotificationAdapter(
     private val context: Context,
-    private val dbCommunicationDataList: ArrayList<DbCommunicationData>
-) : RecyclerView.Adapter<NotificationAdapter.ParentViewHolder>() {
+    private val dbCommunicationDataList: ArrayList<DbCommunicationData>,
+    private val fragment: Fragment,
+    ) : RecyclerView.Adapter<NotificationAdapter.ParentViewHolder>() {
 
     inner class ParentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgBtnUnread: ImageButton = itemView.findViewById(R.id.imgBtnUnread)
@@ -40,6 +41,7 @@ class NotificationAdapter(
         val formatterClass = FormatterClass(context)
         val navigationId = parentItem.navigationId
         val status = parentItem.status
+        val basedOn = parentItem.basedOn
 
         parentItem.title.let { holder.tvNotificationTitle.text = it }
         parentItem.dateTime.let { holder.tvNotificationDateTime.text = it }
@@ -49,10 +51,9 @@ class NotificationAdapter(
             holder.imgBtnUnread.visibility = View.GONE
         }
 
-
-        //Create a setOnClickListener for the chip
         holder.tvNotificationViewForm.setOnClickListener {
-
+            formatterClass.saveSharedPref("","notificationBasedOn",basedOn)
+            findNavController(fragment).navigate(R.id.action_notificationFragment_to_viewFormFragment)
         }
 
     }

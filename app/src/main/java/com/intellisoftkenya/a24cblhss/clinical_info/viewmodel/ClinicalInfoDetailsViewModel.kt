@@ -51,7 +51,7 @@ class ClinicalInfoDetailsViewModel(
         fhirEngine
             .search<Encounter> {
                 filter(Encounter.SUBJECT, { value = "Patient/$patientId" })
-                filter(Encounter.BASED_ON, { value = "Careplan/$carePlanId" })
+                filter(Encounter.BASED_ON, { value = "CarePlan/$carePlanId" })
                 sort(Encounter.DATE, Order.ASCENDING)
             }
             .map { createEncounterItem(it.resource) }
