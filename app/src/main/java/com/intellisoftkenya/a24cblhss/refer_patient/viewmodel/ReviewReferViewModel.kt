@@ -164,6 +164,10 @@ class ReviewReferViewModel (
         val patientId = formatterClass.getSharedPref(
             "",
             "patientId")
+        val patientName = formatterClass.getSharedPref(
+            "",
+            "patientName")
+
         val carePlanId = formatterClass.getSharedPref(
             DbNavigationDetails.CARE_PLAN.name,
             "carePlanId")
@@ -209,7 +213,7 @@ class ReviewReferViewModel (
             var navigationId = 0
 
             title = convertToTitleCase(workflowTitles)
-            "A new $title Form has been submitted.".also { content = it }
+            "A new $title Form has been submitted for patient $patientName".also { content = it }
 
             val basedOnReference = Reference("CarePlan/$carePlanId")
             val subjectReference = Reference("Patient/$patientId")

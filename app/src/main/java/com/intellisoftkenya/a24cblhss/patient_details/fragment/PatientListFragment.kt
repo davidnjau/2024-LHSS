@@ -126,19 +126,14 @@ class PatientListFragment : Fragment() {
         val patientSortedList = formatterClass.sortPatientListByDate(
             patientList, fromDateStr, toDateStr)
 
-
-        patientSortedList.forEach {
-            Log.e("--->","<----")
-            println("name ${it.name}")
-            println("created ${it.dateCreated}")
-            Log.e("--->","<----")
-        }
-
         // Initialize RecyclerView and adapter
         val patientAdapter = PatientAdapter(patientSortedList) { selectedPatient ->
 
             val id = selectedPatient.id
+            val patientName = selectedPatient.name
             formatterClass.saveSharedPref("","patientId", id)
+            formatterClass.saveSharedPref("","patientName", patientName)
+
             findNavController().navigate(R.id.action_patientListFragment_to_patientCardFragment)
         }
         binding.patientRecyclerView.layoutManager = LinearLayoutManager(requireContext())
