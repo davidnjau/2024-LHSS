@@ -406,6 +406,10 @@
             android:id="@+id/action_notificationFragment_to_viewFormFragment"
             app:destination="@id/viewFormFragment"
             app:popUpTo="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_notificationFragment_to_clinicalViewEncountersFragment"
+            app:destination="@id/clinicalViewEncountersFragment"
+            app:popUpTo="@id/notificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/viewFormFragment"

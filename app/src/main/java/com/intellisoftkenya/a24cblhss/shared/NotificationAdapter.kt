@@ -41,7 +41,7 @@ class NotificationAdapter(
         val formatterClass = FormatterClass(context)
         val navigationId = parentItem.navigationId
         val status = parentItem.status
-        val basedOn = parentItem.basedOn
+        val basedOn = parentItem.basedOn.first()
 
         parentItem.title.let { holder.tvNotificationTitle.text = it }
         parentItem.dateTime.let { holder.tvNotificationDateTime.text = it }

@@ -51,6 +51,16 @@ class NotificationFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
 
             val notificationList = viewModel.getCommunicationList()
+            formatterClass.deleteSharedPref("","notificationBasedOn")
+
+            notificationList.forEach {
+                Log.e("----->","<-----")
+                println("Notification ID: ${it.id}")
+                println("Notification Title: ${it.title}")
+                println("Notification status: ${it.status}")
+                println("Notification basedOn: ${it.basedOn}")
+                Log.e("----->","<-----")
+            }
 
             val formDataAdapter = NotificationAdapter(
                 requireActivity().applicationContext,
@@ -60,6 +70,7 @@ class NotificationFragment : Fragment() {
                 binding.recyclerView.layoutManager = LinearLayoutManager(context)
                 binding.recyclerView.adapter = formDataAdapter
             }
+
 
         }
 

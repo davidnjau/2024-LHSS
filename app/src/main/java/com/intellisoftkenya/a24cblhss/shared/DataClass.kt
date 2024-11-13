@@ -10,10 +10,9 @@ data class DbCommunication(
     val subject: Reference? = null,
     val recipient: Reference? = null,
     val sender: Reference? = null,
-    val basedOn: Reference? = null,
+    val basedOn: ArrayList<Reference>,
     val title: String,
     val content: String,
-    val navigationId: Int
     )
 
 data class DbCommunicationData(
@@ -24,7 +23,7 @@ data class DbCommunicationData(
     val content: String,
     val dateTime: String,
     val status: String,
-    val basedOn: String
+    val basedOn: ArrayList<String>
 )
 
 data class DbField(

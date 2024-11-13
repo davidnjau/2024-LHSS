@@ -1,6 +1,7 @@
 package com.intellisoftkenya.a24cblhss.shared
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,16 +11,20 @@ import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.fhir.Constants
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
+import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.Annotation
+import org.hl7.fhir.r4.model.CarePlan
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
 import org.hl7.fhir.r4.model.Communication
 import org.hl7.fhir.r4.model.Encounter
+import org.hl7.fhir.r4.model.Observation
 import org.hl7.fhir.r4.model.Reference
+import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.codesystems.EventStatus
 import java.util.Date
 
@@ -32,21 +37,11 @@ class NotificationServiceViewModel(
     private var fhirEngine: FhirEngine =
         FhirApplication.fhirEngine(application.applicationContext)
 
+
+
     fun createNotification(dbCommunication: DbCommunication) {
 
         CoroutineScope(Dispatchers.IO).launch {
-
-            // Create a reason code for the navigation
-            val navigationCodeableConcept = CodeableConcept()
-            navigationCodeableConcept.text = "ACTION"
-            navigationCodeableConcept.id = formatterClass.generateUuid()
-            navigationCodeableConcept.coding = arrayListOf(
-                Coding(
-                    Constants.SYSTEM_TB_REGISTRATION,
-                    Constants.TOPIC_NUMBER_REASON_C0DE,
-                    "${dbCommunication.navigationId}"
-                )
-            )
 
             //Build a communication
             val communication = Communication()
@@ -68,10 +63,9 @@ class NotificationServiceViewModel(
             communication.sender = dbCommunication.sender
             communication.status = dbCommunication.status
             communication.priority = Communication.CommunicationPriority.ROUTINE
-            communication.basedOn = arrayListOf(dbCommunication.basedOn)
+            communication.basedOn = dbCommunication.basedOn
             communication.sent = Date()
             communication.topic = topicCodeableConcept
-            communication.reasonCode = arrayListOf(navigationCodeableConcept)
 
             fhirEngine.create(communication)
 
@@ -113,7 +107,7 @@ class NotificationServiceViewModel(
         var content: String = ""
         var dateTime: String = ""
         var status: String = ""
-        var basedOn: String = ""
+        var basedOnList = ArrayList<String>()
 
         val id = resource.id
 
@@ -170,8 +164,10 @@ class NotificationServiceViewModel(
 
         //6. This is the Notification basedOn
         if (resource.hasBasedOn()){
-            val basedOnReference = resource.basedOn[0].reference
-            basedOn = basedOnReference
+            val basedOnReference = resource.basedOn
+            basedOnReference.forEach {
+                basedOnList.add(it.reference)
+            }
         }
 
 //        val annotationList = ArrayList<DbAnnotation>()
@@ -186,9 +182,125 @@ class NotificationServiceViewModel(
             content,
             dateCreated,
             status,
-            basedOn
+            basedOnList
         )
 
+    }
+
+    fun getNotificationDataList(resourceId: String) = runBlocking {
+        getNotificationList(resourceId)
+    }
+
+    private suspend fun getNotificationList(resourceId: String): FormData {
+
+        var titleInfo = ""
+        val formList = ArrayList<DbFormData>()
+
+        val (resourceType, id) = extractParts(resourceId)
+
+        if (resourceType == "CarePlan" || resourceType == "Careplan") {
+            val searchResult =
+                fhirEngine.search<CarePlan> {
+                    filter(Resource.RES_ID, { value = of(id) })
+                }
+
+            if (searchResult.isNotEmpty()){
+                searchResult.first().let {
+
+                    val carePlan = it.resource
+                    if (carePlan.hasSupportingInfo()){
+                        carePlan.supportingInfo.forEach {
+
+                            val encounterReferenceList = carePlan.supportingInfo
+
+                            encounterReferenceList.forEach { encounterReference ->
+                                val formData = getEncounterDetails(encounterReference.reference)
+                                if (formData!= null){
+                                    titleInfo = formData.title
+                                    val formDataList = formData.formDataList
+
+                                    formList.addAll(formDataList)
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (resourceType == "Encounter"){
+            val formData = getEncounterDetails(resourceId)
+            if (formData!= null){
+                titleInfo = formData.title
+                formList.addAll(formData.formDataList)
+            }
+        }
+
+        return FormData(titleInfo.replace(
+            "_"," "
+        ), formList)
+    }
+
+    private suspend fun getEncounterDetails(encounter:String):FormData?{
+
+        val observationList = ArrayList<DbFormData>()
+        var title = ""
+        val encounterId = encounter.replace("Encounter/","")
+
+        fhirEngine
+            .search<Observation> {
+                filter(Observation.ENCOUNTER, { value = encounter })
+                sort(Observation.DATE, Order.ASCENDING)
+            }
+            .map { createObservationItem(it.resource) }
+            .let {observationList.addAll(it)}
+
+
+        val searchResult =
+            fhirEngine.search<Encounter> {
+                filter(Resource.RES_ID, { value = of(encounterId) })
+            }
+
+        if (searchResult.isNotEmpty()) {
+            searchResult.first().let {
+                title = if (it.resource.hasReasonCode() && it.resource.reasonCodeFirstRep.hasText()){
+                    it.resource.reasonCodeFirstRep.text
+                }else ""
+            }
+        }
+
+
+        if (title != "" && observationList.isNotEmpty()){
+            val formData = FormData(
+                title,
+                observationList
+            )
+            return formData
+        }
+        return null
+    }
+
+    private fun createObservationItem(resource: Observation):DbFormData {
+
+        val tag = if(resource.hasCode() && resource.code.hasCoding()){
+            resource.code.codingFirstRep.display
+        }else ""
+
+        val text = if (resource.hasValueStringType()){
+            resource.valueStringType.valueAsString
+        }else ""
+
+        return DbFormData(
+            tag, text
+        )
+
+    }
+
+
+
+    private fun extractParts(input: String): Pair<String, String> {
+        val parts = input.split('/') // Split the string at the "/"
+        return Pair(parts[0], parts[1]) // Return the two parts as a pair
     }
 
 }

@@ -161,7 +161,9 @@ class ReviewReferViewModel (
         status: CarePlan.CarePlanStatus
     ) {
 
-        val patientId = formatterClass.getSharedPref("", "patientId")
+        val patientId = formatterClass.getSharedPref(
+            "",
+            "patientId")
         val carePlanId = formatterClass.getSharedPref(
             DbNavigationDetails.CARE_PLAN.name,
             "carePlanId")
@@ -197,7 +199,8 @@ class ReviewReferViewModel (
             //Update the CarePlan status
             clinicalViewModel.updateCarePlanStatus(
                 status,
-                carePlanId, supportingInfoList
+                carePlanId,
+                supportingInfoList
             )
 
             // Create a notification
@@ -205,17 +208,11 @@ class ReviewReferViewModel (
             var content = ""
             var navigationId = 0
 
-            if (workflowTitles == DbClasses.END_TREATMENT_FORM.name){
-                title = "End of Treatment"
-                content = "An End of Treatment Form has been submitted."
-                navigationId = 0
-            }else{
-                title = convertToTitleCase(workflowTitles)
-                content = "A new ${workflowTitles.toLowerCase()} Form has been submitted."
-            }
+            title = convertToTitleCase(workflowTitles)
+            "A new $title Form has been submitted.".also { content = it }
 
             val basedOnReference = Reference("CarePlan/$carePlanId")
-            val subjectReference = Reference("Patient/$carePlanId")
+            val subjectReference = Reference("Patient/$patientId")
 
             /**
              * TODO: Update the subject reference to the CarePlan in the notification
@@ -226,10 +223,9 @@ class ReviewReferViewModel (
                 subjectReference,
                 subjectReference,
                 subjectReference,
-                basedOnReference,
+                supportingInfoList,
                 title,
                 content,
-                navigationId
             )
             viewModel.createNotification(dbCommunication)
 
@@ -237,10 +233,10 @@ class ReviewReferViewModel (
 
 
     }
-    fun convertToTitleCase(input: String): String {
-        return input.split('_')  // Split the string by underscores
-            .map { word -> word.lowercase().replaceFirstChar { it.uppercase() } }  // Lowercase the entire word, then capitalize the first character
-            .joinToString(" ")  // Join the words back together with spaces
+    private fun convertToTitleCase(input: String): String {
+        return input.split('_').joinToString(" ") { word ->
+            word.lowercase().replaceFirstChar { it.uppercase() }
+        }  // Join the words back together with spaces
     }
 
     private suspend fun updateResourceToDatabase(resource: Resource, s: String) {
