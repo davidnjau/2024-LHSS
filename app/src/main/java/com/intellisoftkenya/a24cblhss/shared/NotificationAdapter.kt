@@ -39,20 +39,30 @@ class NotificationAdapter(
         val parentItem = dbCommunicationDataList[position]
 
         val formatterClass = FormatterClass(context)
+        val communicationId = parentItem.id
         val navigationId = parentItem.navigationId
         val status = parentItem.status
         val basedOn = parentItem.basedOn.first()
+        val dateTime = formatterClass.convertDateFormat(parentItem.dateTime) ?: ""
+        val content = parentItem.content.replace("_", " ")
+        val title = parentItem.title
 
-        parentItem.title.let { holder.tvNotificationTitle.text = it }
-        parentItem.dateTime.let { holder.tvNotificationDateTime.text = it }
-        parentItem.content.let { holder.tvNotificationContent.text = it }
+        holder.tvNotificationTitle.text = title
+        holder.tvNotificationDateTime.text = dateTime
+        holder.tvNotificationContent.text = content
 
-        if (status.contains("Completed")) {
+        if (status == "completed"){
             holder.imgBtnUnread.visibility = View.GONE
+        } else {
+            holder.imgBtnUnread.visibility = View.VISIBLE
+            holder.tvNotificationTitle.setTypeface(null, android.graphics.Typeface.BOLD)
+            holder.tvNotificationDateTime.setTypeface(null, android.graphics.Typeface.BOLD)
+            holder.tvNotificationContent.setTypeface(null, android.graphics.Typeface.BOLD)
         }
 
         holder.tvNotificationViewForm.setOnClickListener {
             formatterClass.saveSharedPref("","notificationBasedOn",basedOn)
+            formatterClass.saveSharedPref("","communicationId",communicationId)
             findNavController(fragment).navigate(R.id.action_notificationFragment_to_viewFormFragment)
         }
 

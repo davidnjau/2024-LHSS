@@ -219,7 +219,7 @@ class ReviewReferViewModel (
              */
 
             val dbCommunication = DbCommunication(
-                Communication.CommunicationStatus.COMPLETED,
+                Communication.CommunicationStatus.INPROGRESS,
                 subjectReference,
                 subjectReference,
                 subjectReference,

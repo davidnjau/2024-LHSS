@@ -52,15 +52,9 @@ class NotificationFragment : Fragment() {
 
             val notificationList = viewModel.getCommunicationList()
             formatterClass.deleteSharedPref("","notificationBasedOn")
+            formatterClass.deleteSharedPref("","communicationId")
 
-            notificationList.forEach {
-                Log.e("----->","<-----")
-                println("Notification ID: ${it.id}")
-                println("Notification Title: ${it.title}")
-                println("Notification status: ${it.status}")
-                println("Notification basedOn: ${it.basedOn}")
-                Log.e("----->","<-----")
-            }
+            notificationList.sortByDescending { it.dateTime }
 
             val formDataAdapter = NotificationAdapter(
                 requireActivity().applicationContext,

@@ -72,11 +72,9 @@ class NotificationServiceViewModel(
         }
 
     }
-
     fun getCommunicationList() = runBlocking {
         getCommunication()
     }
-
     private suspend fun getCommunication(): ArrayList<DbCommunicationData>{
 
         val communicationList = ArrayList<DbCommunicationData>()
@@ -98,7 +96,6 @@ class NotificationServiceViewModel(
 
         return ArrayList(communicationList)
     }
-
     private fun createCommunicationItem(resource: Communication): DbCommunicationData {
 
         var patientId: String = ""
@@ -160,7 +157,7 @@ class NotificationServiceViewModel(
             status = resource.status.toString()
         }
 
-        val dateCreated = formatterClass.convertDateFormat(dateTime) ?: ""
+//        val dateCreated = formatterClass.convertDateFormat(dateTime) ?: ""
 
         //6. This is the Notification basedOn
         if (resource.hasBasedOn()){
@@ -180,17 +177,15 @@ class NotificationServiceViewModel(
             navigationId,
             title,
             content,
-            dateCreated,
+            dateTime,
             status,
             basedOnList
         )
 
     }
-
     fun getNotificationDataList(resourceId: String) = runBlocking {
         getNotificationList(resourceId)
     }
-
     private suspend fun getNotificationList(resourceId: String): FormData {
 
         var titleInfo = ""
@@ -235,10 +230,9 @@ class NotificationServiceViewModel(
                 formList.addAll(formData.formDataList)
             }
         }
+        val titleDataInfo = formatterClass.toSentenceCase(titleInfo)
 
-        return FormData(titleInfo.replace(
-            "_"," "
-        ), formList)
+        return FormData(titleDataInfo, formList)
     }
 
     private suspend fun getEncounterDetails(encounter:String):FormData?{
@@ -279,7 +273,6 @@ class NotificationServiceViewModel(
         }
         return null
     }
-
     private fun createObservationItem(resource: Observation):DbFormData {
 
         val tag = if(resource.hasCode() && resource.code.hasCoding()){
@@ -295,9 +288,6 @@ class NotificationServiceViewModel(
         )
 
     }
-
-
-
     private fun extractParts(input: String): Pair<String, String> {
         val parts = input.split('/') // Split the string at the "/"
         return Pair(parts[0], parts[1]) // Return the two parts as a pair
