@@ -31,7 +31,7 @@ class ReferPatientFragment : Fragment() {
     private lateinit var fieldManager: FieldManager
 
     private val viewModel: ReferPatientViewModel by viewModels()
-    private val countryList = listOf("Kenya", "Uganda")
+    private val countryList = listOf("Djibouti", "Eritrea", "Kenya", "Ethiopia", "Somalia", "South Sudan", "Sudan", "Uganda")
     private val titleList = listOf("Mr", "Miss", "Mrs", "Dr")
     private lateinit var formatterClass: FormatterClass
 
@@ -174,11 +174,11 @@ class ReferPatientFragment : Fragment() {
                 listOf("Pumwani", "Avenue Hospital"), true,
                 com.intellisoftkenya.a24cblhss.fhir.Constants.RECEIVING_FACILITY_NAME,
             ),
-//            DbField(
-//                DbWidgets.EDIT_TEXT.name,
-//                "Name of Receiving facility", true,
-//                InputType.TYPE_TEXT_VARIATION_PERSON_NAME
-//            ),
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Name of Receiving facility", true,
+                InputType.TYPE_TEXT_VARIATION_PERSON_NAME
+            ),
             DbField(
                 DbWidgets.SPINNER.name,
                 "Title", true, null,

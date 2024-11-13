@@ -42,7 +42,8 @@ class DemographicsFragment : Fragment() {
     private lateinit var formatterClass: FormatterClass
 
     private val viewModel: MainActivityViewModel by viewModels()
-    private var identificationTypes = listOf("Birth Certificate", "National ID", "Passport")
+    private var identificationTypes =
+        listOf("Birth Certificate", "National ID", "Passport","Drivers License")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -173,7 +174,7 @@ class DemographicsFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Telephone in receiving country", true,
+                "Telephone in receiving country", false,
                 InputType.TYPE_CLASS_PHONE
             ),
             DbField(
@@ -189,7 +190,7 @@ class DemographicsFragment : Fragment() {
             DbField(
                 DbWidgets.SPINNER.name,
                 "Sex", true, null,
-                listOf("Male", "Female")
+                listOf("Male", "Female", "Intersex")
             )
 
 

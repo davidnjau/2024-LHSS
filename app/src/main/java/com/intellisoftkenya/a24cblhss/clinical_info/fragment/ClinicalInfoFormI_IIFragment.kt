@@ -159,6 +159,12 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
+                    DbWidgets.SPINNER.name,
+                    "Drug Sensitivity",
+                    true,
+                    optionList = listOf("DSTB", "DRTB")
+                ),
+                DbField(
                     DbWidgets.EDIT_TEXT.name,
                     "Radiological Information (If Applicable)", false,
                     InputType.TYPE_CLASS_TEXT

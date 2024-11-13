@@ -268,6 +268,52 @@ object FormUtils {
                         }
                     }
 
+                    // New case for extracting phone number with country code
+                    is LinearLayout -> {
+                        // Check if this LinearLayout contains both CountryCodePicker and EditText
+                        var countryCodePicker: com.hbb20.CountryCodePicker? = null
+                        var phoneEditText: MandatoryEditText? = null
+
+                        // Loop through the children of this LinearLayout to find CPP and EditText
+                        for (j in 0 until childView.childCount) {
+                            val innerChild = childView.getChildAt(j)
+
+                            when (innerChild) {
+                                is com.hbb20.CountryCodePicker -> {
+                                    countryCodePicker = innerChild
+                                }
+                                is MandatoryEditText -> {
+                                    phoneEditText = innerChild
+                                }
+                            }
+                        }
+
+                        if (countryCodePicker != null && phoneEditText != null) {
+                            val countryCode = countryCodePicker.selectedCountryCodeWithPlus // Get the country code with plus sign
+                            val phoneNumber = phoneEditText.text.toString()
+                            val tag = phoneEditText.tag?.toString() ?: ""
+
+                            if (phoneEditText.isMandatory) {
+                                if (tag.isNotEmpty() && phoneNumber.isNotEmpty()) {
+                                    // Combine country code and phone number
+                                    val fullPhoneNumber = "$countryCode$phoneNumber"
+                                    val formData = DbFormData(tag, fullPhoneNumber)
+                                    addedFields.add(formData)
+                                } else {
+                                    // Add missing mandatory fields if phone number is empty
+                                    missingFields.add(DbFormData(tag, ""))
+                                }
+                            } else {
+                                if (tag.isNotEmpty() && phoneNumber.isNotEmpty()) {
+                                    // Combine country code and phone number
+                                    val fullPhoneNumber = "$countryCode$phoneNumber"
+                                    val formData = DbFormData(tag, fullPhoneNumber)
+                                    addedFields.add(formData)
+                                }
+                            }
+                        }
+                    }
+
                     // Add more cases as needed based on widget types
                 }
             }

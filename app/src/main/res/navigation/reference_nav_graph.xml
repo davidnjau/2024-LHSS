@@ -107,8 +107,7 @@
         tools:layout="@layout/fragment_next_of_kin" >
         <action
             android:id="@+id/action_nextOfKinFragment_to_patientRegistrationSummaryFragment"
-            app:destination="@id/patientRegistrationSummaryFragment"
-            app:popUpTo="@id/nextOfKinFragment" />
+            app:destination="@id/patientRegistrationSummaryFragment" />
     </fragment>
     <fragment
         android:id="@+id/patientRegistrationSummaryFragment"
@@ -118,8 +117,7 @@
         <action
             android:id="@+id/action_patientRegistrationSummaryFragment_to_patientCardFragment"
             app:destination="@id/patientCardFragment"
-            app:popUpTo="@id/patientRegistrationSummaryFragment"
-            app:popUpToInclusive="true" />
+            />
 
     </fragment>
     <fragment
@@ -153,6 +151,11 @@
         <action
             android:id="@+id/action_patientCardFragment_to_patientFileFragment"
             app:destination="@id/patientFileFragment" />
+        <action
+            android:id="@+id/action_patientCardFragment_to_patientListFragment2"
+            app:popUpTo="@id/patientListFragment"
+            app:popUpToInclusive="true"
+            app:destination="@id/patientListFragment" />
 
     </fragment>
     <fragment

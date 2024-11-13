@@ -53,6 +53,9 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
     private val monthList = listOf("1 month", "2 month","3 month", "4 month",
         "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
         "11 month", "12 month")
+    private val monthList1 = listOf("1 month", "2 month","3 month", "4 month",
+        "5 month", "15 month", "18 month", "21 month", "24 month", "18 month",
+        "21 month", "24 month")
     private lateinit var fhirEngine: FhirEngine
     private var carePlanId:String = ""
     private var encounterId:String = ""
@@ -77,7 +80,12 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
         encounterId = formatterClass.getSharedPref("","encounterId")?: ""
 
         if (workflowTitles != ""){
-            binding.tvTitle.text = formatterClass.toSentenceCase(workflowTitles!!)
+            val sectionTitle = if (workflowTitles == DbClasses.DST.name){
+                "DST/Cultures/LPA"
+            }else {
+                formatterClass.toSentenceCase(workflowTitles)
+            }
+            binding.tvTitle.text = sectionTitle
 //            binding.imgBtn.setImageResource(workflowTitles)
         }
 
@@ -191,10 +199,10 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
                 DbField(
                     DbWidgets.SPINNER.name,
                     "Month", false, null,
-                    monthList),
+                    monthList1),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "GXP Result", false,
+                    "Culture Result", false,
                     InputType.TYPE_TEXT_VARIATION_PERSON_NAME
                 ),
                 DbField(

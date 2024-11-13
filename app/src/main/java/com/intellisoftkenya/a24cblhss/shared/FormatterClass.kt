@@ -274,7 +274,7 @@ class FormatterClass(private val context: Context) {
         val editTextMonths = EditText(context).apply {
             hint = "Months"
             background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext)
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            inputType = android.text.InputType.TYPE_CLASS_TEXT
             visibility = View.GONE // Hidden initially
             filters = arrayOf(InputFilter.LengthFilter(2), MonthInputFilter())
             layoutParams = LinearLayout.LayoutParams(
@@ -541,7 +541,7 @@ class FormatterClass(private val context: Context) {
         val minDate: Date? = fromDate?.let { parseDateSafely(it, dateFormat) }
         val maxDate: Date? = toDate?.let { parseDateSafely(it, dateFormat) }
 
-        return patientList
+        val sortedPatients = patientList
             // Filter based on fromDate (min) and toDate (max)
             .filter { patient ->
                 patient.dateCreated?.let { dateStr ->
@@ -561,6 +561,19 @@ class FormatterClass(private val context: Context) {
                     parseDateSafely(dateStr, dateFormat)
                 }
             }
+
+        val sortedPatientList = patientList.sortedWith(compareByDescending<DbPatientItem> {
+            try {
+                // Parse date if it's not empty
+                if (it.dateCreated.isNullOrEmpty()) null else dateFormat.parse(it.dateCreated)
+            } catch (e: Exception) {
+                null // Handle unparseable date
+            }
+        }.thenBy {
+            it.dateCreated.isNullOrEmpty() // Push empty dateCreated to the bottom
+        })
+
+        return sortedPatientList
     }
 
     // Helper function to safely parse dates and handle exceptions

@@ -57,28 +57,60 @@ class EditTextFieldCreator(
         isEnable: Boolean,
         isPastDate: Boolean
     ): View {
+        // LinearLayout to hold both Country Code Picker and EditText
+        val containerLayout = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8, 5, 8, 12)
+            }
+        }
+
+        // Country Code Picker (CCP) if input type is phone number
+        val countryCodePicker = com.hbb20.CountryCodePicker(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 16, 0)
+            }
+            // Set default country code (e.g., Kenya)
+            setDefaultCountryUsingNameCode("ke")  // Set using country code, like "KE" for Kenya
+            // Or alternatively, you can set by phone code:
+             setCountryForPhoneCode(254) // Set using phone code for Kenya
+        }
+
+        // EditText field
         val editText = MandatoryEditText(context).apply {
             this.hint = label
-            if (inputType != null) {
-                this.inputType = inputType
-            }else{
-                this.inputType = InputType.TYPE_CLASS_TEXT
-            }
+            this.inputType = inputType ?: InputType.TYPE_CLASS_TEXT
             this.background = ContextCompat.getDrawable(context, R.drawable.rounded_edittext) // Set rounded border
             this.tag = label
             this.isMandatory = isMandatory
             this.isEnabled = isEnable
             this.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(8,5,8,12)
+                weight = 1f // Let EditText take up remaining space after Country Code Picker
             }
-            this.setPadding(32,16,20,16)
+            this.setPadding(32, 16, 20, 16)
         }
-        return editText
+
+        // Add country code picker only if the input type is for a phone number
+        if (inputType == InputType.TYPE_CLASS_PHONE) {
+            containerLayout.addView(countryCodePicker)
+        }
+
+        // Add the EditText to the container
+        containerLayout.addView(editText)
+
+        return containerLayout
     }
 }
+
 
 // Concrete implementation for creating a Spinner field (LSP)
 class SpinnerFieldCreator(

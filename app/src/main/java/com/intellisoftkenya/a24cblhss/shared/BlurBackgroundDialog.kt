@@ -7,6 +7,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.intellisoftkenya.a24cblhss.R
@@ -56,7 +57,18 @@ class BlurBackgroundDialog(
 
         closeMaterialButton.setOnClickListener {
             dismiss()
-            currentFragment.findNavController().navigate(nextNavigation)
+            if (nextNavigation == R.id.action_patientRegistrationSummaryFragment_to_patientCardFragment){
+                // Clear the back stack up to the desired destination
+                currentFragment.findNavController().navigate(
+                    R.id.patientCardFragment,
+                    null,
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.landingPageFragment, true)  // Clear back stack
+                        .build()
+                )
+            }else{
+                currentFragment.findNavController().navigate(nextNavigation)
+            }
         }
 
 

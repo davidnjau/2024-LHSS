@@ -11,7 +11,7 @@ android {
         applicationId "com.intellisoftkenya.a24cblhss"
         minSdk 24
         targetSdk 34
-        versionCode 10
+        versionCode 12
         versionName "Internal"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -97,6 +97,7 @@ dependencies {
 
 //    implementation 'com.google.android.material:material:1.9.0' // Material Components library
 
+    implementation 'com.hbb20:ccp:2.6.0'
 
     //Network
     implementation(libs.retrofit)

@@ -126,6 +126,14 @@ class PatientListFragment : Fragment() {
         val patientSortedList = formatterClass.sortPatientListByDate(
             patientList, fromDateStr, toDateStr)
 
+
+        patientSortedList.forEach {
+            Log.e("--->","<----")
+            println("name ${it.name}")
+            println("created ${it.dateCreated}")
+            Log.e("--->","<----")
+        }
+
         // Initialize RecyclerView and adapter
         val patientAdapter = PatientAdapter(patientSortedList) { selectedPatient ->
 

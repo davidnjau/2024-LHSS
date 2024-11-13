@@ -144,7 +144,7 @@ class NextOfKinFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Telephone", true,
-                android.text.InputType.TYPE_CLASS_NUMBER
+                InputType.TYPE_CLASS_PHONE
             )
         )
 

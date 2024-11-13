@@ -21,6 +21,8 @@ import com.intellisoftkenya.a24cblhss.shared.DbPatientItem
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.PatientAdapter
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class ReferralPatientList : Fragment() {
     private var _binding: FragmentReferralPatientListBinding? = null
@@ -105,7 +107,23 @@ class ReferralPatientList : Fragment() {
     }
 
     fun populateRecyclerView(patientList: List<DbPatientItem>) {
-        val patientAdapter = PatientAdapter(patientList) { selectedPatient ->
+
+        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
+
+        val distinctPatientList = patientList.distinctBy { it.name }
+
+        val sortedPatientList = distinctPatientList.sortedWith(compareByDescending<DbPatientItem> {
+            try {
+                // Parse date if it's not empty
+                if (it.dateCreated.isNullOrEmpty()) null else dateFormat.parse(it.dateCreated)
+            } catch (e: Exception) {
+                null // Handle unparseable date
+            }
+        }.thenBy {
+            it.dateCreated.isNullOrEmpty() // Push empty dateCreated to the bottom
+        })
+
+        val patientAdapter = PatientAdapter(sortedPatientList) { selectedPatient ->
 
             val id = selectedPatient.id
             formatterClass.saveSharedPref("","patientId", id)
@@ -117,7 +135,7 @@ class ReferralPatientList : Fragment() {
         binding.patientRecyclerView.adapter = patientAdapter
 
         // Set total patients
-        binding.totalPatientsTextView.text = "Total Patients: ${patientList.size}"
+        binding.totalPatientsTextView.text = "Total Patients: ${distinctPatientList.size}"
     }
     fun searchPatientsByName(patients: List<DbPatientItem>, query: String): ArrayList<DbPatientItem> {
         return ArrayList(patients.filter { it.name.contains(query, ignoreCase = true) })

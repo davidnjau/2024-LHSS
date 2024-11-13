@@ -77,7 +77,10 @@ class ClinicalInfoEncountersFragment : Fragment() {
             encounterList.removeIf{ it.referralReason != clinicalInfo }
 
             val formDataAdapter = ClinicalEncounterAdapter(
-                requireActivity(), this@ClinicalInfoEncountersFragment, clinicalInfo, encounterList)
+                requireActivity().applicationContext,
+                this@ClinicalInfoEncountersFragment,
+                clinicalInfo,
+                encounterList)
             CoroutineScope(Dispatchers.Main).launch {
                 binding.recyclerView.layoutManager = LinearLayoutManager(context)
                 binding.recyclerView.adapter = formDataAdapter

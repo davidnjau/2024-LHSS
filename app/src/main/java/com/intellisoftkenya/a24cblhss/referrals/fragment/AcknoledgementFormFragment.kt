@@ -179,11 +179,11 @@ class AcknoledgementFormFragment : Fragment() {
                 emptyList(),
                 false
             ),
-//            DbField(
-//                DbWidgets.EDIT_TEXT.name,
-//                "Name of Health Facility", true,
-//                InputType.TYPE_CLASS_TEXT
-//            ),
+            DbField(
+                DbWidgets.EDIT_TEXT.name,
+                "Name of Health Facility", true,
+                InputType.TYPE_CLASS_TEXT
+            ),
 //            DbField(
 //                DbWidgets.EDIT_TEXT.name,
 //                "Country", true,
@@ -219,12 +219,12 @@ class AcknoledgementFormFragment : Fragment() {
                 "Email Contact", true,
                 InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             ),
-            DbField(
-                DbWidgets.RADIO_BUTTON.name,
-                "Referral of PTLD",
-                true,
-                optionList = listOf("Yes", "No")
-            )
+//            DbField(
+//                DbWidgets.RADIO_BUTTON.name,
+//                "Referral of PTLD",
+//                true,
+//                optionList = listOf("Yes", "No")
+//            )
 
         )
 

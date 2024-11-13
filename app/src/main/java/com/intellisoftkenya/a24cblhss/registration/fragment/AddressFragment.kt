@@ -33,7 +33,7 @@ class AddressFragment : Fragment() {
 
     private lateinit var fieldManager: FieldManager
     private var countryOriginList = listOf(
-        "Kenya", "Uganda")
+        "Djibouti", "Eritrea", "Kenya", "Ethiopia", "Somalia", "South Sudan", "Sudan", "Uganda")
 
     private lateinit var formatterClass: FormatterClass
 

@@ -83,7 +83,7 @@ class PatientCardViewModel(
                         if (it.resource.telecom.first().hasValue()) {
                             val phone = it.resource.telecom.first().value
                             demographicFormDataList.add(
-                                DbFormData("Telephone", phone)
+                                DbFormData("Telephone in Referring Country", phone)
                             )
                         }
                     }
@@ -123,8 +123,11 @@ class PatientCardViewModel(
                         kinFormDataList.add(
                             DbFormData("Full Name", name)
                         )
+
+                        val formattedPhone = if (phone.startsWith("+") || phone.startsWith("0")) phone else "+$phone"
+
                         kinFormDataList.add(
-                            DbFormData("Phone Number", phone)
+                            DbFormData("Phone Number", formattedPhone)
                         )
                         kinFormDataList.add(
                             DbFormData("Relationship", rshp)
@@ -153,12 +156,12 @@ class PatientCardViewModel(
                     }
                     if (patient.addressFirstRep.hasState()){
                         addressFormDataList.add(
-                            DbFormData("County", patient.addressFirstRep.stateElement.valueAsString)
+                            DbFormData("Residential Address in Referring Country", patient.addressFirstRep.stateElement.valueAsString)
                         )
                     }
                     if (patient.addressFirstRep.hasCity()){
                         addressFormDataList.add(
-                            DbFormData("Sub County", patient.addressFirstRep.cityElement.valueAsString)
+                            DbFormData("Residential Address in Receiving Country", patient.addressFirstRep.cityElement.valueAsString)
                         )
                     }
                 }

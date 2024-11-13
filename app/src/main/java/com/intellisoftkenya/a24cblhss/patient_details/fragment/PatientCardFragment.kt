@@ -1,7 +1,9 @@
 package com.intellisoftkenya.a24cblhss.patient_details.fragment
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +36,7 @@ class PatientCardFragment : Fragment() {
     private var patientId:String = ""
     private lateinit var formDataAdapter: FormDataAdapter
     private lateinit var clinicalViewModel: ClinicalInfoDetailsViewModel
+    private var lastDestinationId: Int? = null
 
 
     override fun onCreateView(
@@ -75,6 +78,7 @@ class PatientCardFragment : Fragment() {
 
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -105,11 +109,26 @@ class PatientCardFragment : Fragment() {
         val crossBorderId = "Cross Border Id: ${patientId.substring(0,6)}"
         binding.tvCrossBorderId.text = crossBorderId
 
-     //Make sure that the back button works properly. That it moves back to the PatientListFragment.
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            findNavController().navigateUp()
+        // get navController to listen for back button presses
+        val navController = findNavController()
+        navController.addOnDestinationChangedListener { previous, destination, res ->
+            lastDestinationId = previous.previousBackStackEntry?.destination?.id
         }
-        
+
+        // Access the backQueue which contains the back stack entries
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            Log.e("BackStack", "Navigated to: ${destination.displayName}")
+
+            // Log current and previous entries
+            controller.currentBackStackEntry?.let {
+                Log.e("BackStack", "Current Fragment: ${it.destination.displayName}")
+            }
+
+            controller.previousBackStackEntry?.let {
+                Log.e("BackStack", "Previous Fragment: ${it.destination.displayName}")
+            }
+        }
 
     }
 
