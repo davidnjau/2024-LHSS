@@ -31,6 +31,8 @@ class LayoutViewHolder(
 
     private val referralNumbers = FormatterClass(binding.root.context)
         .getSharedPref("","referralNumbers")
+    private val notificationSize = FormatterClass(binding.root.context)
+        .getSharedPref("","notificationSize")
     fun bind(layout: LayoutListViewModel.Layout) {
         binding.componentLayoutIconImageview.setImageResource(layout.iconId)
         binding.componentLayoutTextView.text = layout.textId
@@ -39,6 +41,10 @@ class LayoutViewHolder(
         if (layout.textId == "Referrals") {
             binding.tvNumber.visibility = View.VISIBLE
             binding.tvNumber.text = referralNumbers
+        }
+        if (layout.textId == "Notifications") {
+            binding.tvNumber.visibility = View.VISIBLE
+            binding.tvNumber.text = notificationSize
         }
 
     }

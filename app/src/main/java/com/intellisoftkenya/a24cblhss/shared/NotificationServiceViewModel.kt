@@ -94,6 +94,14 @@ class NotificationServiceViewModel(
             .map { createCommunicationItem(it.resource) }
             .let {communicationList.addAll(it)}
 
+        val notificationSize = communicationList.size
+
+        formatterClass.saveSharedPref(
+            "",
+            "notificationSize",
+            notificationSize.toString())
+
+
         return ArrayList(communicationList)
     }
 
@@ -157,6 +165,8 @@ class NotificationServiceViewModel(
             status = resource.status.toString()
         }
 
+        val dateCreated = formatterClass.convertDateFormat(dateTime) ?: ""
+
 
 
         return DbCommunicationData(
@@ -165,7 +175,7 @@ class NotificationServiceViewModel(
             navigationId,
             title,
             content,
-            dateTime,
+            dateCreated,
             status
         )
 

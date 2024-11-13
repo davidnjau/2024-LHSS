@@ -52,10 +52,6 @@ class NotificationFragment : Fragment() {
 
             val notificationList = viewModel.getCommunicationList()
 
-            Log.e("----->","<------")
-            println("Notification List: $notificationList")
-            Log.e("----->","<------")
-
             val formDataAdapter = NotificationAdapter(
                 requireActivity().applicationContext,
                 notificationList)
