@@ -190,7 +190,7 @@ class EndTreatmentFormFragment : Fragment() {
             DbField(
                 DbWidgets.RADIO_BUTTON.name,
                 "Referral of PTLD",
-                true,
+                false,
                 optionList = listOf("Yes", "No")
             )
         )

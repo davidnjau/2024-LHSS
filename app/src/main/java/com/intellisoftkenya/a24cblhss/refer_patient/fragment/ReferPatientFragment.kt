@@ -190,7 +190,7 @@ class ReferPatientFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Email", true,
+                "Email", false,
                 InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             ),
 
