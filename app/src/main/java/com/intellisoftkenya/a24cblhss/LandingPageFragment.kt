@@ -66,6 +66,9 @@ class LandingPageFragment : Fragment() {
             "Register Patient" -> {
                 findNavController().navigate(R.id.demographicsFragment)
             }
+            "Notifications" -> {
+                findNavController().navigate(R.id.demographicsFragment)
+            }
 
         }
 

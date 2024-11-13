@@ -20,5 +20,6 @@ class LayoutListViewModel(application: Application, private val state: SavedStat
         SEARCH_PATIENT(R.drawable.ic_search_patient, "Search Patient"),
         REGISTER_CLIENT(R.drawable.ic_register_patient, "Register Patient"),
         HEALTH_FACILITIES(R.drawable.ic_referrals, "Referrals"),
+        NOTIFICATION(R.drawable.ic_action_notifications, "Notifications"),
     }
 }

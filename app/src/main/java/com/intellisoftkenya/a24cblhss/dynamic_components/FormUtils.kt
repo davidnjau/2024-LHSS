@@ -214,6 +214,11 @@ object FormUtils {
                         val text = childView.text.toString()
                         val isMandatory = childView.isMandatory
 
+                        Log.e("******","*****")
+                        println("tag $tag")
+                        println("text $text")
+                        Log.e("******","*****")
+
                         if (isMandatory){
                             if (tag.isNotEmpty() && text.isNotEmpty()){
 
@@ -258,9 +263,6 @@ object FormUtils {
                     is TextView -> {
                         val text = childView.text.toString()
                         val tag = childView.tag?.toString()?: ""
-
-                        println("text1 $text")
-                        println("tag1 $tag")
 
                         if (tag.isNotEmpty() && text.isNotEmpty()) {
                             val formData = DbFormData(tag, text)

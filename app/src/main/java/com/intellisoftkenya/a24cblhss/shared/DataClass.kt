@@ -2,7 +2,29 @@ package com.intellisoftkenya.a24cblhss.shared
 
 import androidx.annotation.DrawableRes
 import com.intellisoftkenya.a24cblhss.R
+import org.hl7.fhir.r4.model.Communication
 import org.hl7.fhir.r4.model.Reference
+
+data class DbCommunication(
+    val status: Communication.CommunicationStatus,
+    val subject: Reference? = null,
+    val recipient: Reference? = null,
+    val sender: Reference? = null,
+    val basedOn: Reference? = null,
+    val title: String,
+    val content: String,
+    val navigationId: Int
+    )
+
+data class DbCommunicationData(
+    val id: String,
+    val patientId: String,
+    val navigationId: Int,
+    val title: String,
+    val content: String,
+    val dateTime: String,
+    val status: String
+)
 
 data class DbField(
     val widgets: String,

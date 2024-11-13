@@ -3,6 +3,7 @@ package com.intellisoftkenya.a24cblhss.refer_patient.fragment
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -75,6 +76,10 @@ class ReferPatientFragment : Fragment() {
             // Handle next button click
             // Navigate to the next fragment or perform any action
             val (addedFields, missingFields) = FormUtils.extractAllFormData(binding.rootLayout)
+
+            Log.e("------>","<------")
+            println("addedFields $addedFields")
+
             if (missingFields.isNotEmpty()){
                 var missingText = ""
                 missingFields.forEach { missingText += "\n ${it.tag}, " }
@@ -89,12 +94,12 @@ class ReferPatientFragment : Fragment() {
                 val telephoneData = addedFields.find { it.tag == "Telephone" }
                 val emailData = addedFields.find { it.tag == "Email" }
 
-                if (telephoneData != null && emailData != null){
+
+                if (telephoneData != null){
                     val textNumber = telephoneData.text
                     val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
-                    val isEmailValid = formatterClass.isValidEmail(emailData.text)
 
-                    if (isPhoneValid && isEmailValid){
+                    if (isPhoneValid){
                         findNavController().navigate(R.id.action_referPatientFragment_to_referralInfoFragment)
 
                         val formData = FormData(
@@ -111,8 +116,9 @@ class ReferPatientFragment : Fragment() {
                         )
                     }else{
                         if (!isPhoneValid) Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
-                        if (!isEmailValid) Toast.makeText(context, "You have provided an invalid email address", Toast.LENGTH_LONG).show()
                     }
+                }else{
+                    Toast.makeText(context, "You have not provided a telephone", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -191,7 +197,7 @@ class ReferPatientFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Email", false,
-                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                InputType.TYPE_CLASS_TEXT
             ),
 
         )
