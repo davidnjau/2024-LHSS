@@ -73,6 +73,10 @@
             android:id="@+id/action_landingPageFragment_to_notificationFragment"
             app:destination="@id/notificationFragment"
             app:popUpTo="@id/landingPageFragment" />
+        <action
+            android:id="@+id/action_landingPageFragment_to_notificationFragment2"
+            app:destination="@id/notificationFragment"
+            app:popUpTo="@id/landingPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/patientListFragment"
@@ -396,6 +400,6 @@
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.intellisoftkenya.a24cblhss.NotificationFragment"
-        android:label="fragment_notification"
+        android:label="Notification"
         tools:layout="@layout/fragment_notification" />
 </navigation>

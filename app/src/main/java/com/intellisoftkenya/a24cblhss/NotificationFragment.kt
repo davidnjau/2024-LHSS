@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.fhir.FhirEngine
@@ -18,7 +19,6 @@ import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewMo
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.NotificationAdapter
 import com.intellisoftkenya.a24cblhss.shared.NotificationServiceViewModel
-import com.intellisoftkenya.a24cblhss.shared.NotificationServiceViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ class NotificationFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var fhirEngine: FhirEngine
     private lateinit var formatterClass: FormatterClass
-    private lateinit var viewModel: NotificationServiceViewModel
+    private val viewModel: NotificationServiceViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,15 +40,7 @@ class NotificationFragment : Fragment() {
         _binding = FragmentNotificationBinding.inflate(inflater, container, false)
         formatterClass = FormatterClass(requireContext())
         fhirEngine = FhirApplication.fhirEngine(requireContext())
-        viewModel =
-            ViewModelProvider(
-                this,
-                NotificationServiceViewModelFactory(
-                    requireContext().applicationContext as Application,
-                    fhirEngine,
-                    "",
-                ),
-            )[NotificationServiceViewModel::class.java]
+
 
         return binding.root
 

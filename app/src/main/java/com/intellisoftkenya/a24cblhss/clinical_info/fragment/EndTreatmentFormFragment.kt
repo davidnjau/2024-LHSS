@@ -178,13 +178,13 @@ class EndTreatmentFormFragment : Fragment() {
                 InputType.TYPE_TEXT_VARIATION_PERSON_NAME
             ),
             DbField(
-                DbWidgets.EDIT_TEXT.name,
-                "Designation", true,
-                InputType.TYPE_CLASS_TEXT
+                DbWidgets.SPINNER.name,
+                "Designation", true, null,
+                listOf("Doctor", "Nurse", "Clinical Officer")
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Email Contact", true,
+                "Email Contact", false,
                 InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
             ),
             DbField(

@@ -8,6 +8,7 @@ import com.google.android.fhir.FhirEngine
 import com.google.android.fhir.search.Order
 import com.google.android.fhir.search.search
 import com.intellisoftkenya.a24cblhss.fhir.Constants
+import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,12 +25,12 @@ import java.util.Date
 
 class NotificationServiceViewModel(
     application: Application,
-    private val fhirEngine: FhirEngine,
-    private val patientId: String
 ): AndroidViewModel(application) {
 
     private val formatterClass = FormatterClass(application.applicationContext)
 
+    private var fhirEngine: FhirEngine =
+        FhirApplication.fhirEngine(application.applicationContext)
 
     fun createNotification(dbCommunication: DbCommunication) {
 
@@ -170,18 +171,4 @@ class NotificationServiceViewModel(
 
     }
 
-}
-
-class NotificationServiceViewModelFactory(
-    private val application: Application,
-    private val fhirEngine: FhirEngine,
-    private val patientId: String
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        require(modelClass.isAssignableFrom(NotificationServiceViewModel::class.java)) {
-            "Unknown ViewModel class"
-        }
-        return NotificationServiceViewModel(application, fhirEngine, patientId) as T
-    }
 }

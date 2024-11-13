@@ -67,7 +67,7 @@ class LandingPageFragment : Fragment() {
                 findNavController().navigate(R.id.demographicsFragment)
             }
             "Notifications" -> {
-                findNavController().navigate(R.id.demographicsFragment)
+                findNavController().navigate(R.id.notificationFragment)
             }
 
         }

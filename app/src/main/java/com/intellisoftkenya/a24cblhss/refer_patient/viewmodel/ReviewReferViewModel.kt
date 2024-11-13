@@ -7,10 +7,13 @@ import com.google.android.fhir.FhirEngine
 import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoDetailsViewModel
 import com.intellisoftkenya.a24cblhss.fhir.Constants
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
+import com.intellisoftkenya.a24cblhss.shared.DbClasses
+import com.intellisoftkenya.a24cblhss.shared.DbCommunication
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import com.intellisoftkenya.a24cblhss.shared.NotificationServiceViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +21,7 @@ import kotlinx.coroutines.runBlocking
 import org.hl7.fhir.r4.model.CarePlan
 import org.hl7.fhir.r4.model.CodeableConcept
 import org.hl7.fhir.r4.model.Coding
+import org.hl7.fhir.r4.model.Communication
 import org.hl7.fhir.r4.model.DateTimeType
 import org.hl7.fhir.r4.model.Encounter
 import org.hl7.fhir.r4.model.Observation
@@ -26,6 +30,7 @@ import org.hl7.fhir.r4.model.Reference
 import org.hl7.fhir.r4.model.Resource
 import org.hl7.fhir.r4.model.ServiceRequest
 import org.hl7.fhir.r4.model.StringType
+import org.hl7.fhir.r4.model.codesystems.EventStatus
 import java.util.Date
 
 class ReviewReferViewModel (
@@ -37,7 +42,9 @@ class ReviewReferViewModel (
 
     private var fhirEngine: FhirEngine =
         FhirApplication.fhirEngine(application.applicationContext)
-    
+
+    private var viewModel =  NotificationServiceViewModel(application)
+
 
 
     fun createServiceRequest(formDataList: List<FormData>,
@@ -190,11 +197,50 @@ class ReviewReferViewModel (
             //Update the CarePlan status
             clinicalViewModel.updateCarePlanStatus(
                 status,
-                carePlanId, supportingInfoList)
+                carePlanId, supportingInfoList
+            )
+
+            // Create a notification
+            var title = ""
+            var content = ""
+            var navigationId = 0
+
+            if (workflowTitles == DbClasses.END_TREATMENT_FORM.name){
+                title = "End of Treatment"
+                content = "An End of Treatment Form has been submitted."
+                navigationId = 0
+            }else{
+                title = convertToTitleCase(workflowTitles)
+                content = "A new ${workflowTitles.toLowerCase()} Form has been submitted."
+            }
+
+            val basedOnReference = Reference("Careplan/$carePlanId")
+            val subjectReference = Reference("Patient/$carePlanId")
+
+            /**
+             * TODO: Update the subject reference to the CarePlan in the notification
+             */
+
+            val dbCommunication = DbCommunication(
+                Communication.CommunicationStatus.COMPLETED,
+                subjectReference,
+                subjectReference,
+                subjectReference,
+                basedOnReference,
+                title,
+                content,
+                navigationId
+            )
+            viewModel.createNotification(dbCommunication)
 
         }
 
 
+    }
+    fun convertToTitleCase(input: String): String {
+        return input.split('_')  // Split the string by underscores
+            .map { word -> word.lowercase().replaceFirstChar { it.uppercase() } }  // Lowercase the entire word, then capitalize the first character
+            .joinToString(" ")  // Join the words back together with spaces
     }
 
     private suspend fun updateResourceToDatabase(resource: Resource, s: String) {

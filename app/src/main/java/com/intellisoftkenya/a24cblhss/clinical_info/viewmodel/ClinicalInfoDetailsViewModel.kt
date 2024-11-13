@@ -2,6 +2,7 @@ package com.intellisoftkenya.a24cblhss.clinical_info.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,7 @@ import com.intellisoftkenya.a24cblhss.shared.DbCarePlan
 import com.intellisoftkenya.a24cblhss.shared.DbEncounterDetails
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import com.intellisoftkenya.a24cblhss.shared.NotificationServiceViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +38,7 @@ class ClinicalInfoDetailsViewModel(
 
     private var fhirEngine: FhirEngine =
         FhirApplication.fhirEngine(application.applicationContext)
+
 
     fun getCarePlanAndEncounters(carePlanId: String) = runBlocking {
         getEncountersBac(carePlanId)
