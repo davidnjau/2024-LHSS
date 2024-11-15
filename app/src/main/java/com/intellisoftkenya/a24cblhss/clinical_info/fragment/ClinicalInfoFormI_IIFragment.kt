@@ -50,7 +50,7 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
     private var serviceRequestId:String = ""
     private var workflowTitles:String = ""
     private val tbTypeList = listOf("PTB" , "EPTB")
-    private val monthList = listOf("1 month", "2 month","3 month", "4 month",
+    private val monthList = listOf("2 Weeks","1 month", "2 month","3 month", "4 month",
         "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
         "11 month", "12 month")
     private val clinicalInfoViewViewModel: ClinicalInfoViewViewModel by viewModels()
@@ -150,20 +150,20 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                     optionList = listOf("New", "Previously Treated")
                 ),
                 DbField(
-                    DbWidgets.SPINNER.name,
-                    "Tb Location", true, null,
-                    tbTypeList),
-                DbField(
                     DbWidgets.EDIT_TEXT.name,
                     "Specify Site (EPTB)", false,
                     InputType.TYPE_CLASS_TEXT
                 ),
                 DbField(
                     DbWidgets.SPINNER.name,
-                    "Drug Sensitivity",
+                    "Patient Classification",
                     true,
-                    optionList = listOf("DSTB", "DRTB")
+                    optionList = listOf("DSTB", "DRTB", "TPT")
                 ),
+                DbField(
+                    DbWidgets.SPINNER.name,
+                    "Type of TB", true, null,
+                    tbTypeList),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
                     "Radiological Information (If Applicable)", false,

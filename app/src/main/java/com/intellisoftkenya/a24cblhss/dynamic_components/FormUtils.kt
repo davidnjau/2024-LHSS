@@ -185,7 +185,9 @@ object FormUtils {
             val childView = rootLayout.getChildAt(i)
 
             if (childView.visibility == View.VISIBLE) { // Only process visible views
+
                 when (childView) {
+
                     is MandatoryRadioGroup -> {
 
                         val selectedText = childView.getSelectedRadioButtonText()
@@ -213,11 +215,6 @@ object FormUtils {
                         val tag = childView.tag?.toString() ?: ""
                         val text = childView.text.toString()
                         val isMandatory = childView.isMandatory
-
-                        Log.e("******","*****")
-                        println("tag $tag")
-                        println("text $text")
-                        Log.e("******","*****")
 
                         if (isMandatory){
                             if (tag.isNotEmpty() && text.isNotEmpty()){
@@ -272,41 +269,51 @@ object FormUtils {
 
                     // New case for extracting phone number with country code
                     is LinearLayout -> {
-                        // Check if this LinearLayout contains both CountryCodePicker and EditText
+                        // Initialize variables for CountryCodePicker and EditText
                         var countryCodePicker: com.hbb20.CountryCodePicker? = null
-                        var phoneEditText: MandatoryEditText? = null
+                        var editText: MandatoryEditText? = null
 
-                        // Loop through the children of this LinearLayout to find CPP and EditText
+                        // Loop through the children of this LinearLayout to find CountryCodePicker and EditText
                         for (j in 0 until childView.childCount) {
                             val innerChild = childView.getChildAt(j)
 
+                            // Log for debugging purposes
+                            Log.e("^^^^^^", "^^^^^^")
+                            println("innerChild: $innerChild")
+                            println("tag: ${innerChild.tag?.toString() ?: ""}")
+                            Log.e("^^^^^^", "^^^^^^")
+
+                            // Check the type of each inner child
                             when (innerChild) {
                                 is com.hbb20.CountryCodePicker -> {
                                     countryCodePicker = innerChild
                                 }
                                 is MandatoryEditText -> {
-                                    phoneEditText = innerChild
+                                    editText = innerChild
                                 }
                             }
                         }
 
-                        if (countryCodePicker != null && phoneEditText != null) {
-                            val countryCode = countryCodePicker.selectedCountryCodeWithPlus // Get the country code with plus sign
-                            val phoneNumber = phoneEditText.text.toString()
-                            val tag = phoneEditText.tag?.toString() ?: ""
+                        // Process phone number fields with CountryCodePicker and EditText
+                        if (countryCodePicker != null && editText != null) {
+                            val countryCode = countryCodePicker.selectedCountryCodeWithPlus // Get the country code with the plus sign
+                            val phoneNumber = editText.text.toString() // Get the entered phone number
+                            val tag = editText.tag?.toString() ?: "" // Get the tag for identifying the field
 
-                            if (phoneEditText.isMandatory) {
-                                if (tag.isNotEmpty() && phoneNumber.isNotEmpty()) {
+                            // Check if the field is mandatory and has a tag containing "Telephone"
+                            if (editText.isMandatory) {
+                                if (tag.isNotEmpty() && phoneNumber.isNotEmpty() && tag.contains("Telephone", true)) {
                                     // Combine country code and phone number
                                     val fullPhoneNumber = "$countryCode$phoneNumber"
                                     val formData = DbFormData(tag, fullPhoneNumber)
                                     addedFields.add(formData)
                                 } else {
-                                    // Add missing mandatory fields if phone number is empty
+                                    // Add missing mandatory field if phone number is empty
                                     missingFields.add(DbFormData(tag, ""))
                                 }
                             } else {
-                                if (tag.isNotEmpty() && phoneNumber.isNotEmpty()) {
+                                // For non-mandatory fields, check if tag and phone number are not empty
+                                if (tag.isNotEmpty() && phoneNumber.isNotEmpty() && tag.contains("Telephone", true)) {
                                     // Combine country code and phone number
                                     val fullPhoneNumber = "$countryCode$phoneNumber"
                                     val formData = DbFormData(tag, fullPhoneNumber)
@@ -314,7 +321,30 @@ object FormUtils {
                                 }
                             }
                         }
+
+                        // Process other fields like First Name or any other field without a country code
+                        else if (editText != null) {
+                            val tag = editText.tag?.toString() ?: ""
+                            val text = editText.text.toString()
+
+                            // Check if the field is mandatory
+                            if (editText.isMandatory) {
+                                if (tag.isNotEmpty() && text.isNotEmpty()) {
+                                    val formData = DbFormData(tag, text)
+                                    addedFields.add(formData)
+                                } else {
+                                    // Add missing mandatory fields if text is empty
+                                    missingFields.add(DbFormData(tag, ""))
+                                }
+                            } else {
+                                if (tag.isNotEmpty() && text.isNotEmpty()) {
+                                    val formData = DbFormData(tag, text)
+                                    addedFields.add(formData)
+                                }
+                            }
+                        }
                     }
+
 
                     // Add more cases as needed based on widget types
                 }

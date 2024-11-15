@@ -95,7 +95,7 @@ data class DbEncounter(
 
 data class DbFormData(
     val tag: String,
-    val text: String,
+    var text: String,
     val fhirCode: String? = null,
 )
 data class DbPatientItem(
