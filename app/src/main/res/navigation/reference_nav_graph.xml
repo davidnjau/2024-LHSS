@@ -214,7 +214,7 @@
         <action
             android:id="@+id/action_referPatientFragment_to_referralInfoFragment"
             app:destination="@id/referralInfoFragment"
-            app:popUpTo="@id/referPatientFragment" />
+            />
     </fragment>
     <fragment
         android:id="@+id/referralInfoFragment"
@@ -227,7 +227,8 @@
             app:popUpTo="@id/referralInfoFragment" />
         <action
             android:id="@+id/action_referralInfoFragment_to_reviewReferFragment"
-            app:destination="@id/reviewReferFragment" />
+            app:destination="@id/reviewReferFragment"
+            />
 
     </fragment>
     <fragment
@@ -274,7 +275,11 @@
             app:destination="@id/patientCardFragment" />
         <action
             android:id="@+id/action_reviewReferFragment_to_patientFileFragment"
-            app:destination="@id/patientFileFragment" />
+            app:destination="@id/patientFileFragment"
+            app:popUpTo="@id/referPatientFragment"
+            app:popUpToInclusive="true"
+            />
+
     </fragment>
     <fragment
         android:id="@+id/referralPatientList"
