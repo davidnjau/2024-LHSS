@@ -95,8 +95,7 @@
         tools:layout="@layout/fragment_demographics" >
         <action
             android:id="@+id/action_demographicsFragment_to_addressFragment"
-            app:destination="@id/addressFragment"
-            app:popUpTo="@id/demographicsFragment" />
+            app:destination="@id/addressFragment" />
     </fragment>
     <fragment
         android:id="@+id/addressFragment"
@@ -106,7 +105,7 @@
         <action
             android:id="@+id/action_addressFragment_to_nextOfKinFragment"
             app:destination="@id/nextOfKinFragment"
-            app:popUpTo="@id/addressFragment" />
+             />
     </fragment>
     <fragment
         android:id="@+id/nextOfKinFragment"
@@ -125,6 +124,8 @@
         <action
             android:id="@+id/action_patientRegistrationSummaryFragment_to_patientCardFragment"
             app:destination="@id/patientCardFragment"
+            app:popUpTo="@id/demographicsFragment"
+            app:popUpToInclusive="true"
             />
 
     </fragment>

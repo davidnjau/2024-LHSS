@@ -115,6 +115,11 @@ class NextOfKinFragment : Fragment() {
             }else{
 
                 val telephoneData = addedFields.find { it.tag == "Telephone" }
+
+                Log.e("----->","<-----")
+                print("Telephone: $telephoneData")
+                Log.e("----->","<-----")
+
                 if (telephoneData != null) {
                     val textNumber = telephoneData.text
                     val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)

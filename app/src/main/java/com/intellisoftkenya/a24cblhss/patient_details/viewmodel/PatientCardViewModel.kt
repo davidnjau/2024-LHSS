@@ -80,12 +80,23 @@ class PatientCardViewModel(
                 //Phone
                 if (patient.hasTelecom()) {
                     if (it.resource.telecom.isNotEmpty()) {
-                        if (it.resource.telecom.first().hasValue()) {
-                            val phone = it.resource.telecom.first().value
-                            demographicFormDataList.add(
-                                DbFormData("Telephone in Referring Country", phone)
-                            )
+
+                        val telecomList = it.resource.telecom
+                        telecomList.forEach {contactPoint ->
+                            val rank = if (contactPoint.hasRank()) contactPoint.rank else 0
+                            val contactPointValue = if (contactPoint.hasValue()) contactPoint.value else ""
+
+                            val tag = when (rank) {
+                                1 -> { "Telephone in referring country" }
+                                2 -> { "Telephone in receiving country" }
+                                else -> { "Telephone number" }
+                            }
+
+                            val dbFormData = DbFormData(tag, contactPointValue)
+                            demographicFormDataList.add(dbFormData)
+
                         }
+
                     }
                 }
 
@@ -149,21 +160,35 @@ class PatientCardViewModel(
                 val addressFormDataList =  ArrayList<DbFormData>()
 
                 if (patient.hasAddress()) {
-                    if (patient.addressFirstRep.hasCountry()){
-                        addressFormDataList.add(
-                            DbFormData("Country", patient.addressFirstRep.countryElement.valueAsString)
-                        )
+
+                    val addressList = patient.address
+                    addressList.forEach { address ->
+
+                        val country = if (address.hasCountry()) address.country else ""
+                        val state = if (address.hasState()) address.state else ""
+                        val city = if (address.hasCity()) address.city else ""
+
+                        val text = if (address.hasText()) address.text else ""
+
+                        if (country != "" && text != ""){
+                            //Country
+                             addressFormDataList.add(
+                                DbFormData(text, country)
+                            )
+
+                        }
+                        if (state != "" && text!= ""){
+                            addressFormDataList.add(
+                                DbFormData(text, state)
+                            )
+                        }
+                        if (city!= "" && text!= ""){
+                            addressFormDataList.add(
+                                DbFormData(text, city)
+                            )
+                        }
                     }
-                    if (patient.addressFirstRep.hasState()){
-                        addressFormDataList.add(
-                            DbFormData("Residential Address in Referring Country", patient.addressFirstRep.stateElement.valueAsString)
-                        )
-                    }
-                    if (patient.addressFirstRep.hasCity()){
-                        addressFormDataList.add(
-                            DbFormData("Residential Address in Receiving Country", patient.addressFirstRep.cityElement.valueAsString)
-                        )
-                    }
+
                 }
                 formDataList.add(
                     FormData(

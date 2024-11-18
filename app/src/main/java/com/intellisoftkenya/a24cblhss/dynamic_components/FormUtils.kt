@@ -277,11 +277,6 @@ object FormUtils {
                         for (j in 0 until childView.childCount) {
                             val innerChild = childView.getChildAt(j)
 
-                            // Log for debugging purposes
-                            Log.e("^^^^^^", "^^^^^^")
-                            println("innerChild: $innerChild")
-                            println("tag: ${innerChild.tag?.toString() ?: ""}")
-                            Log.e("^^^^^^", "^^^^^^")
 
                             // Check the type of each inner child
                             when (innerChild) {
