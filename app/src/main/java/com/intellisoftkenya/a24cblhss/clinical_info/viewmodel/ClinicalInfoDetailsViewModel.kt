@@ -14,6 +14,7 @@ import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralPatientListVi
 import com.intellisoftkenya.a24cblhss.shared.DbCarePlan
 import com.intellisoftkenya.a24cblhss.shared.DbEncounterDetails
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
+import com.intellisoftkenya.a24cblhss.shared.DbServiceRequest
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.NotificationServiceViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -83,6 +84,52 @@ class ClinicalInfoDetailsViewModel(
     fun closeCarePlan(carePlanId: String) {
         val supportingInfo = ArrayList<Reference>()
         updateCarePlanStatus(CarePlanStatus.COMPLETED, carePlanId, supportingInfo)
+    }
+
+    fun getServiceRequests() = runBlocking {
+        getServiceRequestsBac()
+    }
+
+    private suspend fun getServiceRequestsBac(): ArrayList<DbServiceRequest> {
+
+        val serviceRequestList = ArrayList<DbServiceRequest>()
+        fhirEngine
+            .search<ServiceRequest> {
+                filter(CarePlan.SUBJECT, { value = "Patient/$patientId" })
+                sort(CarePlan.DATE, Order.ASCENDING)
+            }
+            .map { createServiceRequestItem(it.resource) }
+            .let {serviceRequestList.addAll(it)}
+
+        return serviceRequestList
+    }
+
+    private fun createServiceRequestItem(resource: ServiceRequest): DbServiceRequest {
+
+        val formatterClass = FormatterClass(getApplication())
+
+        val id = if (resource.hasId()) {resource.id} else ""
+        val status = if (resource.hasStatus()) {resource.status.toString()} else ""
+        val dateRecorded = if (resource.hasAuthoredOn()){
+            formatterClass.convertDateFormat(resource.authoredOn.toString())?: ""
+        } else ""
+        val encounterList = if (resource.hasSupportingInfo()) {
+            resource.supportingInfo
+        }else emptyList()
+        val referralReason = if (resource.hasReasonCode() && resource.reasonCodeFirstRep.hasCoding()) {
+            resource.reasonCodeFirstRep.codingFirstRep.display
+        }else ""
+
+        return DbServiceRequest(
+            id,
+            patientId,
+            status,
+            dateRecorded,
+            ArrayList(encounterList),
+            referralReason
+        )
+
+
     }
 
     fun getCarePlanDetails() = runBlocking {

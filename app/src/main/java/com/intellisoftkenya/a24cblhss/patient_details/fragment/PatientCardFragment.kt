@@ -89,8 +89,10 @@ class PatientCardFragment : Fragment() {
             findNavController().navigate(R.id.action_patientCardFragment_to_referPatientFragment)
         }
         binding.btnPatientFile.setOnClickListener {
-            val isCarePlan = getClinicalInfo()
-            if (isCarePlan) {
+
+            val isServiceRequest = getServiceRequestInfo()
+
+            if (isServiceRequest) {
                 findNavController().navigate(R.id.action_patientCardFragment_to_patientFileFragment)
             } else {
                 Toast.makeText(requireContext(), "Kindly start with performing a referral first", Toast.LENGTH_SHORT).show()
@@ -132,10 +134,10 @@ class PatientCardFragment : Fragment() {
 
     }
 
-    private fun getClinicalInfo():Boolean {
-        val carePlanList = clinicalViewModel.getCarePlanDetails()
-        val carePlanNo = carePlanList.size
-        return carePlanNo > 0
+    private fun getServiceRequestInfo():Boolean {
+        val serviceRequestList = clinicalViewModel.getServiceRequests()
+        val serviceRequest = serviceRequestList.size
+        return serviceRequest > 0
     }
 
     override fun onDestroyView() {
