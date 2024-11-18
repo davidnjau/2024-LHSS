@@ -92,6 +92,7 @@ class DemographicsFragment : Fragment() {
             // Navigate to the next fragment or perform any action
             val gson = Gson()
 
+
             // Call the function to extract form data
             val (addedFields, missingFields) = extractAllFormData(binding.rootLayout)
 
@@ -109,16 +110,16 @@ class DemographicsFragment : Fragment() {
             }else{
 
                 val telephoneReferringData = addedFields.find { it.tag == "Telephone in referring country" }
-                val telephoneReceivingData = addedFields.find { it.tag == "Telephone in receiving country" }
+//                val telephoneReceivingData = addedFields.find { it.tag == "Telephone in receiving country" }
 
-                if (telephoneReferringData != null && telephoneReceivingData != null){
+                if (telephoneReferringData != null){
                     val textReferringNumber = telephoneReferringData.text
-                    val textReceivingNumber = telephoneReceivingData.text
+//                    val textReceivingNumber = telephoneReceivingData.text
 
                     val isReferringPhoneValid = formatterClass.getStandardPhoneNumber(textReferringNumber)
-                    val isReceivingPhoneValid = formatterClass.getStandardPhoneNumber(textReceivingNumber)
+//                    val isReceivingPhoneValid = formatterClass.getStandardPhoneNumber(textReceivingNumber)
 
-                    if (isReferringPhoneValid && isReceivingPhoneValid){
+                    if (isReferringPhoneValid){
                         findNavController().navigate(R.id.action_demographicsFragment_to_addressFragment)
 
                         val formData = FormData(
@@ -208,8 +209,6 @@ class DemographicsFragment : Fragment() {
             DbClasses.DEMOGRAPHICS.name
         )
 
-        // Call the extractFormData function to attach listeners to RadioGroups
-//        viewModel.extractFormData(binding.rootLayout)
 
     }
 

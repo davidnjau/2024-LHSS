@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -66,6 +67,7 @@ class EditTextFieldCreator(
             ).apply {
                 setMargins(8, 5, 8, 12)
             }
+
         }
 
         // Country Code Picker (CCP) if input type is phone number
@@ -76,6 +78,7 @@ class EditTextFieldCreator(
             ).apply {
                 setMargins(0, 0, 16, 0)
             }
+
             // Set default country code (e.g., Kenya)
             setDefaultCountryUsingNameCode("ke")  // Set using country code, like "KE" for Kenya
             // Or alternatively, you can set by phone code:

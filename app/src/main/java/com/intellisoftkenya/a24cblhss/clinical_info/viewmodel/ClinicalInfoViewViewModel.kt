@@ -1,5 +1,6 @@
 package com.intellisoftkenya.a24cblhss.clinical_info.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ class ClinicalInfoViewViewModel : ViewModel() {
 
     // Method to update the selected item in LiveData
     fun updateSelectedItem(item: String) {
+        Log.e("ClinicalInfoViewViewModel", "Selected item updated: $item")
         _selectedItem.value = item
     }
 }

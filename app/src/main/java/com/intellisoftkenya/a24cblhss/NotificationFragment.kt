@@ -58,7 +58,7 @@ class NotificationFragment : Fragment() {
                 notificationList.sortedBy { it.dateTime }
 
             val formDataAdapter = NotificationAdapter(
-                requireActivity().applicationContext,
+                requireContext(),
                 ArrayList(notificationSortedList), this@NotificationFragment)
 
             CoroutineScope(Dispatchers.Main).launch {

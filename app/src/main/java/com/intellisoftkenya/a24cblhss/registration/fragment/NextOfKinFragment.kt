@@ -3,24 +3,35 @@ package com.intellisoftkenya.a24cblhss.registration.fragment
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.gson.Gson
 import com.intellisoftkenya.a24cblhss.registration.viewmodel.NextOfKinViewModel
 import com.intellisoftkenya.a24cblhss.R
+import com.intellisoftkenya.a24cblhss.clinical_info.viewmodel.ClinicalInfoViewViewModel
 import com.intellisoftkenya.a24cblhss.databinding.FragmentNextOfKinBinding
 import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultLabelCustomizer
+import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultRadioGroupSelectionHandler
+import com.intellisoftkenya.a24cblhss.dynamic_components.DefaultSpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.dynamic_components.FieldManager
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
+import com.intellisoftkenya.a24cblhss.dynamic_components.MandatoryRadioGroup
+import com.intellisoftkenya.a24cblhss.dynamic_components.SpinnerSelectionHandler
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 
@@ -36,6 +47,8 @@ class NextOfKinFragment : Fragment() {
 
     private val relationShipList = listOf("Wife", "Husband", "Sister", "Brother", "Son", "Daughter", "Parent")
     private lateinit var formatterClass: FormatterClass
+    private val clinicalInfoViewViewModel: ClinicalInfoViewViewModel by viewModels()
+    private val spinnerSelectionHandler: SpinnerSelectionHandler = DefaultSpinnerSelectionHandler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +75,17 @@ class NextOfKinFragment : Fragment() {
         return binding.root
 
     }
+    private fun setSpinnerListener(tagList: List<String>) {
+        tagList.forEach { tag ->
+            val rootViewParent = binding.rootLayout.findViewWithTag<View>(tag)
+            if (rootViewParent is Spinner) {
+                spinnerSelectionHandler.handleSelection(rootViewParent) { selectedItem ->
+                    clinicalInfoViewViewModel.updateSelectedItem(selectedItem)
+                }
+            }
+        }
+    }
+
 
     private fun navigationActions() {
         // Set the next button text to "Continue" and add click listeners
@@ -127,11 +151,15 @@ class NextOfKinFragment : Fragment() {
 
         val dbFieldList = listOf(
             DbField(
-                DbWidgets.RADIO_BUTTON.name,
-                "Can we contact your Next of Kin/Relative?",
-                true,
-                optionList = listOf("Yes", "No")
-            ),
+                DbWidgets.SPINNER.name,
+                "Can we contact your Next of Kin/Relative?", true, null,
+                optionList = listOf("Yes", "No")),
+//            DbField(
+//                DbWidgets.RADIO_BUTTON.name,
+//                "Can we contact your Next of Kin/Relative?",
+//                true,
+//                optionList = listOf("Yes", "No")
+//            ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Full Name", true,
@@ -150,12 +178,80 @@ class NextOfKinFragment : Fragment() {
 
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
+        setSpinnerListener(
+            listOf("Can we contact your Next of Kin/Relative?")
+        )
+
+        clinicalInfoViewViewModel.selectedItem.observe(viewLifecycleOwner) { selectedItem ->
+
+            val fullName = binding.rootLayout.findViewWithTag<View>("Full Name")
+            val relationship = binding.rootLayout.findViewWithTag<View>("Relationship")
+            val telephone = binding.rootLayout.findViewWithTag<View>("Telephone")
+
+            val fullNameText = formatterClass.findTextViewByText(binding.rootLayout, "Full Name *")
+            val relationshipText = formatterClass.findTextViewByText(binding.rootLayout, "Relationship *")
+            val telephoneText = formatterClass.findTextViewByText(binding.rootLayout, "Telephone *")
+            var countryCodePicker: com.hbb20.CountryCodePicker? = null
+
+            for (i in 0 until binding.rootLayout.childCount) {
+                val childView = binding.rootLayout.getChildAt(i)
+
+                if (childView is LinearLayout){
+
+                    for (j in 0 until childView.childCount) {
+                        val innerChildView = childView.getChildAt(j)
+
+                        //Check if the inner child view is com.hbb20.CountryCodePicker
+                        if (innerChildView is com.hbb20.CountryCodePicker) {
+                            countryCodePicker = innerChildView as com.hbb20.CountryCodePicker
+                            break
+                        }
+
+                    }
+
+                }
+
+
+
+            }
+
+            when (selectedItem) {
+
+                "Yes" -> {
+                    fullName.visibility = View.VISIBLE
+                    relationship.visibility = View.VISIBLE
+                    telephone.visibility = View.VISIBLE
+
+                    fullNameText?.visibility = View.VISIBLE
+                    relationshipText?.visibility = View.VISIBLE
+                    telephoneText?.visibility = View.VISIBLE
+                    countryCodePicker?.visibility = View.VISIBLE
+                }
+
+                "No" -> {
+                    fullName.visibility = View.GONE
+                    relationship.visibility = View.GONE
+                    telephone.visibility = View.GONE
+
+                    fullNameText?.visibility = View.GONE
+                    relationshipText?.visibility = View.GONE
+                    telephoneText?.visibility = View.GONE
+                    countryCodePicker?.visibility = View.GONE
+                }
+
+            }
+
+
+        }
+
         FormUtils.loadFormData(
             requireContext(),
             binding.rootLayout,
             DbNavigationDetails.PATIENT_REGISTRATION.name,
             DbClasses.NEXT_OF_KIN.name
         )
+
+
     }
 
     override fun onDestroyView() {
