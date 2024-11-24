@@ -32,6 +32,7 @@ import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.dynamic_components.FormUtils
 import com.intellisoftkenya.a24cblhss.dynamic_components.MandatoryRadioGroup
 import com.intellisoftkenya.a24cblhss.dynamic_components.SpinnerSelectionHandler
+import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.MainActivityViewModel
 
@@ -103,49 +104,62 @@ class NextOfKinFragment : Fragment() {
             // Call the function to extract form data
             val (addedFields, missingFields) = FormUtils.extractAllFormData(binding.rootLayout)
 
-            if (missingFields.isNotEmpty()){
-                var missingText = ""
-                missingFields.forEach { missingText += "\n ${it.tag}, " }
+            // Check that if No is selected we can just proceed to the next fragment
+            val contactConsent = addedFields.find { it.tag == "Can we contact your Next of Kin/Relative?" }
+            if (contactConsent?.text == "Yes") {
 
-                val mandatoryText = "The following are mandatory fields and " +
-                        "need to be filled before proceeding: \n" +
-                        missingText
+                if (missingFields.isNotEmpty()){
+                    var missingText = ""
+                    missingFields.forEach { missingText += "\n ${it.tag}, " }
 
-                formatterClass.showDialog("Missing Content", mandatoryText)
-            }else{
+                    val mandatoryText = "The following are mandatory fields and " +
+                            "need to be filled before proceeding: \n" +
+                            missingText
 
-                val telephoneData = addedFields.find { it.tag == "Telephone" }
+                    formatterClass.showDialog("Missing Content", mandatoryText)
+                }else{
 
-                Log.e("----->","<-----")
-                print("Telephone: $telephoneData")
-                Log.e("----->","<-----")
+                    val telephoneData = addedFields.find { it.tag == "Telephone" }
 
-                if (telephoneData != null) {
-                    val textNumber = telephoneData.text
-                    val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
-                    if (isPhoneValid) {
+                    if (telephoneData != null) {
+                        val textNumber = telephoneData.text
+                        val isPhoneValid = formatterClass.getStandardPhoneNumber(textNumber)
+                        if (isPhoneValid) {
 
-                        findNavController().navigate(R.id.action_nextOfKinFragment_to_patientRegistrationSummaryFragment)
+                            saveData(addedFields)
 
-                        val formData = FormData(
-                            DbClasses.NEXT_OF_KIN.name,
-                            addedFields)
-
-                        val gson = Gson()
-                        val json = gson.toJson(formData)
-
-                        formatterClass.saveSharedPref(
-                            sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
-                            DbClasses.NEXT_OF_KIN.name,
-                            json
-                        )
-
-                    }else{
-                        Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
+                        }else{
+                            Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
+
+            }else {
+                saveData(addedFields)
             }
+
+
+
         }
+    }
+
+    private fun saveData(addedFields: ArrayList<DbFormData>) {
+
+        findNavController().navigate(R.id.action_nextOfKinFragment_to_patientRegistrationSummaryFragment)
+
+        val formData = FormData(
+            DbClasses.NEXT_OF_KIN.name,
+            addedFields)
+
+        val gson = Gson()
+        val json = gson.toJson(formData)
+
+        formatterClass.saveSharedPref(
+            sharedPrefName = DbNavigationDetails.PATIENT_REGISTRATION.name,
+            DbClasses.NEXT_OF_KIN.name,
+            json
+        )
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

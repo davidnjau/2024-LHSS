@@ -11,7 +11,7 @@ android {
         applicationId "com.intellisoftkenya.a24cblhss"
         minSdk 24
         targetSdk 34
-        versionCode 12
+        versionCode 13
         versionName "Internal"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

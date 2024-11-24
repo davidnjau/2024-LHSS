@@ -1,7 +1,6 @@
 package com.intellisoftkenya.a24cblhss.dynamic_components
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
@@ -13,10 +12,8 @@ import android.widget.RadioGroup
 import android.widget.Spinner
 import android.widget.TextView
 import com.google.gson.Gson
-import com.intellisoftkenya.a24cblhss.shared.DbClasses
 import com.intellisoftkenya.a24cblhss.shared.DbField
 import com.intellisoftkenya.a24cblhss.shared.DbFormData
-import com.intellisoftkenya.a24cblhss.shared.DbNavigationDetails
 import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
@@ -353,17 +350,33 @@ object FormUtils {
 
     fun populateFormData(
         formDataList: ArrayList<FormData>,
-        parentLayout: LinearLayout) {
+        parentLayout: LinearLayout,
+        context: Context
+    ) {
+
+        val formatterClass = FormatterClass(context)
+
 
         formDataList.forEach { formData ->
             formData.formDataList.forEach { dbFormData ->
                 // Find the widget by its tag in the parent layout
                 val view = parentLayout.findViewWithTag<View>(dbFormData.tag)
 
+
+
                 // Check for the type of view and set the appropriate text/value
                 when (view) {
                     is EditText -> {
-                        view.setText(dbFormData.text)
+                        //Set Edittext bold
+                        val text = dbFormData.text
+
+                        val pairNull = formatterClass.parsePhoneNumber(text)
+                        if (pairNull == null){
+                            view.setText(text)
+                        }else{
+                            view.setText(pairNull.second)
+                        }
+
                     }
                     is Spinner -> {
                         // Assuming your spinner has an ArrayAdapter with strings, find the correct position
@@ -383,6 +396,9 @@ object FormUtils {
                             }
                         }
                     }
+
+
+
                     // Add handling for other types of widgets here as needed
                     else -> {
                         // Optionally handle other widget types
@@ -413,7 +429,7 @@ object FormUtils {
             if (formDataFromJson != null){
                 formDataList.addAll(listOf(formDataFromJson))
                 if (formDataList.isNotEmpty()){
-                    populateFormData(formDataList, rootLayout)
+                    populateFormData(formDataList, rootLayout, context)
                 }
             }
         }

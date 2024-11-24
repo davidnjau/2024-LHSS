@@ -127,7 +127,7 @@ class PatientListFragment : Fragment() {
             patientList, fromDateStr, toDateStr)
 
         // Initialize RecyclerView and adapter
-        val patientAdapter = PatientAdapter(patientSortedList) { selectedPatient ->
+        val patientAdapter = PatientAdapter(patientList) { selectedPatient ->
 
             val id = selectedPatient.id
             val patientName = selectedPatient.name
@@ -140,7 +140,7 @@ class PatientListFragment : Fragment() {
         binding.patientRecyclerView.adapter = patientAdapter
 
         // Set total patients
-        binding.totalPatientsTextView.text = "Total Patients: ${patientSortedList.size}"
+        binding.totalPatientsTextView.text = "Total Patients: ${patientList.size}"
 
     }
 

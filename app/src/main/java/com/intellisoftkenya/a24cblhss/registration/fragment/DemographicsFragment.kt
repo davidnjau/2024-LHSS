@@ -110,9 +110,12 @@ class DemographicsFragment : Fragment() {
             }else{
 
                 val telephoneReferringData = addedFields.find { it.tag == "Telephone in referring country" }
+                val documentNumber = addedFields.find { it.tag == "Document Number" }
+
 //                val telephoneReceivingData = addedFields.find { it.tag == "Telephone in receiving country" }
 
-                if (telephoneReferringData != null){
+                if (telephoneReferringData != null && documentNumber != null && documentNumber.text.length <= 9){
+
                     val textReferringNumber = telephoneReferringData.text
 //                    val textReceivingNumber = telephoneReceivingData.text
 
@@ -136,6 +139,17 @@ class DemographicsFragment : Fragment() {
                     }else{
                         Toast.makeText(context, "You have provided an invalid phone number", Toast.LENGTH_LONG).show()
                     }
+                }else{
+
+                    if (documentNumber == null || documentNumber.text.length > 9)
+                        Toast.makeText(context,
+                            "The document number is not correct. Check if the number is less than 9 characters.",
+                            Toast.LENGTH_LONG).show()
+
+                    if (telephoneReferringData == null)
+                        Toast.makeText(context,
+                            "The telephone number in referring country is not provided.",
+                            Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -185,7 +199,7 @@ class DemographicsFragment : Fragment() {
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
-                "Document Number", true,
+                "Document Number", true, // Have this at 9 characters for now
                 InputType.TYPE_CLASS_NUMBER
             ),
             DbField(
@@ -200,7 +214,10 @@ class DemographicsFragment : Fragment() {
         FormUtils.populateView(ArrayList(dbFieldList), binding.rootLayout, fieldManager, requireContext())
 
         // Call the function to add the RadioButtons and TextView dynamically
+        // On picking the dates have it start at it
         formatterClass.addRadioButtonWithDatePicker(requireContext(), binding.rootLayout)
+
+        //Repopulate date of birth
 
         loadFormData(
             requireContext(),

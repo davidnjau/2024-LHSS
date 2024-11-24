@@ -10,6 +10,7 @@ import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -20,6 +21,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import com.hbb20.CCPCountry
 import com.intellisoftkenya.a24cblhss.R
 import com.intellisoftkenya.a24cblhss.dynamic_components.MandatoryRadioGroup
 
@@ -501,7 +503,7 @@ class FormatterClass(private val context: Context) {
     }
 
     // Function to clear all SharedPreferences data
-    fun clearSharedPreferences(sharedPrefName:String,) {
+    fun clearSharedPreferences(sharedPrefName: String) {
         val sharedPreferenceName = if (sharedPrefName == ""){
             context.getString(R.string.app_name)
         }else{
@@ -535,7 +537,7 @@ class FormatterClass(private val context: Context) {
         toDate: String?
     ): List<DbPatientItem> {
         // Define the date format that matches the format of dateCreated field
-        val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.ENGLISH)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
         // Parse the fromDate and toDate if they are not null
         val minDate: Date? = fromDate?.let { parseDateSafely(it, dateFormat) }
@@ -562,18 +564,29 @@ class FormatterClass(private val context: Context) {
                 }
             }
 
-        val sortedPatientList = patientList.sortedWith(compareByDescending<DbPatientItem> {
-            try {
-                // Parse date if it's not empty
-                if (it.dateCreated.isNullOrEmpty()) null else dateFormat.parse(it.dateCreated)
-            } catch (e: Exception) {
-                null // Handle unparseable date
-            }
-        }.thenBy {
-            it.dateCreated.isNullOrEmpty() // Push empty dateCreated to the bottom
-        })
+        val sortedPatientsList = ArrayList(sortedPatients)
 
-        return sortedPatientList
+        sortedPatientsList.sortWith(compareByDescending {
+            try {
+                it.dateCreated?.let { it1 -> parseDateSafely(it1, dateFormat) }
+            } catch (e: Exception) {
+                Log.e("PatientListViewModel", "Error parsing date: ${it.dateCreated}")
+                null
+            }
+        })
+//
+//        val sortedPatientList = patientList.sortedWith(compareByDescending<DbPatientItem> {
+//            try {
+//                // Parse date if it's not empty
+//                if (it.dateCreated.isNullOrEmpty()) null else dateFormat.parse(it.dateCreated)
+//            } catch (e: Exception) {
+//                null // Handle unparseable date
+//            }
+//        }.thenBy {
+//            it.dateCreated.isNullOrEmpty() // Push empty dateCreated to the bottom
+//        })
+
+        return sortedPatients
     }
 
     // Helper function to safely parse dates and handle exceptions
@@ -597,12 +610,28 @@ class FormatterClass(private val context: Context) {
             "dd/MM/yyyy",
             "yyyyMMddHHmmss",
             "yyyy-MM-dd HH:mm:ss",
-            "EEE, dd MMM yyyy HH:mm:ss Z",  // Example: "Mon, 25 Dec 2023 12:30:45 +0000"
-            "yyyy-MM-dd'T'HH:mm:ssXXX",     // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
-            "EEE MMM dd HH:mm:ss zzz yyyy", // Example: "Sun Jan 01 00:00:00 GMT+03:00 2023"
-
-            // Add more formats as needed
+            "EEE, dd MMM yyyy HH:mm:ss Z",  // "Mon, 25 Dec 2023 12:30:45 +0000"
+            "yyyy-MM-dd'T'HH:mm:ssXXX",      // ISO 8601 with time zone offset (e.g., "2023-11-29T15:44:00+03:00")
+            "EEE MMM dd HH:mm:ss zzz yyyy", // "Wed Nov 13 18:35:24 GMT+03:00 2024"
+            "EEE MMM dd HH:mm:ss z yyyy",
+            "EEE MMM dd HH:mm:ss 'GMT'XXX yyyy",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", // "2024-11-19T15:30:45.123+03:00"
+            "EEE, dd MMM yyyy",             // "Mon, 25 Dec 2023"
+            "yyyy-MM-dd hh:mm:ss a",        // "2024-11-19 03:15:30 PM"
+            "yyyy-MM-dd HH:mm:ss 'GMT'XXX", // "2024-11-19 15:30:45 GMT+03:00"
+            "dd/MM/yyyy HH:mm:ss",          // "19/11/2024 15:30:45"
+            "EEE dd MMM yyyy HH:mm:ss",     // "Thu 14 Nov 2024 00:31:07"
+            "MMM dd, yyyy",                 // "Nov 14, 2024"
+            "EEE MMM dd HH:mm:ss z yyyy",   // "Thu Nov 14 00:31:07 GMT 2024"
+            "yyyy-MM-dd'T'HH:mm:ss",        // "2024-11-19T15:30:45"
+            "yyyy-MM-dd HH:mm:ss.SSS",      // "2024-11-19 15:30:45.123"
+            "MMM yyyy",                     // "Nov 2024"
+            "MM/dd/yyyy HH:mm:ss Z",        // "11/19/2024 15:30:45 +0300"
+            "yyyyMMdd",                     // "20241119"
+            "EEE MMM dd hh:mm:ss a",        // "Thu Nov 14 12:31:07 AM"
+            "EEE, dd MMM yyyy HH:mm:ss Z"   // "Thu, 14 Nov 2024 00:31:07 +0300"
         )
+
 
         // Try parsing the input date with each format
         for (format in inputDateFormats) {
@@ -623,6 +652,30 @@ class FormatterClass(private val context: Context) {
 
         // If none of the formats match, return an error message or handle it as needed
         return null
+    }
+
+    fun parsePhoneNumber(number: String): Pair<String, String>? {
+        // Regex pattern to match any country code (starting with +) followed by digits
+
+        val regexPattern = Regex("""^\+?\d+$""")
+        if (!regexPattern.matches(number)) {
+            return null
+        }
+
+        val phoneCodeList = ArrayList<String>()
+        val countryCodeList = CCPCountry.getLibraryMasterCountriesEnglish()
+        countryCodeList.forEach { ccpCountry ->
+            val phoneCode = ccpCountry.phoneCode
+            phoneCodeList.add(phoneCode)
+        }
+
+        val countryCode = number.replace("+", "").substring(0, 3)
+
+        return if (phoneCodeList.contains(countryCode)) {
+            Pair(countryCode, number.replace("+", "").substring(3))
+        }else{
+            null
+        }
     }
 
     fun getNameFields(formDataList: ArrayList<FormData>): String {

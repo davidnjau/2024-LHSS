@@ -16,6 +16,7 @@ import com.intellisoftkenya.a24cblhss.databinding.FragmentNotificationBinding
 import com.intellisoftkenya.a24cblhss.fhir.FhirApplication
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModel
 import com.intellisoftkenya.a24cblhss.referrals.viewmodels.ReferralDetailsViewModelFactory
+import com.intellisoftkenya.a24cblhss.shared.DbCommunicationData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import com.intellisoftkenya.a24cblhss.shared.NotificationAdapter
 import com.intellisoftkenya.a24cblhss.shared.NotificationServiceViewModel
@@ -31,6 +32,9 @@ class NotificationFragment : Fragment() {
     private lateinit var formatterClass: FormatterClass
     private val viewModel: NotificationServiceViewModel by viewModels()
 
+    private lateinit var notificationList: ArrayList<DbCommunicationData>
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +45,14 @@ class NotificationFragment : Fragment() {
         formatterClass = FormatterClass(requireContext())
         fhirEngine = FhirApplication.fhirEngine(requireContext())
 
+        CoroutineScope(Dispatchers.IO).launch {
+
+            notificationList = viewModel.getCommunicationList()
+
+            formatterClass.deleteSharedPref("","notificationBasedOn")
+            formatterClass.deleteSharedPref("","communicationId")
+
+        }
 
         return binding.root
 
@@ -48,26 +60,16 @@ class NotificationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val notificationList = viewModel.getCommunicationList()
-            formatterClass.deleteSharedPref("","notificationBasedOn")
-            formatterClass.deleteSharedPref("","communicationId")
-
-            val notificationSortedList =
-                notificationList.sortedBy { it.dateTime }
+        CoroutineScope(Dispatchers.Main).launch {
 
             val formDataAdapter = NotificationAdapter(
                 requireContext(),
-                ArrayList(notificationSortedList), this@NotificationFragment)
+                ArrayList(notificationList), this@NotificationFragment)
 
-            CoroutineScope(Dispatchers.Main).launch {
-                binding.recyclerView.layoutManager = LinearLayoutManager(context)
-                binding.recyclerView.adapter = formDataAdapter
-            }
-
-
+            binding.recyclerView.layoutManager = LinearLayoutManager(context)
+            binding.recyclerView.adapter = formDataAdapter
         }
+
 
     }
 

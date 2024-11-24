@@ -16,6 +16,8 @@ import com.intellisoftkenya.a24cblhss.shared.DbPatientItem
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
 import kotlinx.coroutines.launch
 import org.hl7.fhir.r4.model.Patient
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PatientListViewModel(
     application: Application, 
@@ -79,6 +81,17 @@ class PatientListViewModel(
             .mapIndexed { index, fhirPatient -> createPatient(fhirPatient.resource) }
             .let { patients.addAll(it) }
 
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+
+        //Sort the patients by dateCreated such that the patient with the most recent date is the first
+        patients.sortWith(compareByDescending {
+            try {
+                it.dateCreated?.let { it1 -> formatterClass.parseDateSafely(it1, dateFormat) }
+            } catch (e: Exception) {
+                Log.e("PatientListViewModel", "Error parsing date: ${it.dateCreated}")
+                null
+            }
+        })
 
         return ArrayList(patients)
     }
@@ -94,9 +107,10 @@ class PatientListViewModel(
             val identifierList = fhirPatient.identifier
             identifierList.forEach {
                 if (it.hasSystem() && it.hasValue() && it.system == "system-creation"){
-                    val valueStr = formatterClass.convertDateFormat(it.value)
-                    if (valueStr != null){
-                        dateCreated = valueStr
+//                    val valueStr = formatterClass.convertDateFormat(it.value)
+
+                    if (it.value != null){
+                        dateCreated = it.value.toString()
                     }
                 }
             }

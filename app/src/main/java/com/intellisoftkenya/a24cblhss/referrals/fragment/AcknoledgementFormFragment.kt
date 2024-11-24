@@ -1,6 +1,8 @@
 package com.intellisoftkenya.a24cblhss.referrals.fragment
 
 import android.app.Application
+import android.graphics.Color
+import android.graphics.Typeface
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.text.InputType
@@ -238,6 +240,9 @@ class AcknoledgementFormFragment : Fragment() {
             //Check if rootViewParent is EditText and set its text from the retrieved patient name
             if (rootViewParentName is EditText) {
                 rootViewParentName.setText(patientName)
+                rootViewParentName.setTypeface(rootViewParentName.typeface, Typeface.BOLD)
+                //Set the color to bold
+                rootViewParentName.setTextColor(Color.BLACK)
             }
         }
 
@@ -250,6 +255,9 @@ class AcknoledgementFormFragment : Fragment() {
             //Check if rootViewParent is EditText and set its text from the retrieved observation
             if (rootViewParent is EditText) {
                 rootViewParent.setText(tbRegistration.text)
+                rootViewParent.setTypeface(rootViewParent.typeface, Typeface.BOLD)
+                //Set the color to bold
+                rootViewParent.setTextColor(Color.BLACK)
             }
         }
 

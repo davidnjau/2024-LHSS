@@ -50,9 +50,9 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
     private var serviceRequestId:String = ""
     private var workflowTitles:String = ""
     private val tbTypeList = listOf("PTB" , "EPTB")
-    private val monthList = listOf("2 Weeks","1 month", "2 month","3 month", "4 month",
-        "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
-        "11 month", "12 month")
+    private val monthList = listOf("2 Weeks","1 month", "2 months","3 months", "4 months",
+        "5 months", "6 months", "7 months", "8 months", "9 months", "10 months",
+        "11 months", "12 months")
     private val clinicalInfoViewViewModel: ClinicalInfoViewViewModel by viewModels()
     private val spinnerSelectionHandler: SpinnerSelectionHandler = DefaultSpinnerSelectionHandler()
 
@@ -212,13 +212,13 @@ class ClinicalInfoFormI_IIFragment : Fragment() {
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "CD4 Count", false,
-                    InputType.TYPE_CLASS_TEXT
+                    "CD4 Count", false, //Should be a number
+                    InputType.TYPE_CLASS_NUMBER
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,
-                    "Viral Load", false,
-                    InputType.TYPE_CLASS_TEXT
+                    "Viral Load", false, //Should be a number
+                    InputType.TYPE_CLASS_NUMBER
                 ),
                 DbField(
                     DbWidgets.EDIT_TEXT.name,

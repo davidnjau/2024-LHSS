@@ -50,12 +50,12 @@ class ClinicalInfoFormIII_IVFragment : Fragment() {
     private var patientId:String = ""
     private var serviceRequestId:String = ""
     private var workflowTitles:String = ""
-    private val monthList = listOf("1 month", "2 month","3 month", "4 month",
-        "5 month", "6 month", "7 month", "8 month", "9 month", "10 month",
-        "11 month", "12 month")
-    private val monthList1 = listOf("1 month", "2 month","3 month", "4 month",
-        "5 month", "15 month", "18 month", "21 month", "24 month", "18 month",
-        "21 month", "24 month")
+    private val monthList = listOf("1 month", "2 months","3 months", "4 months",
+        "5 months", "6 months", "7 months", "8 months", "9 months", "10 months",
+        "11 months", "12 months")
+    private val monthList1 = listOf("1 month", "2 months","3 months", "4 months",
+        "5 months", "15 months", "18 months", "21 months", "24 months", "18 months",
+        "21 months", "24 months")
     private lateinit var fhirEngine: FhirEngine
     private var carePlanId:String = ""
     private var encounterId:String = ""
