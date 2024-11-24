@@ -17,6 +17,7 @@ import com.intellisoftkenya.a24cblhss.shared.DbFormData
 import com.intellisoftkenya.a24cblhss.shared.DbWidgets
 import com.intellisoftkenya.a24cblhss.shared.FormData
 import com.intellisoftkenya.a24cblhss.shared.FormatterClass
+import java.text.SimpleDateFormat
 
 object FormUtils {
     fun extractFormData(
@@ -338,6 +339,7 @@ object FormUtils {
                     }
 
 
+
                     // Add more cases as needed based on widget types
                 }
             }
@@ -396,6 +398,7 @@ object FormUtils {
                             }
                         }
                     }
+
 
 
 

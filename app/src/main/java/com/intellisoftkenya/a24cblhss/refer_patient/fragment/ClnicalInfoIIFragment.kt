@@ -123,12 +123,12 @@ class ClnicalInfoIIFragment : Fragment() {
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "CD4 Count", true,
-                InputType.TYPE_CLASS_TEXT
+                InputType.TYPE_CLASS_NUMBER
             ),
             DbField(
                 DbWidgets.EDIT_TEXT.name,
                 "Viral Load", true,
-                InputType.TYPE_CLASS_TEXT
+                InputType.TYPE_CLASS_NUMBER
             ),
 
 //            DbField(

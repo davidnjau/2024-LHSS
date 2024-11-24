@@ -101,7 +101,7 @@ class ReferralListFragment : Fragment() {
                 val status = selectedPatient?.status
                 if (status == "COMPLETED") {
                     Toast.makeText(requireContext(), "Patient has already been received. " +
-                            "The action cannot be performNoed twice.", Toast.LENGTH_SHORT).show()
+                            "The action cannot be performed twice.", Toast.LENGTH_SHORT).show()
                 }else{
                     showReceivePatientDialog()
 

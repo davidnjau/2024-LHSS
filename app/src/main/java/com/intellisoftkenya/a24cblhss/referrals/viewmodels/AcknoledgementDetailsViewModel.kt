@@ -78,7 +78,7 @@ class AcknoledgementDetailsViewModel(
 
         val documentReferenceContextComponent =
             DocumentReference.DocumentReferenceContextComponent()
-        relatedList.add(Reference("ServiceRequest/$patientId"))
+        relatedList.add(Reference("ServiceRequest/$serviceRequestId"))
 
         documentReferenceContextComponent.related = relatedList
 
