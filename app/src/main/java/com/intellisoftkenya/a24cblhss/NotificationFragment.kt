@@ -52,6 +52,18 @@ class NotificationFragment : Fragment() {
             formatterClass.deleteSharedPref("","notificationBasedOn")
             formatterClass.deleteSharedPref("","communicationId")
 
+            val formDataAdapter = NotificationAdapter(
+                requireContext(),
+                ArrayList(notificationList), this@NotificationFragment)
+
+            CoroutineScope(Dispatchers.Main).launch {
+
+                binding.recyclerView.layoutManager = LinearLayoutManager(context)
+                binding.recyclerView.adapter = formDataAdapter
+            }
+
+
+
         }
 
         return binding.root
@@ -60,15 +72,6 @@ class NotificationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        CoroutineScope(Dispatchers.Main).launch {
-
-            val formDataAdapter = NotificationAdapter(
-                requireContext(),
-                ArrayList(notificationList), this@NotificationFragment)
-
-            binding.recyclerView.layoutManager = LinearLayoutManager(context)
-            binding.recyclerView.adapter = formDataAdapter
-        }
 
 
     }

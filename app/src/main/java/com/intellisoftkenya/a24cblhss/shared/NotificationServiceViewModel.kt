@@ -112,7 +112,7 @@ class NotificationServiceViewModel(
             notificationSize.toString())
 
         //Sort the list based on the date such that the latest notification is at the bottom
-        communicationList.sortWith(compareByDescending { it.dateTime })
+        communicationList.sortBy { it.dateTime }
 
 
         return ArrayList(communicationList)
